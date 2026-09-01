@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Variable Lab · Learn Python</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14161f;
+    --panel-dark:#1b1e29;
+    --panel-dark-2:#20232f;
+    --line-dark:#2c3040;
+    --text-dark:#e7e9ee;
+    --muted-dark:#8991a6;
+
+    --paper:#e7ebee;
+    --paper-2:#dde3e7;
+    --line-light:#c7cfd5;
+    --text-light:#20232b;
+    --muted-light:#5b6270;
+
+    --teal:#43c9b8;
+    --teal-dim:#2f8f83;
+    --blue:#5b8def;
+    --violet:#b67ce0;
+    --green:#4f9d63;
+    --amber:#d9a24b;
+    --grey:#9098a3;
+    --error:#e8685f;
+
+    --radius-lg:20px;
+    --radius-md:12px;
+    --radius-sm:8px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--text-dark);
+    font-family:'Inter',system-ui,sans-serif;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:1400px;
+    margin:0 auto;
+    padding:28px 28px 60px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex;
+    align-items:flex-end;
+    gap:24px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+  }
+  .brand h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:28px;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .brand .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--teal);
+    box-shadow:0 0 0 4px rgba(67,201,184,0.18);
+  }
+  .brand p{
+    margin:2px 0 0;
+    color:var(--muted-dark);
+    font-size:14.5px;
+    max-width:46ch;
+  }
+
+  .lessons{
+    display:flex;
+    flex-wrap:nowrap;
+    align-items:center;
+    gap:6px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 2px 12px;
+    margin-bottom:12px;
+    scrollbar-width:thin;
+    scrollbar-color:var(--teal-dim) transparent;
+  }
+  .lessons::-webkit-scrollbar{ height:5px; }
+  .lessons::-webkit-scrollbar-track{
+    background:var(--line-dark);
+    border-radius:999px;
+    margin:0 2px;
+  }
+  .lessons::-webkit-scrollbar-thumb{
+    background:var(--teal-dim);
+    border-radius:999px;
+  }
+  .lessons::-webkit-scrollbar-thumb:hover{ background:var(--teal); }
+  .lesson-pill{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--muted-dark);
+    background:var(--panel-dark);
+    border:1px solid var(--line-dark);
+    width:30px;
+    height:30px;
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    cursor:pointer;
+    transition:border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .lesson-pill:hover{ color:var(--text-dark); border-color:#3a3f52; }
+  .lesson-pill.active{
+    color:#0f1712;
+    background:var(--teal);
+    border-color:var(--teal);
+  }
+  .lesson-pill.done:not(.active){
+    color:var(--teal);
+    border-color:var(--teal-dim);
+    background:rgba(67,201,184,0.10);
+  }
+
+  /* ---------- Topics link & progress ---------- */
+  .topics-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    font-weight:500;
+    color:var(--muted-dark);
+    text-decoration:none;
+    margin-bottom:16px;
+    transition:color .15s ease;
+  }
+  .topics-link:hover{ color:var(--teal); }
+
+  .progress-track{
+    height:5px;
+    border-radius:999px;
+    background:var(--panel-dark);
+    border:1px solid var(--line-dark);
+    overflow:hidden;
+    margin-bottom:16px;
+  }
+  .progress-bar{
+    height:100%;
+    width:0%;
+    background:var(--teal);
+    border-radius:999px;
+    transition:width .35s ease;
+  }
+
+  /* ---------- Instructions ---------- */
+  .instructions{
+    background:var(--panel-dark);
+    border:1px solid var(--line-dark);
+    border-radius:var(--radius-lg);
+    padding:18px 20px;
+    margin-bottom:16px;
+  }
+  .instructions-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .instructions .step{
+    font-size:12.5px;
+    color:var(--teal);
+    font-weight:600;
+    margin:0;
+  }
+  .level-badge{
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.01em;
+    padding:3px 9px;
+    border-radius:999px;
+    color:#0f1712;
+    background:var(--teal);
+  }
+  .level-badge.mid{ background:var(--amber); }
+  .level-badge.adv{ background:var(--violet); color:#1a1424; }
+  .instructions h2{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:19px;
+    margin:0 0 6px;
+  }
+  .instructions p{
+    margin:0;
+    color:#c3c8d4;
+    font-size:14.5px;
+    line-height:1.55;
+    max-width:70ch;
+  }
+
+  /* ---------- Grid ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    align-items:stretch;
+  }
+  @media (max-width:920px){
+    .grid{ grid-template-columns:1fr; }
+  }
+
+  .col{ display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+  .panel{
+    border-radius:var(--radius-lg);
+    border:1px solid var(--line-dark);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .panel-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 16px;
+    border-bottom:1px solid var(--line-dark);
+    background:var(--panel-dark-2);
+  }
+  .panel-head .title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.01em;
+    color:var(--text-dark);
+  }
+  .panel-head .title .swatch{ width:8px;height:8px;border-radius:2px; }
+  .panel-head .sub{ font-size:12px; color:var(--muted-dark); }
+
+  /* ---------- Editor ---------- */
+  .editor-panel{ background:var(--panel-dark); flex:1; min-height:360px; }
+  .editor-body{
+    position:relative;
+    flex:1;
+    display:flex;
+    min-height:300px;
+  }
+  .gutter{
+    background:var(--panel-dark-2);
+    color:#4a5064;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13.5px;
+    line-height:22px;
+    padding:14px 10px 14px 0;
+    text-align:right;
+    width:44px;
+    flex-shrink:0;
+    overflow:hidden;
+    user-select:none;
+    white-space:pre;
+    border-right:1px solid var(--line-dark);
+  }
+  .code-col{
+    position:relative;
+    flex:1;
+    min-width:0;
+  }
+  .current-line{
+    position:absolute;
+    left:0; right:0; top:0;
+    height:22px;
+    background:rgba(67,201,184,0.10);
+    border-top:1px solid rgba(67,201,184,0.35);
+    border-bottom:1px solid rgba(67,201,184,0.35);
+    transform:translateY(14px);
+    transition:transform .18s ease;
+    display:none;
+    pointer-events:none;
+  }
+  .current-line.err{
+    background:rgba(232,104,95,0.12);
+    border-color:rgba(232,104,95,0.5);
+  }
+  textarea.code-input{
+    position:relative;
+    z-index:1;
+    display:block;
+    width:100%;
+    height:100%;
+    min-height:300px;
+    resize:none;
+    border:none;
+    outline:none;
+    background:transparent;
+    color:var(--text-dark);
+    caret-color:var(--teal);
+    font-family:'JetBrains Mono',monospace;
+    font-size:13.5px;
+    line-height:22px;
+    padding:14px 16px;
+    white-space:pre;
+    overflow:auto;
+    tab-size:4;
+  }
+  .editor-controls{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 16px;
+    border-top:1px solid var(--line-dark);
+    background:var(--panel-dark-2);
+  }
+  button{ font-family:'Inter',sans-serif; cursor:pointer; }
+  .btn{
+    border-radius:10px;
+    padding:9px 16px;
+    font-size:13.5px;
+    font-weight:600;
+    border:1px solid transparent;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    transition:opacity .15s ease, transform .05s ease;
+  }
+  .btn:active{ transform:scale(0.98); }
+  .btn:disabled{ opacity:0.5; cursor:not-allowed; }
+  .btn-run{
+    background:var(--teal);
+    color:#0f1712;
+  }
+  .btn-run:hover:not(:disabled){ background:#57d4c4; }
+  .btn-ghost{
+    background:transparent;
+    color:var(--muted-dark);
+    border-color:var(--line-dark);
+  }
+  .btn-ghost:hover:not(:disabled){ color:var(--text-dark); border-color:#454b60; }
+  .run-hint{
+    margin-left:auto;
+    font-size:12px;
+    color:var(--muted-dark);
+  }
+
+  /* ---------- Visual panel (paper) ---------- */
+  .visual-panel{
+    background:var(--paper);
+    color:var(--text-light);
+    border:1px solid var(--line-light);
+    min-height:230px;
+  }
+  .visual-panel .panel-head{
+    background:var(--paper-2);
+    border-bottom:1px solid var(--line-light);
+  }
+  .visual-panel .panel-head .title{ color:var(--text-light); }
+  .visual-panel .panel-head .sub{ color:var(--muted-light); }
+
+  .legend{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    padding:10px 16px;
+    border-bottom:1px solid var(--line-light);
+    background:var(--paper);
+  }
+  .legend-item{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:11.5px;
+    color:var(--muted-light);
+    font-weight:500;
+  }
+  .legend-dot{ width:8px;height:8px;border-radius:50%; }
+
+  .boxes{
+    flex:1;
+    padding:16px;
+    display:flex;
+    flex-wrap:wrap;
+    align-content:flex-start;
+    gap:12px;
+    min-height:150px;
+  }
+  .empty-state{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:var(--muted-light);
+    padding:30px 10px;
+    gap:8px;
+  }
+  .empty-state .icon{
+    width:38px;height:30px;
+    border:2px dashed #b7bfc6;
+    border-radius:8px;
+    position:relative;
+  }
+  .empty-state .icon::after{
+    content:'';
+    position:absolute;
+    left:8px; top:-6px;
+    width:14px;height:6px;
+    border:2px dashed #b7bfc6;
+    border-bottom:none;
+    border-radius:4px 4px 0 0;
+  }
+  .empty-state p{ margin:0; font-size:13.5px; max-width:30ch; }
+
+  .vbox{
+    position:relative;
+    background:#ffffff;
+    border:1.5px solid var(--line-light);
+    border-radius:var(--radius-sm);
+    padding:12px 14px 11px;
+    min-width:118px;
+    box-shadow:0 1px 0 rgba(20,23,30,0.03);
+  }
+  .vbox::before{
+    content:attr(data-name);
+    position:absolute;
+    top:-10px;
+    left:10px;
+    background:var(--tag-color, var(--grey));
+    color:#0f1712;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    font-weight:600;
+    padding:2px 7px;
+    border-radius:5px;
+  }
+  .vbox .val{
+    font-family:'JetBrains Mono',monospace;
+    font-size:14.5px;
+    font-weight:500;
+    margin-top:6px;
+    word-break:break-word;
+    color:#1c1f27;
+  }
+  .vbox .type{
+    margin-top:5px;
+    font-size:10.5px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    color:var(--tag-color, var(--grey));
+  }
+  .vbox{ transition:transform .15s ease, box-shadow .15s ease; cursor:default; }
+  .vbox:hover{ transform:translateY(-2px); box-shadow:0 6px 16px rgba(20,23,30,0.09); }
+  .vbox.is-new{ animation:popIn .38s cubic-bezier(.2,.9,.3,1.3); }
+  .vbox.is-updated{ animation:flash .6s ease; }
+  .vbox.is-referenced{ animation:refPulse 1.3s ease; }
+  .vbox.is-referenced::after{
+    content:'👀';
+    position:absolute;
+    top:-11px;
+    right:8px;
+    font-size:13px;
+    line-height:1;
+    animation:fadeBadge 1.3s ease;
+    pointer-events:none;
+  }
+  @keyframes popIn{
+    0%{ transform:scale(0.6); opacity:0; }
+    100%{ transform:scale(1); opacity:1; }
+  }
+  @keyframes flash{
+    0%{ box-shadow:0 0 0 0 rgba(67,201,184,0); border-color:var(--line-light); }
+    30%{ box-shadow:0 0 0 4px rgba(67,201,184,0.35); border-color:var(--teal-dim); }
+    100%{ box-shadow:0 0 0 0 rgba(67,201,184,0); border-color:var(--line-light); }
+  }
+  @keyframes refPulse{
+    0%{ background:#ffffff; box-shadow:0 0 0 0 rgba(20,23,30,0); border-color:var(--line-light); transform:scale(1); }
+    18%{ background:var(--tag-tint, rgba(91,141,239,0.18)); box-shadow:0 0 0 5px var(--tag-tint, rgba(91,141,239,0.18)); border-color:var(--tag-color, var(--blue)); transform:scale(1.045); }
+    100%{ background:#ffffff; box-shadow:0 0 0 0 rgba(20,23,30,0); border-color:var(--line-light); transform:scale(1); }
+  }
+  @keyframes fadeBadge{
+    0%{ opacity:0; transform:translateY(3px) scale(0.8); }
+    18%{ opacity:1; transform:translateY(0) scale(1); }
+    70%{ opacity:1; }
+    100%{ opacity:0; }
+  }
+
+  .boxes{
+    background-image:radial-gradient(circle, rgba(32,35,43,0.07) 1px, transparent 1px);
+    background-size:15px 15px;
+    background-position:-3px -3px;
+  }
+
+  /* ---------- Terminal panel ---------- */
+  .terminal-panel{ background:var(--panel-dark); flex:1; min-height:180px; }
+  .terminal-body{
+    flex:1;
+    background:#101219;
+    padding:14px 16px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    line-height:1.65;
+    overflow-y:auto;
+    min-height:150px;
+  }
+  .term-line{ white-space:pre-wrap; word-break:break-word; color:#d7dae2; }
+  .term-line.is-error{ color:var(--error); }
+  .term-line.is-muted{ color:#565c70; }
+  .cursor-line{ color:var(--teal); }
+  .blink{ animation:blink 1s steps(2) infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  ::-webkit-scrollbar{ width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb{ background:#33384a; border-radius:6px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="topics-link" href="index.html">&larr; All topics</a>
+
+  <header>
+    <div class="brand">
+      <div class="dot"></div>
+      <div>
+        <h1>Variable Lab</h1>
+        <p>Write real Python on the left, watch each variable appear as a labeled box, and see the program's output in the terminal — one line at a time.</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="lessons" id="lessons"></div>
+
+  <div class="progress-track">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <div class="instructions">
+    <div class="instructions-top">
+      <p class="step" id="lesson-step">Lesson 1 of 5</p>
+      <span class="level-badge" id="lesson-level">Beginner</span>
+    </div>
+    <h2 id="lesson-title">Make a box</h2>
+    <p id="lesson-goal">A variable gives a value a name. Type a line like <code>age = 14</code> and press Run — watch a labeled box appear on the right.</p>
+  </div>
+
+  <div class="grid">
+    <div class="col">
+      <div class="panel editor-panel">
+        <div class="panel-head">
+          <div class="title"><span class="swatch" style="background:var(--teal)"></span>code.py</div>
+          <div class="sub" id="line-count">4 lines</div>
+        </div>
+        <div class="editor-body">
+          <div class="gutter" id="gutter">1</div>
+          <div class="code-col">
+            <div class="current-line" id="current-line"></div>
+            <textarea class="code-input" id="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+          </div>
+        </div>
+        <div class="editor-controls">
+          <button class="btn btn-run" id="run-btn">Run ▶</button>
+          <button class="btn btn-ghost" id="reset-btn">Reset lesson</button>
+          <span class="run-hint" id="run-hint">Runs line by line so you can watch it happen</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="panel visual-panel" style="flex:1.15;">
+        <div class="panel-head">
+          <div class="title"><span class="swatch" style="background:var(--blue)"></span>Variables</div>
+          <div class="sub">live view</div>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>int</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--violet)"></span>float</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>str</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>bool</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--grey)"></span>None</div>
+        </div>
+        <div class="boxes" id="boxes">
+          <div class="empty-state">
+            <div class="icon"></div>
+            <p>Run your code to see each variable appear here as a labeled box.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel terminal-panel">
+        <div class="panel-head">
+          <div class="title"><span class="swatch" style="background:#565c70"></span>Terminal</div>
+          <div class="sub">output</div>
+        </div>
+        <div class="terminal-body" id="terminal">
+          <div class="term-line is-muted">Waiting for you to press Run…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// Mini Python interpreter (tokenizer + recursive-descent parser/evaluator)
+// Scope: variables, literals, arithmetic, comparisons, booleans,
+// f-strings, print/type/len/str/int/float/bool, tuple assignment.
+// ============================================================
+const mkInt = v => ({ t: 'int', v: Math.trunc(v) });
+const mkFloat = v => ({ t: 'float', v });
+const mkStr = v => ({ t: 'str', v });
+const mkBool = v => ({ t: 'bool', v: !!v });
+const mkNone = () => ({ t: 'none', v: null });
+
+function pyErr(type, message) {
+  const e = new Error(`${type}: ${message}`);
+  e.isPyErr = true; e.pyType = type; e.pyMessage = message;
+  return e;
+}
+
+const TYPE_NAMES = { int: 'int', float: 'float', str: 'str', bool: 'bool', none: 'NoneType' };
+const pyTypeName = v => TYPE_NAMES[v.t];
+
+function fmtFloat(v) {
+  if (!isFinite(v)) return v > 0 ? 'inf' : (v < 0 ? '-inf' : 'nan');
+  let s = parseFloat(v.toPrecision(12)).toString();
+  if (!s.includes('.') && !s.includes('e')) s += '.0';
+  return s;
+}
+function pyStr(val) {
+  switch (val.t) {
+    case 'int': return String(val.v);
+    case 'float': return fmtFloat(val.v);
+    case 'str': return val.v;
+    case 'bool': return val.v ? 'True' : 'False';
+    case 'none': return 'None';
+  }
+}
+function pyDisplay(val) { return val.t === 'str' ? `"${val.v}"` : pyStr(val); }
+
+function isNumeric(v) { return v.t === 'int' || v.t === 'float' || v.t === 'bool'; }
+function isIntty(v) { return v.t === 'int' || v.t === 'bool'; }
+function numVal(v) { return v.t === 'bool' ? (v.v ? 1 : 0) : v.v; }
+function isTruthy(v) {
+  switch (v.t) {
+    case 'int': case 'float': return v.v !== 0;
+    case 'str': return v.v.length > 0;
+    case 'bool': return v.v;
+    case 'none': return false;
+  }
+}
+
+function scanRawString(line, start, quote) {
+  let i = start;
+  while (i < line.length) {
+    if (line[i] === '\\') { i += 2; continue; }
+    if (line[i] === quote) return { content: line.slice(start, i), end: i + 1 };
+    i++;
+  }
+  throw pyErr('SyntaxError', 'unterminated string literal');
+}
+function processEscapes(s) {
+  return s.replace(/\\(.)/g, (m, ch) => ({ n: '\n', t: '\t', "'": "'", '"': '"', '\\': '\\' }[ch] ?? ch));
+}
+
+function tokenize(line) {
+  const toks = []; let i = 0; const n = line.length;
+  while (i < n) {
+    const c = line[i];
+    if (c === ' ' || c === '\t') { i++; continue; }
+    if (/[0-9]/.test(c) || (c === '.' && /[0-9]/.test(line[i + 1] || ''))) {
+      let j = i, isFloat = false;
+      while (j < n && /[0-9]/.test(line[j])) j++;
+      if (line[j] === '.') { isFloat = true; j++; while (j < n && /[0-9]/.test(line[j])) j++; }
+      const text = line.slice(i, j);
+      toks.push({ type: 'NUM', value: isFloat ? parseFloat(text) : parseInt(text, 10), isFloat });
+      i = j; continue;
+    }
+    if ((c === 'f' || c === 'F') && (line[i + 1] === '"' || line[i + 1] === "'")) {
+      const q = line[i + 1];
+      const { content, end } = scanRawString(line, i + 2, q);
+      toks.push({ type: 'FSTR', raw: content }); i = end; continue;
+    }
+    if (c === '"' || c === "'") {
+      const { content, end } = scanRawString(line, i + 1, c);
+      toks.push({ type: 'STR', value: processEscapes(content) }); i = end; continue;
+    }
+    if (/[A-Za-z_]/.test(c)) {
+      let j = i + 1;
+      while (j < n && /[A-Za-z0-9_]/.test(line[j])) j++;
+      toks.push({ type: 'NAME', value: line.slice(i, j) }); i = j; continue;
+    }
+    const three = line.slice(i, i + 3);
+    if (['//=', '**='].includes(three)) { toks.push({ type: 'OP', value: three }); i += 3; continue; }
+    const two = line.slice(i, i + 2);
+    if (['**', '//', '==', '!=', '<=', '>=', '+=', '-=', '*=', '/=', '%='].includes(two)) {
+      toks.push({ type: 'OP', value: two }); i += 2; continue;
+    }
+    if (c === '(') { toks.push({ type: 'LPAREN' }); i++; continue; }
+    if (c === ')') { toks.push({ type: 'RPAREN' }); i++; continue; }
+    if (c === ',') { toks.push({ type: 'COMMA' }); i++; continue; }
+    if ('+-*/%=<>'.includes(c)) { toks.push({ type: 'OP', value: c }); i++; continue; }
+    throw pyErr('SyntaxError', `invalid character '${c}'`);
+  }
+  return toks;
+}
+
+function stripComment(line) {
+  let i = 0, out = '';
+  while (i < line.length) {
+    const c = line[i];
+    if (c === '"' || c === "'") {
+      const start = i; i++;
+      while (i < line.length) {
+        if (line[i] === '\\') { i += 2; continue; }
+        if (line[i] === c) { i++; break; }
+        i++;
+      }
+      out += line.slice(start, i); continue;
+    }
+    if (c === '#') break;
+    out += c; i++;
+  }
+  return out;
+}
+
+function evalFString(raw, env) {
+  let out = '', i = 0;
+  while (i < raw.length) {
+    const c = raw[i];
+    if (c === '{') {
+      if (raw[i + 1] === '{') { out += '{'; i += 2; continue; }
+      let depth = 1, j = i + 1;
+      while (j < raw.length && depth > 0) {
+        if (raw[j] === '{') depth++; else if (raw[j] === '}') depth--;
+        if (depth > 0) j++;
+      }
+      if (depth !== 0) throw pyErr('SyntaxError', "f-string: expecting '}'");
+      const exprSrc = raw.slice(i + 1, j);
+      const toks = tokenize(exprSrc);
+      const { val, pos } = parseExprTop(toks, 0, env);
+      if (pos !== toks.length) throw pyErr('SyntaxError', 'invalid syntax');
+      out += pyStr(val); i = j + 1; continue;
+    }
+    if (c === '}' && raw[i + 1] === '}') { out += '}'; i += 2; continue; }
+    if (c === '\\') { out += processEscapes(raw.slice(i, i + 2)); i += 2; continue; }
+    out += c; i++;
+  }
+  return mkStr(out);
+}
+
+function applyBinOp(op, l, r) {
+  if (op === '+') {
+    if (isNumeric(l) && isNumeric(r)) {
+      const isF = l.t === 'float' || r.t === 'float';
+      const val = numVal(l) + numVal(r);
+      return isF ? mkFloat(val) : mkInt(val);
+    }
+    if (l.t === 'str' && r.t === 'str') return mkStr(l.v + r.v);
+    if (l.t === 'str' || r.t === 'str') {
+      const other = l.t === 'str' ? r : l;
+      throw pyErr('TypeError', `can only concatenate str (not "${pyTypeName(other)}") to str`);
+    }
+    throw pyErr('TypeError', `unsupported operand type(s) for +: '${pyTypeName(l)}' and '${pyTypeName(r)}'`);
+  }
+  if (op === '*') {
+    if (isNumeric(l) && isNumeric(r)) {
+      const isF = l.t === 'float' || r.t === 'float';
+      const val = numVal(l) * numVal(r);
+      return isF ? mkFloat(val) : mkInt(val);
+    }
+    if (l.t === 'str' && isIntty(r)) return mkStr(numVal(r) > 0 ? l.v.repeat(numVal(r)) : '');
+    if (r.t === 'str' && isIntty(l)) return mkStr(numVal(l) > 0 ? r.v.repeat(numVal(l)) : '');
+    throw pyErr('TypeError', `unsupported operand type(s) for *: '${pyTypeName(l)}' and '${pyTypeName(r)}'`);
+  }
+  if (['-', '/', '//', '%', '**'].includes(op)) {
+    if (!isNumeric(l) || !isNumeric(r)) throw pyErr('TypeError', `unsupported operand type(s) for ${op}: '${pyTypeName(l)}' and '${pyTypeName(r)}'`);
+    const isF = l.t === 'float' || r.t === 'float';
+    const a = numVal(l), b = numVal(r);
+    if (op === '-') { const val = a - b; return isF ? mkFloat(val) : mkInt(val); }
+    if (op === '/') { if (b === 0) throw pyErr('ZeroDivisionError', 'division by zero'); return mkFloat(a / b); }
+    if (op === '//') {
+      if (b === 0) throw pyErr('ZeroDivisionError', isF ? 'float floor division by zero' : 'integer division or modulo by zero');
+      const val = Math.floor(a / b); return isF ? mkFloat(val) : mkInt(val);
+    }
+    if (op === '%') {
+      if (b === 0) throw pyErr('ZeroDivisionError', isF ? 'float modulo' : 'integer division or modulo by zero');
+      const val = ((a % b) + b) % b; return isF ? mkFloat(val) : mkInt(val);
+    }
+    if (op === '**') {
+      const val = Math.pow(a, b);
+      const resF = isF || b < 0;
+      return resF ? mkFloat(val) : mkInt(val);
+    }
+  }
+  function eq(l, r) {
+    if (isNumeric(l) && isNumeric(r)) return numVal(l) === numVal(r);
+    if (l.t === 'str' && r.t === 'str') return l.v === r.v;
+    if (l.t === 'none' && r.t === 'none') return true;
+    return false;
+  }
+  if (op === '==') return mkBool(eq(l, r));
+  if (op === '!=') return mkBool(!eq(l, r));
+  if (['<', '>', '<=', '>='].includes(op)) {
+    let a, b;
+    if (isNumeric(l) && isNumeric(r)) { a = numVal(l); b = numVal(r); }
+    else if (l.t === 'str' && r.t === 'str') { a = l.v; b = r.v; }
+    else throw pyErr('TypeError', `'${op}' not supported between instances of '${pyTypeName(l)}' and '${pyTypeName(r)}'`);
+    if (op === '<') return mkBool(a < b);
+    if (op === '>') return mkBool(a > b);
+    if (op === '<=') return mkBool(a <= b);
+    if (op === '>=') return mkBool(a >= b);
+  }
+  throw pyErr('SyntaxError', `unknown operator ${op}`);
+}
+
+let activeWrite = () => {};
+function toIntVal(v) {
+  if (v.t === 'int') return v.v;
+  if (v.t === 'float') return Math.trunc(v.v);
+  if (v.t === 'bool') return v.v ? 1 : 0;
+  if (v.t === 'str') {
+    const s = v.v.trim();
+    if (!/^[+-]?\d+$/.test(s)) throw pyErr('ValueError', `invalid literal for int() with base 10: '${v.v}'`);
+    return parseInt(s, 10);
+  }
+  throw pyErr('TypeError', `int() argument must be a string or a number, not '${pyTypeName(v)}'`);
+}
+function toFloatVal(v) {
+  if (v.t === 'int' || v.t === 'float') return v.v;
+  if (v.t === 'bool') return v.v ? 1 : 0;
+  if (v.t === 'str') {
+    const s = v.v.trim();
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(s)) throw pyErr('ValueError', `could not convert string to float: '${v.v}'`);
+    return parseFloat(s);
+  }
+  throw pyErr('TypeError', `float() argument must be a string or a number, not '${pyTypeName(v)}'`);
+}
+function callFunction(name, args) {
+  switch (name) {
+    case 'print': activeWrite(args.map(pyStr).join(' ')); return mkNone();
+    case 'type': return mkStr(`<class '${pyTypeName(args[0])}'>`);
+    case 'len':
+      if (args[0].t !== 'str') throw pyErr('TypeError', `object of type '${pyTypeName(args[0])}' has no len()`);
+      return mkInt(args[0].v.length);
+    case 'str': return mkStr(pyStr(args[0]));
+    case 'int': return mkInt(toIntVal(args[0]));
+    case 'float': return mkFloat(toFloatVal(args[0]));
+    case 'bool': return mkBool(isTruthy(args[0]));
+    default: throw pyErr('NameError', `name '${name}' is not defined`);
+  }
+}
+
+const KEYWORDS = ['True', 'False', 'None', 'and', 'or', 'not'];
+function parseAtom(toks, pos, env) {
+  const t = toks[pos];
+  if (!t) throw pyErr('SyntaxError', 'unexpected end of expression');
+  if (t.type === 'NUM') return { val: t.isFloat ? mkFloat(t.value) : mkInt(t.value), pos: pos + 1 };
+  if (t.type === 'STR') return { val: mkStr(t.value), pos: pos + 1 };
+  if (t.type === 'FSTR') return { val: evalFString(t.raw, env), pos: pos + 1 };
+  if (t.type === 'LPAREN') {
+    const inner = parseExprTop(toks, pos + 1, env);
+    if (!toks[inner.pos] || toks[inner.pos].type !== 'RPAREN') throw pyErr('SyntaxError', 'invalid syntax (missing ")")');
+    return { val: inner.val, pos: inner.pos + 1 };
+  }
+  if (t.type === 'NAME') {
+    if (t.value === 'True') return { val: mkBool(true), pos: pos + 1 };
+    if (t.value === 'False') return { val: mkBool(false), pos: pos + 1 };
+    if (t.value === 'None') return { val: mkNone(), pos: pos + 1 };
+    if (toks[pos + 1] && toks[pos + 1].type === 'LPAREN') {
+      let p = pos + 2; const args = [];
+      if (!(toks[p] && toks[p].type === 'RPAREN')) {
+        while (true) {
+          const r = parseExprTop(toks, p, env);
+          args.push(r.val); p = r.pos;
+          if (toks[p] && toks[p].type === 'COMMA') { p++; continue; }
+          break;
+        }
+      }
+      if (!toks[p] || toks[p].type !== 'RPAREN') throw pyErr('SyntaxError', 'invalid syntax (missing ")")');
+      return { val: callFunction(t.value, args), pos: p + 1 };
+    }
+    if (!(t.value in env)) throw pyErr('NameError', `name '${t.value}' is not defined`);
+    return { val: env[t.value], pos: pos + 1 };
+  }
+  throw pyErr('SyntaxError', 'invalid syntax');
+}
+function parseUnary(toks, pos, env) {
+  const t = toks[pos];
+  if (t && t.type === 'OP' && (t.value === '-' || t.value === '+')) {
+    const r = parseUnary(toks, pos + 1, env);
+    if (!isNumeric(r.val)) throw pyErr('TypeError', `bad operand type for unary ${t.value}: '${pyTypeName(r.val)}'`);
+    if (t.value === '-') {
+      const val = r.val.t === 'float' ? mkFloat(-r.val.v) : mkInt(-numVal(r.val));
+      return { val, pos: r.pos };
+    }
+    return { val: r.val.t === 'bool' ? mkInt(numVal(r.val)) : r.val, pos: r.pos };
+  }
+  if (t && t.type === 'NAME' && t.value === 'not') {
+    const r = parseUnary(toks, pos + 1, env);
+    return { val: mkBool(!isTruthy(r.val)), pos: r.pos };
+  }
+  return parsePow(toks, pos, env);
+}
+function parsePow(toks, pos, env) {
+  const left = parseAtom(toks, pos, env);
+  const t = toks[left.pos];
+  if (t && t.type === 'OP' && t.value === '**') {
+    const right = parseUnary(toks, left.pos + 1, env);
+    return { val: applyBinOp('**', left.val, right.val), pos: right.pos };
+  }
+  return left;
+}
+function parseMul(toks, pos, env) {
+  let left = parseUnary(toks, pos, env);
+  while (true) {
+    const t = toks[left.pos];
+    if (t && t.type === 'OP' && ['*', '/', '//', '%'].includes(t.value)) {
+      const right = parseUnary(toks, left.pos + 1, env);
+      left = { val: applyBinOp(t.value, left.val, right.val), pos: right.pos };
+    } else break;
+  }
+  return left;
+}
+function parseAdd(toks, pos, env) {
+  let left = parseMul(toks, pos, env);
+  while (true) {
+    const t = toks[left.pos];
+    if (t && t.type === 'OP' && (t.value === '+' || t.value === '-')) {
+      const right = parseMul(toks, left.pos + 1, env);
+      left = { val: applyBinOp(t.value, left.val, right.val), pos: right.pos };
+    } else break;
+  }
+  return left;
+}
+function parseCompare(toks, pos, env) {
+  let left = parseAdd(toks, pos, env);
+  while (true) {
+    const t = toks[left.pos];
+    if (t && t.type === 'OP' && ['==', '!=', '<', '>', '<=', '>='].includes(t.value)) {
+      const right = parseAdd(toks, left.pos + 1, env);
+      left = { val: applyBinOp(t.value, left.val, right.val), pos: right.pos };
+    } else break;
+  }
+  return left;
+}
+function parseNot(toks, pos, env) {
+  const t = toks[pos];
+  if (t && t.type === 'NAME' && t.value === 'not') {
+    const r = parseNot(toks, pos + 1, env);
+    return { val: mkBool(!isTruthy(r.val)), pos: r.pos };
+  }
+  return parseCompare(toks, pos, env);
+}
+function parseAnd(toks, pos, env) {
+  let left = parseNot(toks, pos, env);
+  while (true) {
+    const t = toks[left.pos];
+    if (t && t.type === 'NAME' && t.value === 'and') {
+      const right = parseNot(toks, left.pos + 1, env);
+      left = { val: isTruthy(left.val) ? right.val : left.val, pos: right.pos };
+    } else break;
+  }
+  return left;
+}
+function parseOr(toks, pos, env) {
+  let left = parseAnd(toks, pos, env);
+  while (true) {
+    const t = toks[left.pos];
+    if (t && t.type === 'NAME' && t.value === 'or') {
+      const right = parseAnd(toks, left.pos + 1, env);
+      left = { val: isTruthy(left.val) ? left.val : right.val, pos: right.pos };
+    } else break;
+  }
+  return left;
+}
+function parseExprTop(toks, pos, env) { return parseOr(toks, pos, env); }
+function evalGroup(toks, env) {
+  if (toks.length === 0) throw pyErr('SyntaxError', 'invalid syntax');
+  const { val, pos } = parseExprTop(toks, 0, env);
+  if (pos !== toks.length) throw pyErr('SyntaxError', 'invalid syntax');
+  return val;
+}
+function splitByComma(toks) {
+  const groups = []; let depth = 0, cur = [];
+  for (const t of toks) {
+    if (t.type === 'LPAREN') depth++;
+    if (t.type === 'RPAREN') depth--;
+    if (t.type === 'COMMA' && depth === 0) { groups.push(cur); cur = []; continue; }
+    cur.push(t);
+  }
+  groups.push(cur);
+  return groups;
+}
+const ASSIGN_OPS = ['=', '+=', '-=', '*=', '/=', '//=', '%=', '**='];
+function findAssignIndex(toks) {
+  let depth = 0;
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (t.type === 'LPAREN') depth++;
+    else if (t.type === 'RPAREN') depth--;
+    else if (depth === 0 && t.type === 'OP' && ASSIGN_OPS.includes(t.value)) return i;
+  }
+  return -1;
+}
+function setVar(env, order, name, val, created, updated) {
+  if (!(name in env)) { order.push(name); created.add(name); }
+  else { updated.add(name); }
+  env[name] = val;
+}
+function executeStatement(toks, env, order, created, updated, referenced, write) {
+  activeWrite = write;
+  // A line that is just a bare name (e.g. `age`) does nothing in real Python
+  // beyond looking the name up (and erroring if it's undefined). Here, instead
+  // of silently discarding that lookup, we surface it: the matching box gets
+  // spotlighted in the Live View so the user can see exactly what that name
+  // points to right now. An unknown name still raises NameError, which is
+  // caught by the caller and printed to the Terminal like any other error.
+  if (toks.length === 1 && toks[0].type === 'NAME' && !KEYWORDS.includes(toks[0].value)) {
+    const name = toks[0].value;
+    if (!(name in env)) throw pyErr('NameError', `name '${name}' is not defined`);
+    referenced.add(name);
+    return;
+  }
+  const idx = findAssignIndex(toks);
+  if (idx === -1) { evalGroup(toks, env); return; }
+  const opTok = toks[idx];
+  const lhsToks = toks.slice(0, idx);
+  const rhsToks = toks.slice(idx + 1);
+  const lhsGroups = splitByComma(lhsToks);
+  const targets = lhsGroups.map(g => {
+    if (g.length !== 1 || g[0].type !== 'NAME' || KEYWORDS.includes(g[0].value)) throw pyErr('SyntaxError', 'cannot assign to this expression');
+    return g[0].value;
+  });
+  if (opTok.value !== '=') {
+    if (targets.length !== 1) throw pyErr('SyntaxError', 'invalid syntax');
+    const name = targets[0];
+    if (!(name in env)) throw pyErr('NameError', `name '${name}' is not defined`);
+    const rhsVal = evalGroup(rhsToks, env);
+    const base = opTok.value.slice(0, -1);
+    const newVal = applyBinOp(base, env[name], rhsVal);
+    setVar(env, order, name, newVal, created, updated);
+    return;
+  }
+  const rhsGroups = splitByComma(rhsToks);
+  if (targets.length === 1 && rhsGroups.length === 1) {
+    setVar(env, order, targets[0], evalGroup(rhsGroups[0], env), created, updated);
+    return;
+  }
+  if (targets.length > 1 && targets.length === rhsGroups.length) {
+    const vals = rhsGroups.map(g => evalGroup(g, env));
+    targets.forEach((name, i) => setVar(env, order, name, vals[i], created, updated));
+    return;
+  }
+  throw pyErr('SyntaxError', 'not enough values to unpack, or invalid assignment');
+}
+
+// ============================================================
+// Lessons
+// ============================================================
+const LESSONS = [
+  {
+    label: 'Lesson 1',
+    title: 'Make a box',
+    goal: 'A variable gives a value a name. Type a line like <code>age = 14</code> and press Run — watch a labeled box appear on the right.',
+    code: `name = "Ava"\nage = 14\nheight = 1.62\nis_student = True`
+  },
+  {
+    label: 'Lesson 2',
+    title: 'Every value has a type',
+    goal: 'Python looks at a value and decides its type on its own. Use <code>type()</code> to ask what type a variable holds.',
+    code: `score = 95\naverage = 87.5\ngrade = "A"\npassed = True\nprint(type(score))\nprint(type(average))\nprint(type(grade))\nprint(type(passed))`
+  },
+  {
+    label: 'Lesson 3',
+    title: "Change what's inside the box",
+    goal: 'A variable can hold a new value at any time — the name stays the same, only the value changes.',
+    code: `coins = 10\nprint(coins)\ncoins = coins + 5\nprint(coins)\ncoins += 20\nprint(coins)`
+  },
+  {
+    label: 'Lesson 4',
+    title: 'Swap two boxes',
+    goal: 'Python can trade the values of two variables in a single line — no temporary box needed.',
+    code: `left = "sun"\nright = "moon"\nprint(left, right)\nleft, right = right, left\nprint(left, right)`
+  },
+  {
+    label: 'Lesson 5',
+    title: 'Build a sentence from variables',
+    goal: 'An f-string drops variables straight into a piece of text — put an <code>f</code> before the quotes and wrap each variable in <code>{ }</code>.',
+    code: `name = "Kai"\nlevel = 7\nxp = 340\nprint(f"{name} is level {level} with {xp} XP")`
+  },
+  {
+    label: 'Lesson 6',
+    title: 'Whole numbers vs. decimals',
+    goal: 'Python has two number types: <code>int</code> for whole numbers, <code>float</code> for decimals. <code>//</code> and <code>%</code> only make sense for whole numbers — try them below.',
+    code: `apples = 17\npeople = 5\neach = apples // people\nleftover = apples % people\nprint(each, leftover)\nsquared = 4 ** 2\nprint(squared)`
+  },
+  {
+    label: 'Lesson 7',
+    title: 'Working with text',
+    goal: 'Strings have their own operators too — <code>+</code> joins text, <code>*</code> repeats it, and <code>len()</code> counts its characters.',
+    code: `first = "Py"\nsecond = "thon"\nfull = first + second\nprint(full)\nprint(len(full))\nborder = "=" * 12\nprint(border)`
+  },
+  {
+    label: 'Lesson 8',
+    title: 'Convert between types',
+    goal: "A value can have the wrong type for what you need next. <code>int()</code>, <code>float()</code>, and <code>str()</code> convert it to a new type.",
+    code: `age_text = "16"\nage = int(age_text)\nnext_year = age + 1\nprint(next_year)\nprice = 9\nprice_text = "Price: $" + str(price)\nprint(price_text)`
+  },
+  {
+    label: 'Lesson 9',
+    title: 'Ask yes-or-no questions',
+    goal: 'Comparisons like <code>==</code>, <code>&gt;</code>, and <code>&lt;</code> don\'t just check something — they produce a <code>bool</code> value you can store in a variable.',
+    code: `score = 82\npassed = score >= 60\nprint(passed)\ntemperature = 30\nis_hot = temperature > 25\nis_cold = temperature < 10\nprint(is_hot, is_cold)`
+  },
+  {
+    label: 'Lesson 10',
+    title: 'Combine conditions',
+    goal: '<code>and</code>, <code>or</code>, and <code>not</code> combine booleans into a single answer — handy for questions with more than one condition.',
+    code: `has_ticket = True\nhas_id = True\ncan_enter = has_ticket and has_id\nprint(can_enter)\nis_weekend = False\nis_holiday = True\nday_off = is_weekend or is_holiday\nprint(day_off)\nprint(not has_ticket)`
+  },
+  {
+    label: 'Lesson 11',
+    title: 'Order of operations',
+    goal: 'Python follows the same math rules you learned in school — <code>*</code> and <code>/</code> happen before <code>+</code> and <code>-</code>, unless parentheses say otherwise.',
+    code: `result1 = 2 + 3 * 4\nresult2 = (2 + 3) * 4\nprint(result1, result2)`
+  },
+  {
+    label: 'Lesson 12',
+    title: 'Negative numbers and unary minus',
+    goal: 'A leading <code>-</code> flips a value\'s sign. Watch how it interacts with <code>**</code> — <code>-5 ** 2</code> and <code>(-5) ** 2</code> are not the same.',
+    code: `temperature = -12\nflipped = -temperature\nprint(temperature, flipped)\nprint(-5 ** 2)\nprint((-5) ** 2)`
+  },
+  {
+    label: 'Lesson 13',
+    title: 'int() always rounds toward zero',
+    goal: '<code>int()</code> on a float doesn\'t round to the nearest whole number — it chops off everything after the decimal point, even for negatives.',
+    code: `price = 19.99\nwhole = int(price)\nprint(whole)\nrefund = -19.99\nprint(int(refund))`
+  },
+  {
+    label: 'Lesson 14',
+    title: 'Floats are not always exact',
+    goal: 'Computers store decimals in binary, so some sums land a hair off from what you\'d expect. <code>0.1 + 0.2</code> is not quite <code>0.3</code> — a classic gotcha worth knowing about.',
+    code: `a = 0.1 + 0.2\nb = 0.3\nprint(a)\nprint(a == b)`
+  },
+  {
+    label: 'Lesson 15',
+    title: 'Stack two conditions',
+    goal: 'Booleans can feed into other booleans. Here, "adult but not senior" is built from two comparisons combined with <code>and</code> and <code>not</code>.',
+    code: `age = 25\nis_adult = age >= 18\nis_senior = age >= 65\nadult_not_senior = is_adult and not is_senior\nprint(adult_not_senior)`
+  },
+  {
+    label: 'Lesson 16',
+    title: 'Comparing text alphabetically',
+    goal: '<code>&lt;</code> and <code>&gt;</code> work on strings too — Python compares them letter by letter, and capital letters sort before lowercase ones.',
+    code: `a = "apple"\nb = "banana"\nprint(a < b)\nprint(a == "apple")\nprint("Apple" == "apple")`
+  },
+  {
+    label: 'Lesson 17',
+    title: 'Print more than one thing at once',
+    goal: '<code>print()</code> accepts several values separated by commas, and joins them with a space automatically.',
+    code: `name = "Rae"\nscore = 91\nprint("Player:", name, "Score:", score)`
+  },
+  {
+    label: 'Lesson 18',
+    title: 'A receipt line, built from math',
+    goal: 'f-strings can hold an entire expression, not just a variable name — Python evaluates it and drops in the result.',
+    code: `item = "Coffee"\nprice = 4.5\nqty = 3\ntotal = price * qty\nprint(f"{qty} x {item} = \${total}")`
+  },
+  {
+    label: 'Lesson 19',
+    title: 'Turning a fraction into a percent',
+    goal: 'Divide, then multiply by 100 — a common pattern for turning "42 out of 50" into a percentage.',
+    code: `correct = 42\ntotal = 50\npercent = correct / total * 100\nprint(f"{percent}%")`
+  },
+  {
+    label: 'Lesson 20',
+    title: 'Rotate three variables',
+    goal: 'The two-variable swap trick extends to three (or more) — Python computes every value on the right before assigning any of them.',
+    code: `a = "red"\nb = "green"\nc = "blue"\na, b, c = c, a, b\nprint(a, b, c)`
+  },
+  {
+    label: 'Lesson 21',
+    title: 'Draw a progress bar with strings',
+    goal: '<code>*</code> repeats a string. Combine two repeated strings to sketch a simple progress bar out of characters.',
+    code: `score = 8\nmax_score = 10\nbar = "#" * score + "-" * (max_score - score)\nprint(bar)`
+  },
+  {
+    label: 'Lesson 22',
+    title: 'Gluing numbers into text',
+    goal: 'You can\'t <code>+</code> a number and a string directly — convert the number with <code>str()</code> first, then join them.',
+    code: `wins = 7\nlosses = 3\nrecord = str(wins) + "-" + str(losses)\nprint(record)`
+  },
+  {
+    label: 'Lesson 23',
+    title: 'Every value is secretly true or false',
+    goal: '<code>bool()</code> reveals a value\'s truthiness. Empty text and zero are "falsy" — almost everything else is "truthy".',
+    code: `empty = ""\nfull = "hi"\nzero = 0\nnonzero = 5\nprint(bool(empty), bool(full), bool(zero), bool(nonzero))`
+  },
+  {
+    label: 'Lesson 24',
+    title: 'None means "nothing yet"',
+    goal: '<code>None</code> is its own type, standing in for an absent value — different from 0, an empty string, or False.',
+    code: `winner = None\nprint(winner)\nprint(winner == None)\nprint(type(winner))`
+  },
+  {
+    label: 'Lesson 25',
+    title: 'Two ways to combine a rule',
+    goal: '<code>or</code> is true if either side is — <code>and</code> needs both. The same two booleans can answer two different questions.',
+    code: `has_key = False\nhas_code = True\ncan_open = has_key or has_code\nmust_have_both = has_key and has_code\nprint(can_open, must_have_both)`
+  },
+  {
+    label: 'Lesson 26',
+    title: '"not" binds tighter than "or"',
+    goal: 'Python reads <code>not raining or has_umbrella</code> as <code>(not raining) or has_umbrella</code> — <code>not</code> grabs only the value right next to it.',
+    code: `raining = True\nhas_umbrella = False\nstaying_dry = not raining or has_umbrella\nprint(staying_dry)`
+  },
+  {
+    label: 'Lesson 27',
+    title: 'Modulo answers "even or odd?"',
+    goal: 'A number is even exactly when <code>number % 2</code> is 0 — modulo is the standard trick for checking that.',
+    code: `number = 17\nremainder = number % 2\nis_even = remainder == 0\nprint(remainder, is_even)`
+  },
+  {
+    label: 'Lesson 28',
+    title: 'Averaging with parentheses',
+    goal: 'Without parentheses, <code>a + b + c / 3</code> would only divide <code>c</code> — grouping the sum first keeps the math correct.',
+    code: `a = 88\nb = 92\nc = 79\naverage = (a + b + c) / 3\nprint(f"Average: {average}")`
+  },
+  {
+    label: 'Lesson 29',
+    title: 'Compound growth with **',
+    goal: 'Repeated multiplication — like interest compounding every year — is exactly what the exponent operator <code>**</code> was built for.',
+    code: `principal = 100\nrate = 1.05\nyears = 3\nfuture_value = principal * rate ** years\nprint(future_value)`
+  },
+  {
+    label: 'Lesson 30',
+    title: 'Check that a value sits between two others',
+    goal: 'Two comparisons joined with <code>and</code> can test whether a number falls inside a range.',
+    code: `x = 5\ny = 12\nz = 9\nin_range = x < z and z < y\nprint(in_range)`
+  },
+  {
+    label: 'Lesson 31',
+    title: 'Text in, number out',
+    goal: 'Data often arrives as text — like a typed form field. <code>int()</code> converts it so you can compare or do math with it.',
+    code: `raw_age = "17"\nage = int(raw_age)\ncan_drive = age >= 16\nprint(f"{raw_age} -> {age}, can drive: {can_drive}")`
+  },
+  {
+    label: 'Lesson 32',
+    title: 'Splitting cents into dollars',
+    goal: '<code>//</code> and <code>%</code> pair up nicely: floor division gives the whole dollars, modulo gives what\'s left over in cents.',
+    code: `cents = 1050\ndollars = cents // 100\nleftover = cents % 100\nprint(f"\${dollars}.{leftover}")`
+  },
+  {
+    label: 'Lesson 33',
+    title: 'Build "exactly one" from and / or / not',
+    goal: 'Python has no built-in "exactly one of these is true" operator — but you can build it: true when at least one is true, and not both are.',
+    code: `switch_a = True\nswitch_b = False\nexactly_one = (switch_a or switch_b) and not (switch_a and switch_b)\nprint(exactly_one)`
+  },
+  {
+    label: 'Lesson 34',
+    title: 'Two calculations, one f-string',
+    goal: 'An f-string can hold more than one <code>{ }</code> expression — each is evaluated separately and dropped into place.',
+    code: `width = 12\nheight = 5\nprint(f"Area: {width * height}, Perimeter: {2 * (width + height)}")`
+  },
+  {
+    label: 'Lesson 35',
+    title: 'Comparing lengths, not just values',
+    goal: '<code>len()</code> gives you a number back, and numbers can be compared like any other — here, to find the longer word.',
+    code: `word1 = "python"\nword2 = "code"\nlonger = len(word1) > len(word2)\nprint(len(word1), len(word2), longer)`
+  },
+  {
+    label: 'Lesson 36',
+    title: 'A three-part condition',
+    goal: 'Group related comparisons with parentheses, then combine the groups — it keeps a long condition easy to read correctly.',
+    code: `temp = 72\nhumidity = 40\ncomfortable = (temp >= 65 and temp <= 78) and humidity < 60\nprint(comfortable)`
+  },
+  {
+    label: 'Lesson 37',
+    title: 'A gotcha: bool() on text',
+    goal: '<code>bool()</code> on a string only checks whether it\'s empty — the *words inside* don\'t matter. <code>bool("False")</code> is <code>True</code>, because the string isn\'t empty.',
+    code: `flag_yes = bool("False")\nflag_no = bool("")\nprint(flag_yes, flag_no)`
+  },
+  {
+    label: 'Lesson 38',
+    title: 'Convert a whole profile at once',
+    goal: 'Real data rarely arrives as the right type. Convert each field on its way in, then work with clean <code>int</code>, <code>float</code>, and <code>bool</code> values.',
+    code: `name = "Milo"\nage_text = "29"\nheight_text = "1.8"\nage = int(age_text)\nheight = float(height_text)\nprint(name, age, height)`
+  },
+  {
+    label: 'Lesson 39',
+    title: 'A mini scorecard',
+    goal: 'Combine math, a comparison, and an f-string in one small program — the same shape you\'ll reuse in bigger projects.',
+    code: `player = "Zara"\nattempts = 6\nhits = 5\naccuracy = hits / attempts * 100\npassed = accuracy >= 80\nprint(f"{player}: {accuracy}% - passed: {passed}")`
+  },
+  {
+    label: 'Lesson 40',
+    title: 'Final challenge: a full report line',
+    goal: 'Everything from this lab in one program: converting text to a number, doing arithmetic, checking a condition, and gluing it all into one string with <code>+</code>.',
+    code: `name = "Kai"\nraw_score = "87"\nscore = int(raw_score)\nbonus = 5\ntotal = score + bonus\npassed = total >= 90\nsummary = name + " scored " + str(total) + " - passed: " + str(passed)\nprint(summary)`
+  }
+];
+
+const TYPE_COLOR = { int: 'var(--blue)', float: 'var(--violet)', str: 'var(--green)', bool: 'var(--amber)', none: 'var(--grey)' };
+const TYPE_TINT = { int: 'rgba(91,141,239,0.18)', float: 'rgba(182,124,224,0.20)', str: 'rgba(79,157,99,0.18)', bool: 'rgba(217,162,75,0.22)', none: 'rgba(144,152,163,0.20)' };
+const TYPE_DESC = { int: 'whole number', float: 'decimal number', str: 'text', bool: 'True or False', none: 'no value yet' };
+
+// ============================================================
+// UI wiring
+// ============================================================
+const els = {
+  lessons: document.getElementById('lessons'),
+  step: document.getElementById('lesson-step'),
+  title: document.getElementById('lesson-title'),
+  goal: document.getElementById('lesson-goal'),
+  code: document.getElementById('code'),
+  gutter: document.getElementById('gutter'),
+  currentLine: document.getElementById('current-line'),
+  lineCount: document.getElementById('line-count'),
+  runBtn: document.getElementById('run-btn'),
+  resetBtn: document.getElementById('reset-btn'),
+  boxes: document.getElementById('boxes'),
+  terminal: document.getElementById('terminal'),
+  runHint: document.getElementById('run-hint'),
+  progressBar: document.getElementById('progress-bar'),
+  levelBadge: document.getElementById('lesson-level'),
+};
+
+const LINE_HEIGHT = 22;
+const STEP_DELAY = 480;
+const STEP_GAP = 220;
+const PROGRESS_KEY = 'variable-lab-progress';
+
+let state = { running: false, lessonIndex: 0 };
+
+function loadProgress() {
+  try { return new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || '[]')); }
+  catch { return new Set(); }
+}
+function saveProgress(done) {
+  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify([...done])); } catch {}
+}
+let completed = loadProgress();
+
+function levelFor(i) {
+  if (i < 10) return { text: 'Beginner', cls: '' };
+  if (i < 25) return { text: 'Intermediate', cls: 'mid' };
+  return { text: 'Advanced', cls: 'adv' };
+}
+
+function updateProgressBar() {
+  const pct = Math.round((completed.size / LESSONS.length) * 100);
+  els.progressBar.style.width = pct + '%';
+}
+
+function buildLessonPills() {
+  els.lessons.innerHTML = '';
+  let activePill = null;
+  LESSONS.forEach((l, i) => {
+    const pill = document.createElement('button');
+    let cls = 'lesson-pill';
+    if (i === state.lessonIndex) cls += ' active';
+    if (completed.has(i)) cls += ' done';
+    pill.className = cls;
+    pill.textContent = String(i + 1);
+    pill.title = l.title;
+    pill.setAttribute('aria-label', `${l.label}: ${l.title}`);
+    pill.onclick = () => { if (!state.running) loadLesson(i); };
+    if (i === state.lessonIndex) activePill = pill;
+    els.lessons.appendChild(pill);
+  });
+  if (activePill) activePill.scrollIntoView({ inline: 'center', block: 'nearest' });
+}
+
+function loadLesson(i) {
+  state.lessonIndex = i;
+  const l = LESSONS[i];
+  const lvl = levelFor(i);
+  els.step.textContent = `${l.label} of ${LESSONS.length}`;
+  els.levelBadge.textContent = lvl.text;
+  els.levelBadge.className = 'level-badge ' + lvl.cls;
+  els.title.textContent = l.title;
+  els.goal.innerHTML = l.goal;
+  els.code.value = l.code;
+  buildLessonPills();
+  updateProgressBar();
+  syncGutter();
+  clearOutputs();
+}
+
+function syncGutter() {
+  const n = els.code.value.split('\n').length;
+  let s = '';
+  for (let i = 1; i <= n; i++) s += i + (i < n ? '\n' : '');
+  els.gutter.textContent = s;
+  els.gutter.scrollTop = els.code.scrollTop;
+  els.lineCount.textContent = n + (n === 1 ? ' line' : ' lines');
+}
+
+function clearOutputs() {
+  els.boxes.innerHTML = '<div class="empty-state"><div class="icon"></div><p>Run your code to see each variable appear here as a labeled box.</p></div>';
+  els.terminal.innerHTML = '<div class="term-line is-muted">Waiting for you to press Run…</div>';
+  els.currentLine.style.display = 'none';
+  els.currentLine.classList.remove('err');
+}
+
+function setCurrentLine(idx, isErr) {
+  els.currentLine.style.display = 'block';
+  els.currentLine.style.transform = `translateY(${14 + idx * LINE_HEIGHT - els.code.scrollTop}px)`;
+  els.currentLine.classList.toggle('err', !!isErr);
+}
+
+function renderVars(env, order, created, updated, referenced) {
+  if (order.length === 0) {
+    els.boxes.innerHTML = '<div class="empty-state"><div class="icon"></div><p>Run your code to see each variable appear here as a labeled box.</p></div>';
+    return;
+  }
+  els.boxes.innerHTML = '';
+  order.forEach(name => {
+    const val = env[name];
+    const color = TYPE_COLOR[val.t] || 'var(--grey)';
+    const box = document.createElement('div');
+    box.className = 'vbox';
+    if (created.has(name)) box.classList.add('is-new');
+    else if (updated.has(name)) box.classList.add('is-updated');
+    else if (referenced && referenced.has(name)) {
+      box.classList.add('is-referenced');
+      box.style.setProperty('--tag-tint', TYPE_TINT[val.t] || TYPE_TINT.none);
+    }
+    box.setAttribute('data-name', name);
+    box.style.setProperty('--tag-color', color);
+    box.title = `${name} = ${pyDisplayForUI(val)} — ${TYPE_DESC[val.t] || pyTypeName(val)}`;
+    box.innerHTML = `<div class="val">${escapeHtml(pyDisplayForUI(val))}</div><div class="type">${pyTypeName(val)}</div>`;
+    els.boxes.appendChild(box);
+  });
+}
+function pyDisplayForUI(val) { return val.t === 'str' ? `"${val.v}"` : pyStr(val); }
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+}
+
+function writeTerminalLine(text, cls) {
+  const div = document.createElement('div');
+  div.className = 'term-line' + (cls ? ' ' + cls : '');
+  div.textContent = text;
+  els.terminal.appendChild(div);
+  els.terminal.scrollTop = els.terminal.scrollHeight;
+}
+
+function writeCursor() {
+  const div = document.createElement('div');
+  div.className = 'term-line cursor-line';
+  div.innerHTML = '<span class="blink">▍</span>';
+  els.terminal.appendChild(div);
+  els.terminal.scrollTop = els.terminal.scrollHeight;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function runProgram() {
+  if (state.running) return;
+  state.running = true;
+  els.runBtn.disabled = true;
+  els.runBtn.textContent = 'Running…';
+  els.resetBtn.disabled = true;
+  els.code.readOnly = true;
+  els.runHint.textContent = 'Watch the line highlight move as each statement runs';
+
+  els.boxes.innerHTML = '';
+  els.terminal.innerHTML = '';
+
+  const lines = els.code.value.split('\n');
+  const env = Object.create(null);
+  const order = [];
+  let stopped = false;
+  let anyOutput = false;
+
+  for (let i = 0; i < lines.length && !stopped; i++) {
+    const stripped = stripComment(lines[i]).trim();
+    if (!stripped) continue;
+    setCurrentLine(i, false);
+    await sleep(STEP_DELAY);
+
+    const created = new Set(), updated = new Set(), referenced = new Set();
+    try {
+      const toks = tokenize(stripped);
+      executeStatement(toks, env, order, created, updated, referenced, (txt) => {
+        writeTerminalLine(txt);
+        anyOutput = true;
+      });
+    } catch (err) {
+      writeTerminalLine(`Line ${i + 1}: ${err.message}`, 'is-error');
+      setCurrentLine(i, true);
+      stopped = true;
+      break;
+    }
+    renderVars(env, order, created, updated, referenced);
+    await sleep(STEP_GAP);
+  }
+
+  if (!stopped) {
+    els.currentLine.style.display = 'none';
+    if (!anyOutput) writeTerminalLine('(no output — try adding a print())', 'is-muted');
+    writeCursor();
+    if (!completed.has(state.lessonIndex)) {
+      completed.add(state.lessonIndex);
+      saveProgress(completed);
+      buildLessonPills();
+      updateProgressBar();
+    }
+  }
+
+  if (order.length === 0 && !stopped) {
+    els.boxes.innerHTML = '<div class="empty-state"><div class="icon"></div><p>No variables yet — try assigning something, like <code>x = 5</code>.</p></div>';
+  }
+
+  els.code.readOnly = false;
+  state.running = false;
+  els.runBtn.disabled = false;
+  els.runBtn.textContent = 'Run ▶';
+  els.resetBtn.disabled = false;
+  els.runHint.textContent = 'Runs line by line so you can watch it happen';
+}
+
+els.runBtn.addEventListener('click', runProgram);
+els.resetBtn.addEventListener('click', () => { if (!state.running) loadLesson(state.lessonIndex); });
+els.code.addEventListener('input', syncGutter);
+els.code.addEventListener('scroll', () => {
+  els.gutter.scrollTop = els.code.scrollTop;
+});
+els.code.addEventListener('keydown', (e) => {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const s = els.code.selectionStart, en = els.code.selectionEnd;
+    els.code.value = els.code.value.slice(0, s) + '    ' + els.code.value.slice(en);
+    els.code.selectionStart = els.code.selectionEnd = s + 4;
+    syncGutter();
+  }
+});
+
+buildLessonPills();
+loadLesson(0);
+</script>
+</body>
+</html>

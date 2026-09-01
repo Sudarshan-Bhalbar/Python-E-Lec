@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn Python · Interactive Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,650&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14161f;
+    --panel-dark:#1b1e29;
+    --panel-dark-2:#20232f;
+    --line-dark:#2c3040;
+    --text-dark:#e7e9ee;
+    --muted-dark:#8991a6;
+
+    --teal:#43c9b8;
+    --blue:#5b8def;
+    --violet:#b67ce0;
+    --green:#4f9d63;
+    --amber:#d9a24b;
+    --rose:#e0779a;
+    --grey:#9098a3;
+
+    --radius-lg:20px;
+    --radius-md:12px;
+    --radius-sm:8px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--text-dark);
+    font-family:'Inter',system-ui,sans-serif;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:1160px;
+    margin:0 auto;
+    padding:56px 28px 80px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:40px;
+    flex-wrap:wrap;
+    padding-bottom:40px;
+    margin-bottom:40px;
+    border-bottom:1px solid var(--line-dark);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .brand .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--teal);
+    box-shadow:0 0 0 4px rgba(67,201,184,0.18);
+  }
+  .brand span{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    font-weight:500;
+    letter-spacing:0.02em;
+    color:var(--muted-dark);
+  }
+  .hero h1{
+    font-family:'Fraunces',serif;
+    font-weight:650;
+    font-size:52px;
+    line-height:1.05;
+    letter-spacing:-0.015em;
+    margin:0 0 16px;
+    max-width:14ch;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--teal);
+  }
+  .hero-copy{
+    max-width:520px;
+  }
+  .hero-copy p{
+    margin:0;
+    color:var(--muted-dark);
+    font-size:16px;
+    line-height:1.6;
+  }
+  .hero-stats{
+    display:flex;
+    gap:28px;
+    flex-shrink:0;
+  }
+  .hero-stat b{
+    display:block;
+    font-family:'Fraunces',serif;
+    font-size:30px;
+    font-weight:600;
+    color:var(--text-dark);
+  }
+  .hero-stat span{
+    font-size:12.5px;
+    color:var(--muted-dark);
+  }
+
+  /* ---------- Section label ---------- */
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:18px;
+    gap:16px;
+  }
+  .section-head h2{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:22px;
+    margin:0;
+  }
+  .section-head p{
+    margin:0;
+    color:var(--muted-dark);
+    font-size:13.5px;
+  }
+
+  /* ---------- Topic grid ---------- */
+  .topics{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:16px;
+  }
+  @media (max-width:880px){ .topics{ grid-template-columns:repeat(2, 1fr); } }
+  @media (max-width:600px){ .topics{ grid-template-columns:1fr; } }
+
+  .topic-card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    background:var(--panel-dark);
+    border:1px solid var(--line-dark);
+    border-radius:var(--radius-lg);
+    padding:20px;
+    text-decoration:none;
+    color:inherit;
+    overflow:hidden;
+    transition:border-color .15s ease, transform .15s ease, background .15s ease;
+  }
+  .topic-card.is-open{ cursor:pointer; }
+  .topic-card.is-open:hover{
+    border-color:var(--accent, var(--teal));
+    background:var(--panel-dark-2);
+    transform:translateY(-2px);
+  }
+  .topic-card.is-locked{
+    opacity:0.55;
+    cursor:default;
+  }
+  .topic-card::before{
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:3px;
+    background:var(--accent, var(--teal));
+    opacity:0.9;
+  }
+
+  .topic-glyph{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    color:var(--accent, var(--teal));
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--line-dark);
+    border-radius:var(--radius-sm);
+    padding:9px 11px;
+    margin-bottom:16px;
+    line-height:1.55;
+    white-space:pre;
+    overflow:hidden;
+  }
+  .topic-glyph .c1{ color:var(--muted-dark); }
+  .topic-glyph .c2{ color:var(--text-dark); }
+
+  .topic-card h3{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:18.5px;
+    margin:0 0 6px;
+  }
+  .topic-card p{
+    margin:0;
+    color:var(--muted-dark);
+    font-size:13.5px;
+    line-height:1.5;
+    flex:1;
+  }
+
+  .topic-meta{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:18px;
+    padding-top:14px;
+    border-top:1px solid var(--line-dark);
+  }
+  .topic-level{
+    font-size:11.5px;
+    font-weight:600;
+    color:var(--accent, var(--teal));
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .level-bars{ display:flex; gap:2px; }
+  .level-bars i{
+    display:block;
+    width:4px;
+    border-radius:2px;
+    background:var(--line-dark);
+  }
+  .level-bars i:nth-child(1){ height:6px; }
+  .level-bars i:nth-child(2){ height:9px; }
+  .level-bars i:nth-child(3){ height:12px; }
+  .topic-card.is-open .level-bars i{ background:var(--accent, var(--teal)); }
+
+  .topic-count{
+    font-size:11.5px;
+    color:var(--muted-dark);
+  }
+
+  .status-tag{
+    position:absolute;
+    top:16px; right:16px;
+    font-size:10.5px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    padding:4px 9px;
+    border-radius:999px;
+    background:var(--panel-dark-2);
+    border:1px solid var(--line-dark);
+    color:var(--muted-dark);
+  }
+  .status-tag.ready{
+    color:#0f1712;
+    background:var(--accent, var(--teal));
+    border-color:transparent;
+  }
+
+  .go-arrow{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:14px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--text-dark);
+  }
+  .go-arrow svg{ transition:transform .15s ease; }
+  .topic-card.is-open:hover .go-arrow svg{ transform:translateX(3px); }
+
+  footer{
+    margin-top:52px;
+    padding-top:22px;
+    border-top:1px solid var(--line-dark);
+    color:var(--muted-dark);
+    font-size:12.5px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="hero-copy">
+      <div class="brand"><span class="dot"></span><span>PYTHON, ONE IDEA AT A TIME</span></div>
+      <h1>Learn Python by <em>watching</em> it run.</h1>
+      <p>Pick a topic below. Each one walks you from the very first idea to the trickier stuff, with real code you write and run yourself — and a live view of exactly what's happening underneath.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><b>1</b><span>topic ready</span></div>
+      <div class="hero-stat"><b>40</b><span>lessons live</span></div>
+      <div class="hero-stat"><b>5</b><span>coming soon</span></div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <h2>Topics</h2>
+    <p>Start anywhere — each topic stands on its own</p>
+  </div>
+
+  <div class="topics" id="topics"></div>
+
+  <footer>Built for learning by doing — write code, press Run, watch it happen.</footer>
+</div>
+
+<script>
+const TOPICS = [
+  {
+    accent: 'var(--teal)',
+    title: 'Variables & Types',
+    desc: 'Give values a name, watch Python figure out their type, and learn to change what a variable holds.',
+    glyph: [
+      ['name = ', '"Ava"'],
+      ['age = ', '14'],
+      ['print(', 'type(age)', ')'],
+    ],
+    lessons: 40,
+    href: 'variables.html',
+    open: true,
+  },
+  {
+    accent: 'var(--blue)',
+    title: 'Numbers & Math',
+    desc: 'Whole numbers, decimals, and the operators that add, divide, and round them.',
+    glyph: [
+      ['total = ', '17'],
+      ['each = total ', '// 5'],
+      ['left = total ', '% 5'],
+    ],
+    lessons: 8,
+    open: false,
+  },
+  {
+    accent: 'var(--green)',
+    title: 'Strings & Text',
+    desc: 'Build, slice, and format text — the tools behind every message your program shows.',
+    glyph: [
+      ['name = ', '"Kai"'],
+      ['print(f', '"Hi {name}"', ')'],
+    ],
+    lessons: 9,
+    open: false,
+  },
+  {
+    accent: 'var(--amber)',
+    title: 'Booleans & Conditions',
+    desc: 'Ask true-or-false questions and let your program branch based on the answer.',
+    glyph: [
+      ['if age ', '>= 18:'],
+      ['    print(', '"can vote"', ')'],
+    ],
+    lessons: 8,
+    open: false,
+  },
+  {
+    accent: 'var(--violet)',
+    title: 'Lists & Loops',
+    desc: 'Hold many values at once and repeat an action across every one of them.',
+    glyph: [
+      ['for x in ', '[1, 2, 3]', ':'],
+      ['    print(x', ' * 2)'],
+    ],
+    lessons: 10,
+    open: false,
+  },
+  {
+    accent: 'var(--rose)',
+    title: 'Functions',
+    desc: 'Package up code you reuse, with inputs in and a result back out.',
+    glyph: [
+      ['def greet(', 'name', '):'],
+      ['    return f', '"Hi {name}"'],
+    ],
+    lessons: 7,
+    open: false,
+  },
+];
+
+function renderGlyph(lines) {
+  return lines.map(parts => {
+    const html = parts.map((p, i) => `<span class="${i === 0 || i === 2 ? 'c1' : 'c2'}">${p}</span>`).join('');
+    return html;
+  }).join('\n');
+}
+
+const grid = document.getElementById('topics');
+TOPICS.forEach(t => {
+  const isOpen = !!t.open;
+  const el = document.createElement(isOpen ? 'a' : 'div');
+  el.className = 'topic-card ' + (isOpen ? 'is-open' : 'is-locked');
+  el.style.setProperty('--accent', t.accent);
+  if (isOpen) el.href = t.href;
+
+  el.innerHTML = `
+    <div class="status-tag ${isOpen ? 'ready' : ''}">${isOpen ? 'Start here' : 'Coming soon'}</div>
+    <div class="topic-glyph">${renderGlyph(t.glyph)}</div>
+    <h3>${t.title}</h3>
+    <p>${t.desc}</p>
+    <div class="topic-meta">
+      <div class="topic-level"><span class="level-bars"><i></i><i></i><i></i></span>Beginner → Advanced</div>
+      <div class="topic-count">${t.lessons} lessons</div>
+    </div>
+    ${isOpen ? `<div class="go-arrow">Start learning
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>` : ''}
+  `;
+  grid.appendChild(el);
+});
+</script>
+</body>
+</html>
