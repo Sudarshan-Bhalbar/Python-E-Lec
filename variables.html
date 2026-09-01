@@ -548,11 +548,11 @@
 
   <div class="instructions">
     <div class="instructions-top">
-      <p class="step" id="lesson-step">Lesson 1 of 5</p>
+      <p class="step" id="lesson-step">Lesson 1 of 30</p>
       <span class="level-badge" id="lesson-level">Beginner</span>
     </div>
-    <h2 id="lesson-title">Make a box</h2>
-    <p id="lesson-goal">A variable gives a value a name. Type a line like <code>age = 14</code> and press Run — watch a labeled box appear on the right.</p>
+    <h2 id="lesson-title">Declaring Numbers</h2>
+    <p id="lesson-goal">Create variables to hold numbers. Assign a whole number to <code>quantity</code> and a decimal to <code>price</code>, then watch their type tags.</p>
   </div>
 
   <div class="grid">
@@ -1022,12 +1022,6 @@ function setVar(env, order, name, val, created, updated) {
 }
 function executeStatement(toks, env, order, created, updated, referenced, write) {
   activeWrite = write;
-  // A line that is just a bare name (e.g. `age`) does nothing in real Python
-  // beyond looking the name up (and erroring if it's undefined). Here, instead
-  // of silently discarding that lookup, we surface it: the matching box gets
-  // spotlighted in the Live View so the user can see exactly what that name
-  // points to right now. An unknown name still raises NameError, which is
-  // caught by the caller and printed to the Terminal like any other error.
   if (toks.length === 1 && toks[0].type === 'NAME' && !KEYWORDS.includes(toks[0].value)) {
     const name = toks[0].value;
     if (!(name in env)) throw pyErr('NameError', `name '${name}' is not defined`);
@@ -1068,248 +1062,188 @@ function executeStatement(toks, env, order, created, updated, referenced, write)
 }
 
 // ============================================================
-// Lessons
+// Exactly 30 Step-by-Step Lessons
 // ============================================================
 const LESSONS = [
   {
     label: 'Lesson 1',
-    title: 'Make a box',
-    goal: 'A variable gives a value a name. Type a line like <code>age = 14</code> and press Run — watch a labeled box appear on the right.',
-    code: `name = "Ava"\nage = 14\nheight = 1.62\nis_student = True`
+    title: 'Declaring Numbers (int and float)',
+    goal: '<strong>Task:</strong> Create two numeric variables.<br>1. Set <code>quantity = 5</code> (whole number / int).<br>2. Set <code>price = 12.50</code> (decimal / float).<br>Press <strong>Run</strong> to see their boxes appear on the right.',
+    code: `quantity = 5\nprice = 12.50`
   },
   {
     label: 'Lesson 2',
-    title: 'Every value has a type',
-    goal: 'Python looks at a value and decides its type on its own. Use <code>type()</code> to ask what type a variable holds.',
-    code: `score = 95\naverage = 87.5\ngrade = "A"\npassed = True\nprint(type(score))\nprint(type(average))\nprint(type(grade))\nprint(type(passed))`
+    title: 'Storing Text (Strings)',
+    goal: '<strong>Task:</strong> Text in Python must be enclosed in quotes.<br>1. Set <code>first_name = "Alex"</code>.<br>2. Set <code>role = "Coder"</code>.<br>Run the program to see green string boxes.',
+    code: `first_name = "Alex"\nrole = "Coder"`
   },
   {
     label: 'Lesson 3',
-    title: "Change what's inside the box",
-    goal: 'A variable can hold a new value at any time — the name stays the same, only the value changes.',
-    code: `coins = 10\nprint(coins)\ncoins = coins + 5\nprint(coins)\ncoins += 20\nprint(coins)`
+    title: 'Boolean Flags (True and False)',
+    goal: '<strong>Task:</strong> Booleans store binary state (yes/no).<br>1. Set <code>is_active = True</code>.<br>2. Set <code>has_membership = False</code>.<br>Notice how the capitalization matters (capital T and F).',
+    code: `is_active = True\nhas_membership = False`
   },
   {
     label: 'Lesson 4',
-    title: 'Swap two boxes',
-    goal: 'Python can trade the values of two variables in a single line — no temporary box needed.',
-    code: `left = "sun"\nright = "moon"\nprint(left, right)\nleft, right = right, left\nprint(left, right)`
+    title: 'Checking Types with type()',
+    goal: '<strong>Task:</strong> Inspect variable data types.<br>1. Create <code>speed = 45</code> and <code>is_racing = True</code>.<br>2. Use <code>print(type(speed))</code> and <code>print(type(is_racing))</code> to inspect them in the terminal.',
+    code: `speed = 45\nis_racing = True\nprint(type(speed))\nprint(type(is_racing))`
   },
   {
     label: 'Lesson 5',
-    title: 'Build a sentence from variables',
-    goal: 'An f-string drops variables straight into a piece of text — put an <code>f</code> before the quotes and wrap each variable in <code>{ }</code>.',
-    code: `name = "Kai"\nlevel = 7\nxp = 340\nprint(f"{name} is level {level} with {xp} XP")`
+    title: 'Overwriting Existing Variables',
+    goal: '<strong>Task:</strong> Update a variable’s stored value.<br>1. Initialize <code>energy = 100</code>.<br>2. Print it.<br>3. Overwrite <code>energy = 75</code> and print again to watch the box update.',
+    code: `energy = 100\nprint(energy)\nenergy = 75\nprint(energy)`
   },
   {
     label: 'Lesson 6',
-    title: 'Whole numbers vs. decimals',
-    goal: 'Python has two number types: <code>int</code> for whole numbers, <code>float</code> for decimals. <code>//</code> and <code>%</code> only make sense for whole numbers — try them below.',
-    code: `apples = 17\npeople = 5\neach = apples // people\nleftover = apples % people\nprint(each, leftover)\nsquared = 4 ** 2\nprint(squared)`
+    title: 'Basic Math with Variables',
+    goal: '<strong>Task:</strong> Perform arithmetic using variables.<br>1. Set <code>base_salary = 3000</code> and <code>bonus = 450</code>.<br>2. Calculate <code>total_pay = base_salary + bonus</code>.<br>3. Print <code>total_pay</code>.',
+    code: `base_salary = 3000\nbonus = 450\ntotal_pay = base_salary + bonus\nprint(total_pay)`
   },
   {
     label: 'Lesson 7',
-    title: 'Working with text',
-    goal: 'Strings have their own operators too — <code>+</code> joins text, <code>*</code> repeats it, and <code>len()</code> counts its characters.',
-    code: `first = "Py"\nsecond = "thon"\nfull = first + second\nprint(full)\nprint(len(full))\nborder = "=" * 12\nprint(border)`
+    title: 'Shortcut Assignment (+= and -=)',
+    goal: '<strong>Task:</strong> Modify a variable in place.<br>1. Start with <code>score = 50</code>.<br>2. Add 25 using <code>score += 25</code>.<br>3. Subtract 10 using <code>score -= 10</code> and print the result.',
+    code: `score = 50\nscore += 25\nprint(score)\nscore -= 10\nprint(score)`
   },
   {
     label: 'Lesson 8',
-    title: 'Convert between types',
-    goal: "A value can have the wrong type for what you need next. <code>int()</code>, <code>float()</code>, and <code>str()</code> convert it to a new type.",
-    code: `age_text = "16"\nage = int(age_text)\nnext_year = age + 1\nprint(next_year)\nprice = 9\nprice_text = "Price: $" + str(price)\nprint(price_text)`
+    title: 'Multiple Assignment on One Line',
+    goal: '<strong>Task:</strong> Assign multiple variables simultaneously.<br>1. Create three variables in one line: <code>x, y, z = 10, 20, 30</code>.<br>2. Print all three values using <code>print(x, y, z)</code>.',
+    code: `x, y, z = 10, 20, 30\nprint(x, y, z)`
   },
   {
     label: 'Lesson 9',
-    title: 'Ask yes-or-no questions',
-    goal: 'Comparisons like <code>==</code>, <code>&gt;</code>, and <code>&lt;</code> don\'t just check something — they produce a <code>bool</code> value you can store in a variable.',
-    code: `score = 82\npassed = score >= 60\nprint(passed)\ntemperature = 30\nis_hot = temperature > 25\nis_cold = temperature < 10\nprint(is_hot, is_cold)`
+    title: 'Swapping Values',
+    goal: '<strong>Task:</strong> Swap the contents of two variables directly.<br>1. Set <code>primary_color = "red"</code> and <code>secondary_color = "blue"</code>.<br>2. Swap them using <code>primary_color, secondary_color = secondary_color, primary_color</code>.',
+    code: `primary_color = "red"\nsecondary_color = "blue"\nprimary_color, secondary_color = secondary_color, primary_color\nprint(primary_color, secondary_color)`
   },
   {
     label: 'Lesson 10',
-    title: 'Combine conditions',
-    goal: '<code>and</code>, <code>or</code>, and <code>not</code> combine booleans into a single answer — handy for questions with more than one condition.',
-    code: `has_ticket = True\nhas_id = True\ncan_enter = has_ticket and has_id\nprint(can_enter)\nis_weekend = False\nis_holiday = True\nday_off = is_weekend or is_holiday\nprint(day_off)\nprint(not has_ticket)`
+    title: 'Joining Text (String Concatenation)',
+    goal: '<strong>Task:</strong> Glue strings together with <code>+</code>.<br>1. Set <code>first_name = "Ada"</code> and <code>last_name = "Lovelace"</code>.<br>2. Create <code>full_name = first_name + " " + last_name</code>.<br>3. Print <code>full_name</code>.',
+    code: `first_name = "Ada"\nlast_name = "Lovelace"\nfull_name = first_name + " " + last_name\nprint(full_name)`
   },
   {
     label: 'Lesson 11',
-    title: 'Order of operations',
-    goal: 'Python follows the same math rules you learned in school — <code>*</code> and <code>/</code> happen before <code>+</code> and <code>-</code>, unless parentheses say otherwise.',
-    code: `result1 = 2 + 3 * 4\nresult2 = (2 + 3) * 4\nprint(result1, result2)`
+    title: 'Repeating Text with *',
+    goal: '<strong>Task:</strong> Multiply strings to repeat them.<br>1. Create a border with <code>divider = "=" * 20</code>.<br>2. Set <code>title = "DASHBOARD"</code>.<br>3. Print the divider above and below the title.',
+    code: `divider = "=" * 20\ntitle = "DASHBOARD"\nprint(divider)\nprint(title)\nprint(divider)`
   },
   {
     label: 'Lesson 12',
-    title: 'Negative numbers and unary minus',
-    goal: 'A leading <code>-</code> flips a value\'s sign. Watch how it interacts with <code>**</code> — <code>-5 ** 2</code> and <code>(-5) ** 2</code> are not the same.',
-    code: `temperature = -12\nflipped = -temperature\nprint(temperature, flipped)\nprint(-5 ** 2)\nprint((-5) ** 2)`
+    title: 'Measuring Text Length with len()',
+    goal: '<strong>Task:</strong> Count the number of characters in a string.<br>1. Set <code>password = "s3cur3P@ss"</code>.<br>2. Measure its length using <code>char_count = len(password)</code>.<br>3. Print <code>char_count</code>.',
+    code: `password = "s3cur3P@ss"\nchar_count = len(password)\nprint(char_count)`
   },
   {
     label: 'Lesson 13',
-    title: 'int() always rounds toward zero',
-    goal: '<code>int()</code> on a float doesn\'t round to the nearest whole number — it chops off everything after the decimal point, even for negatives.',
-    code: `price = 19.99\nwhole = int(price)\nprint(whole)\nrefund = -19.99\nprint(int(refund))`
+    title: 'Formatted Strings (f-strings)',
+    goal: '<strong>Task:</strong> Insert variables directly inside text.<br>1. Set <code>user = "Sam"</code> and <code>points = 120</code>.<br>2. Build a message with <code>f"User {user} has earned {points} points."</code>.<br>3. Print the message.',
+    code: `user = "Sam"\npoints = 120\nmessage = f"User {user} has earned {points} points."\nprint(message)`
   },
   {
     label: 'Lesson 14',
-    title: 'Floats are not always exact',
-    goal: 'Computers store decimals in binary, so some sums land a hair off from what you\'d expect. <code>0.1 + 0.2</code> is not quite <code>0.3</code> — a classic gotcha worth knowing about.',
-    code: `a = 0.1 + 0.2\nb = 0.3\nprint(a)\nprint(a == b)`
+    title: 'Math Expressions Inside f-strings',
+    goal: '<strong>Task:</strong> Perform arithmetic directly inside f-string braces.<br>1. Set <code>quantity = 4</code> and <code>price_each = 15.5</code>.<br>2. Print a formatted string that calculates <code>{quantity * price_each}</code>.',
+    code: `quantity = 4\nprice_each = 15.5\nprint(f"Total: \${quantity * price_each}")`
   },
   {
     label: 'Lesson 15',
-    title: 'Stack two conditions',
-    goal: 'Booleans can feed into other booleans. Here, "adult but not senior" is built from two comparisons combined with <code>and</code> and <code>not</code>.',
-    code: `age = 25\nis_adult = age >= 18\nis_senior = age >= 65\nadult_not_senior = is_adult and not is_senior\nprint(adult_not_senior)`
+    title: 'Floor Division (//)',
+    goal: '<strong>Task:</strong> Divide numbers and chop off the decimal part.<br>1. Set <code>total_players = 23</code> and <code>team_size = 4</code>.<br>2. Calculate <code>full_teams = total_players // team_size</code>.<br>3. Print <code>full_teams</code>.',
+    code: `total_players = 23\nteam_size = 4\nfull_teams = total_players // team_size\nprint(full_teams)`
   },
   {
     label: 'Lesson 16',
-    title: 'Comparing text alphabetically',
-    goal: '<code>&lt;</code> and <code>&gt;</code> work on strings too — Python compares them letter by letter, and capital letters sort before lowercase ones.',
-    code: `a = "apple"\nb = "banana"\nprint(a < b)\nprint(a == "apple")\nprint("Apple" == "apple")`
+    title: 'Finding the Remainder with Modulo (%)',
+    goal: '<strong>Task:</strong> Find the remainder left over from division.<br>1. Set <code>items = 27</code> and <code>baskets = 5</code>.<br>2. Calculate leftovers using <code>leftover = items % baskets</code>.<br>3. Print <code>leftover</code>.',
+    code: `items = 27\nbaskets = 5\nleftover = items % baskets\nprint(leftover)`
   },
   {
     label: 'Lesson 17',
-    title: 'Print more than one thing at once',
-    goal: '<code>print()</code> accepts several values separated by commas, and joins them with a space automatically.',
-    code: `name = "Rae"\nscore = 91\nprint("Player:", name, "Score:", score)`
+    title: 'Checking Even vs. Odd',
+    goal: '<strong>Task:</strong> Use modulo to check if a number is even.<br>1. Set <code>target_number = 48</code>.<br>2. Check if the remainder divided by 2 is 0: <code>is_even = (target_number % 2 == 0)</code>.<br>3. Print <code>is_even</code>.',
+    code: `target_number = 48\nis_even = (target_number % 2 == 0)\nprint(is_even)`
   },
   {
     label: 'Lesson 18',
-    title: 'A receipt line, built from math',
-    goal: 'f-strings can hold an entire expression, not just a variable name — Python evaluates it and drops in the result.',
-    code: `item = "Coffee"\nprice = 4.5\nqty = 3\ntotal = price * qty\nprint(f"{qty} x {item} = \${total}")`
+    title: 'Exponents and Powers (**)',
+    goal: '<strong>Task:</strong> Calculate powers using <code>**</code>.<br>1. Set <code>base = 2</code> and <code>exponent = 8</code>.<br>2. Calculate total combinations using <code>byte_states = base ** exponent</code>.<br>3. Print the result.',
+    code: `base = 2\nexponent = 8\nbyte_states = base ** exponent\nprint(byte_states)`
   },
   {
     label: 'Lesson 19',
-    title: 'Turning a fraction into a percent',
-    goal: 'Divide, then multiply by 100 — a common pattern for turning "42 out of 50" into a percentage.',
-    code: `correct = 42\ntotal = 50\npercent = correct / total * 100\nprint(f"{percent}%")`
+    title: 'Order of Operations & Parentheses',
+    goal: '<strong>Task:</strong> Control math precedence with parentheses.<br>1. Set <code>score1 = 85</code>, <code>score2 = 90</code>, and <code>score3 = 95</code>.<br>2. Calculate the mean: <code>average = (score1 + score2 + score3) / 3</code>.<br>3. Print <code>average</code>.',
+    code: `score1 = 85\nscore2 = 90\nscore3 = 95\naverage = (score1 + score2 + score3) / 3\nprint(average)`
   },
   {
     label: 'Lesson 20',
-    title: 'Rotate three variables',
-    goal: 'The two-variable swap trick extends to three (or more) — Python computes every value on the right before assigning any of them.',
-    code: `a = "red"\nb = "green"\nc = "blue"\na, b, c = c, a, b\nprint(a, b, c)`
+    title: 'Converting Strings to Numbers',
+    goal: '<strong>Task:</strong> Convert text input into numbers for calculations.<br>1. Convert <code>str_qty = "25"</code> to int with <code>int(str_qty)</code>.<br>2. Convert <code>str_rate = "19.99"</code> to float with <code>float(str_rate)</code>.<br>3. Calculate <code>total_cost = qty * rate</code>.',
+    code: `str_qty = "25"\nstr_rate = "19.99"\nqty = int(str_qty)\nrate = float(str_rate)\ntotal_cost = qty * rate\nprint(total_cost)`
   },
   {
     label: 'Lesson 21',
-    title: 'Draw a progress bar with strings',
-    goal: '<code>*</code> repeats a string. Combine two repeated strings to sketch a simple progress bar out of characters.',
-    code: `score = 8\nmax_score = 10\nbar = "#" * score + "-" * (max_score - score)\nprint(bar)`
+    title: 'Converting Numbers to Strings with str()',
+    goal: '<strong>Task:</strong> Convert a number to text so you can join it with strings.<br>1. Set <code>rank = 1</code>.<br>2. Convert it using <code>str(rank)</code> and combine into <code>rank_label = "Rank: #" + str(rank)</code>.<br>3. Print <code>rank_label</code>.',
+    code: `rank = 1\nrank_label = "Rank: #" + str(rank)\nprint(rank_label)`
   },
   {
     label: 'Lesson 22',
-    title: 'Gluing numbers into text',
-    goal: 'You can\'t <code>+</code> a number and a string directly — convert the number with <code>str()</code> first, then join them.',
-    code: `wins = 7\nlosses = 3\nrecord = str(wins) + "-" + str(losses)\nprint(record)`
+    title: 'Representing Empty States with None',
+    goal: '<strong>Task:</strong> Use <code>None</code> for variables that don’t have a value yet.<br>1. Set <code>current_winner = None</code>.<br>2. Print <code>current_winner</code>.<br>3. Check if it equals None with <code>print(current_winner == None)</code>.',
+    code: `current_winner = None\nprint(current_winner)\nprint(current_winner == None)\nprint(type(current_winner))`
   },
   {
     label: 'Lesson 23',
-    title: 'Every value is secretly true or false',
-    goal: '<code>bool()</code> reveals a value\'s truthiness. Empty text and zero are "falsy" — almost everything else is "truthy".',
-    code: `empty = ""\nfull = "hi"\nzero = 0\nnonzero = 5\nprint(bool(empty), bool(full), bool(zero), bool(nonzero))`
+    title: 'Numeric Comparisons (>=, <=, !=)',
+    goal: '<strong>Task:</strong> Check conditions between numbers.<br>1. Set <code>wallet_balance = 50.0</code> and <code>cart_cost = 45.0</code>.<br>2. Store whether you can afford it: <code>can_afford = wallet_balance >= cart_cost</code>.<br>3. Print <code>can_afford</code>.',
+    code: `wallet_balance = 50.0\ncart_cost = 45.0\ncan_afford = wallet_balance >= cart_cost\nprint(can_afford)`
   },
   {
     label: 'Lesson 24',
-    title: 'None means "nothing yet"',
-    goal: '<code>None</code> is its own type, standing in for an absent value — different from 0, an empty string, or False.',
-    code: `winner = None\nprint(winner)\nprint(winner == None)\nprint(type(winner))`
+    title: 'Alphabetical String Comparisons',
+    goal: '<strong>Task:</strong> Compare text in alphabetical order.<br>1. Set <code>word_a = "apple"</code> and <code>word_b = "banana"</code>.<br>2. Print <code>word_a < word_b</code> (True because "a" comes before "b").<br>3. Compare uppercase vs lowercase: <code>print("Apple" == "apple")</code>.',
+    code: `word_a = "apple"\nword_b = "banana"\nprint(word_a < word_b)\nprint("Apple" == "apple")`
   },
   {
     label: 'Lesson 25',
-    title: 'Two ways to combine a rule',
-    goal: '<code>or</code> is true if either side is — <code>and</code> needs both. The same two booleans can answer two different questions.',
-    code: `has_key = False\nhas_code = True\ncan_open = has_key or has_code\nmust_have_both = has_key and has_code\nprint(can_open, must_have_both)`
+    title: 'Logical AND (Both Must Be True)',
+    goal: '<strong>Task:</strong> Require multiple conditions to hold.<br>1. Set <code>age = 21</code> and <code>has_license = True</code>.<br>2. Combine with <code>can_drive = (age >= 18) and has_license</code>.<br>3. Print <code>can_drive</code>.',
+    code: `age = 21\nhas_license = True\ncan_drive = (age >= 18) and has_license\nprint(can_drive)`
   },
   {
     label: 'Lesson 26',
-    title: '"not" binds tighter than "or"',
-    goal: 'Python reads <code>not raining or has_umbrella</code> as <code>(not raining) or has_umbrella</code> — <code>not</code> grabs only the value right next to it.',
-    code: `raining = True\nhas_umbrella = False\nstaying_dry = not raining or has_umbrella\nprint(staying_dry)`
+    title: 'Logical OR (Either Can Be True)',
+    goal: '<strong>Task:</strong> Check if at least one condition is true.<br>1. Set <code>is_admin = False</code> and <code>has_pass = True</code>.<br>2. Determine access with <code>access_granted = is_admin or has_pass</code>.<br>3. Print <code>access_granted</code>.',
+    code: `is_admin = False\nhas_pass = True\naccess_granted = is_admin or has_pass\nprint(access_granted)`
   },
   {
     label: 'Lesson 27',
-    title: 'Modulo answers "even or odd?"',
-    goal: 'A number is even exactly when <code>number % 2</code> is 0 — modulo is the standard trick for checking that.',
-    code: `number = 17\nremainder = number % 2\nis_even = remainder == 0\nprint(remainder, is_even)`
+    title: 'Logical NOT (Inverting Booleans)',
+    goal: '<strong>Task:</strong> Flip a boolean value.<br>1. Set <code>is_locked = True</code>.<br>2. Invert it using <code>is_unlocked = not is_locked</code>.<br>3. Print <code>is_unlocked</code>.',
+    code: `is_locked = True\nis_unlocked = not is_locked\nprint(is_unlocked)`
   },
   {
     label: 'Lesson 28',
-    title: 'Averaging with parentheses',
-    goal: 'Without parentheses, <code>a + b + c / 3</code> would only divide <code>c</code> — grouping the sum first keeps the math correct.',
-    code: `a = 88\nb = 92\nc = 79\naverage = (a + b + c) / 3\nprint(f"Average: {average}")`
+    title: 'Testing Ranges with Combined Logic',
+    goal: '<strong>Task:</strong> Verify if a number falls inside a specific window.<br>1. Set <code>reading = 72</code>, <code>min_val = 60</code>, and <code>max_val = 80</code>.<br>2. Check range: <code>is_valid = (reading >= min_val) and (reading <= max_val)</code>.<br>3. Print <code>is_valid</code>.',
+    code: `reading = 72\nmin_val = 60\nmax_val = 80\nis_valid = (reading >= min_val) and (reading <= max_val)\nprint(is_valid)`
   },
   {
     label: 'Lesson 29',
-    title: 'Compound growth with **',
-    goal: 'Repeated multiplication — like interest compounding every year — is exactly what the exponent operator <code>**</code> was built for.',
-    code: `principal = 100\nrate = 1.05\nyears = 3\nfuture_value = principal * rate ** years\nprint(future_value)`
+    title: 'Truthiness and bool() Conversion',
+    goal: '<strong>Task:</strong> Discover truthy and falsy values.<br>1. <code>0</code> and empty strings <code>""</code> are False.<br>2. Non-zero numbers and non-empty strings are True.<br>Run the code to verify each.',
+    code: `print(bool(0))\nprint(bool(15))\nprint(bool(""))\nprint(bool("Python"))`
   },
   {
     label: 'Lesson 30',
-    title: 'Check that a value sits between two others',
-    goal: 'Two comparisons joined with <code>and</code> can test whether a number falls inside a range.',
-    code: `x = 5\ny = 12\nz = 9\nin_range = x < z and z < y\nprint(in_range)`
-  },
-  {
-    label: 'Lesson 31',
-    title: 'Text in, number out',
-    goal: 'Data often arrives as text — like a typed form field. <code>int()</code> converts it so you can compare or do math with it.',
-    code: `raw_age = "17"\nage = int(raw_age)\ncan_drive = age >= 16\nprint(f"{raw_age} -> {age}, can drive: {can_drive}")`
-  },
-  {
-    label: 'Lesson 32',
-    title: 'Splitting cents into dollars',
-    goal: '<code>//</code> and <code>%</code> pair up nicely: floor division gives the whole dollars, modulo gives what\'s left over in cents.',
-    code: `cents = 1050\ndollars = cents // 100\nleftover = cents % 100\nprint(f"\${dollars}.{leftover}")`
-  },
-  {
-    label: 'Lesson 33',
-    title: 'Build "exactly one" from and / or / not',
-    goal: 'Python has no built-in "exactly one of these is true" operator — but you can build it: true when at least one is true, and not both are.',
-    code: `switch_a = True\nswitch_b = False\nexactly_one = (switch_a or switch_b) and not (switch_a and switch_b)\nprint(exactly_one)`
-  },
-  {
-    label: 'Lesson 34',
-    title: 'Two calculations, one f-string',
-    goal: 'An f-string can hold more than one <code>{ }</code> expression — each is evaluated separately and dropped into place.',
-    code: `width = 12\nheight = 5\nprint(f"Area: {width * height}, Perimeter: {2 * (width + height)}")`
-  },
-  {
-    label: 'Lesson 35',
-    title: 'Comparing lengths, not just values',
-    goal: '<code>len()</code> gives you a number back, and numbers can be compared like any other — here, to find the longer word.',
-    code: `word1 = "python"\nword2 = "code"\nlonger = len(word1) > len(word2)\nprint(len(word1), len(word2), longer)`
-  },
-  {
-    label: 'Lesson 36',
-    title: 'A three-part condition',
-    goal: 'Group related comparisons with parentheses, then combine the groups — it keeps a long condition easy to read correctly.',
-    code: `temp = 72\nhumidity = 40\ncomfortable = (temp >= 65 and temp <= 78) and humidity < 60\nprint(comfortable)`
-  },
-  {
-    label: 'Lesson 37',
-    title: 'A gotcha: bool() on text',
-    goal: '<code>bool()</code> on a string only checks whether it\'s empty — the *words inside* don\'t matter. <code>bool("False")</code> is <code>True</code>, because the string isn\'t empty.',
-    code: `flag_yes = bool("False")\nflag_no = bool("")\nprint(flag_yes, flag_no)`
-  },
-  {
-    label: 'Lesson 38',
-    title: 'Convert a whole profile at once',
-    goal: 'Real data rarely arrives as the right type. Convert each field on its way in, then work with clean <code>int</code>, <code>float</code>, and <code>bool</code> values.',
-    code: `name = "Milo"\nage_text = "29"\nheight_text = "1.8"\nage = int(age_text)\nheight = float(height_text)\nprint(name, age, height)`
-  },
-  {
-    label: 'Lesson 39',
-    title: 'A mini scorecard',
-    goal: 'Combine math, a comparison, and an f-string in one small program — the same shape you\'ll reuse in bigger projects.',
-    code: `player = "Zara"\nattempts = 6\nhits = 5\naccuracy = hits / attempts * 100\npassed = accuracy >= 80\nprint(f"{player}: {accuracy}% - passed: {passed}")`
-  },
-  {
-    label: 'Lesson 40',
-    title: 'Final challenge: a full report line',
-    goal: 'Everything from this lab in one program: converting text to a number, doing arithmetic, checking a condition, and gluing it all into one string with <code>+</code>.',
-    code: `name = "Kai"\nraw_score = "87"\nscore = int(raw_score)\nbonus = 5\ntotal = score + bonus\npassed = total >= 90\nsummary = name + " scored " + str(total) + " - passed: " + str(passed)\nprint(summary)`
+    title: 'Capstone Challenge: Receipt Generator',
+    goal: '<strong>Task:</strong> Put everything together in one complete program.<br>1. Calculate subtotal and tax on items.<br>2. Test whether the purchase exceeds $50.<br>3. Print a formatted summary line using an f-string.',
+    code: `item_name = "Laptop Stand"\nprice = 24.50\nquantity = 2\nsubtotal = price * quantity\ntax = subtotal * 0.08\ntotal = subtotal + tax\nis_expensive = total > 50.0\nprint(f"Item: {item_name}")\nprint(f"Total: \${total} (Over \$50: {is_expensive})")`
   }
 ];
 
@@ -1356,7 +1290,7 @@ let completed = loadProgress();
 
 function levelFor(i) {
   if (i < 10) return { text: 'Beginner', cls: '' };
-  if (i < 25) return { text: 'Intermediate', cls: 'mid' };
+  if (i < 20) return { text: 'Intermediate', cls: 'mid' };
   return { text: 'Advanced', cls: 'adv' };
 }
 
