@@ -83,7 +83,7 @@
     max-width:68ch;
   }
 
-  /* 50 question pills wrapped in clean multi-line grid */
+  /* 50 question pills wrapped in clean multi-line flex rows (No scrollbars) */
   .lessons{
     display:flex;
     flex-wrap:wrap;
@@ -279,13 +279,13 @@
   }
 
   /* ---------- Editor ---------- */
-  .editor-panel{ background:var(--panel-dark); flex:1; min-height:420px; }
+  .editor-panel{ background:var(--panel-dark); flex:1; min-height:440px; }
   .editor-panel.peeking{ border-color:var(--amber); }
   .editor-body{
     position:relative;
     flex:1;
     display:flex;
-    min-height:340px;
+    min-height:360px;
   }
   .gutter{
     background:var(--panel-dark-2);
@@ -325,7 +325,7 @@
     display:block;
     width:100%;
     height:100%;
-    min-height:340px;
+    min-height:360px;
     resize:none;
     border:none;
     outline:none;
@@ -404,7 +404,9 @@
     background:var(--paper);
     color:var(--text-light);
     border:1px solid var(--line-light);
-    min-height:375px;
+    min-height:360px;
+    display:flex;
+    flex-direction:column;
     transition:background-color .25s ease;
   }
   .visual-panel.kids-active{
@@ -454,6 +456,7 @@
     display:flex;
     flex-direction:column;
     gap:12px;
+    flex-shrink:0;
   }
   .kids-active .decision-stage{
     background:#f7edff;
@@ -515,7 +518,6 @@
     font-size:28px;
     line-height:1;
     flex-shrink:0;
-    transition:transform .2s ease;
   }
   .gate-box.evaluating .gate-icon{
     animation:spinIcon 1s infinite linear;
@@ -579,14 +581,18 @@
     100%{ opacity:1; transform:scale(1.03); }
   }
 
+  /* Fixed .boxes with extra bottom padding to prevent 3D card cut-offs */
   .boxes{
     flex:1;
-    padding:16px;
+    padding:18px 18px 36px 18px;
     display:flex;
     flex-wrap:wrap;
     align-content:flex-start;
-    gap:14px;
-    min-height:140px;
+    gap:16px;
+    min-height:160px;
+    max-height:360px;
+    overflow-y:auto;
+    overflow-x:hidden;
     background-image:radial-gradient(circle, rgba(32,35,43,0.07) 1px, transparent 1px);
     background-size:15px 15px;
     background-position:-3px -3px;
@@ -660,13 +666,14 @@
     color:var(--tag-color, var(--grey));
   }
 
-  /* Kids Mode Styles */
+  /* Kids Mode Styles with complete bottom margins */
   .vbox.kid-card{
     background:#ffffff;
     border:2.5px solid var(--tag-color, #4a5568);
     border-radius:16px;
-    padding:16px 16px 14px;
+    padding:16px 16px 16px;
     min-width:150px;
+    margin-bottom:10px;
     box-shadow:0 6px 0 var(--kid-shadow, #cbd5e0), 0 8px 15px rgba(0,0,0,0.06);
   }
   .vbox.kid-card:hover{
@@ -683,7 +690,7 @@
     left:12px;
     color:#ffffff;
   }
-  .kid-inner{ display:flex; flex-direction:column; gap:4px; margin-top:6px; }
+  .kid-inner{ display:flex; flex-direction:column; gap:6px; margin-top:6px; }
   .kid-val-row{ display:flex; align-items:center; gap:8px; }
   .kid-emoji{ font-size:22px; line-height:1; }
   .kid-val{
@@ -696,10 +703,10 @@
     font-size:11.5px;
     font-weight:600;
     color:#4a5568;
-    background:rgba(0,0,0,0.04);
-    padding:3px 6px;
+    background:rgba(0,0,0,0.05);
+    padding:3px 8px;
     border-radius:6px;
-    margin-top:4px;
+    margin-top:2px;
   }
 
   /* ---------- Terminal panel & interactive input ---------- */
@@ -838,7 +845,7 @@
           </div>
         </div>
 
-        <!-- Real-Time Decision Gate Visualizer with timing & comparison details -->
+        <!-- Real-Time Decision Gate Visualizer -->
         <div class="decision-stage">
           <div class="stage-header">
             <div class="stage-title">🚦 Active Decision Checkpoint</div>
@@ -883,7 +890,7 @@
 
 <script>
 // ============================================================
-// Mini Python Block Interpreter with Fixed (>= / <= / ==) Comparison
+// Mini Python Block Interpreter with Fixed Comparisons
 // ============================================================
 const mkInt = v => ({ t: 'int', v: Math.trunc(v) });
 const mkFloat = v => ({ t: 'float', v });
@@ -1029,7 +1036,6 @@ async function evalFString(raw, env) {
   return mkStr(out);
 }
 
-// Robust Binary Operator Execution with full >=, <=, ==, != support
 function applyBinOp(op, l, r) {
   if (op === '+') {
     if (isNumeric(l) && isNumeric(r)) {
@@ -1068,7 +1074,6 @@ function applyBinOp(op, l, r) {
       return (isF || b < 0) ? mkFloat(val) : mkInt(val);
     }
   }
-  // Comparison Operators: ==, !=, <, >, <=, >=
   if (op === '==') {
     if (isNumeric(l) && isNumeric(r)) return mkBool(numVal(l) === numVal(r));
     return mkBool(l.t === r.t && l.v === r.v);
@@ -1255,7 +1260,7 @@ async function parseOr(toks, pos, env) {
     const t = toks[left.pos];
     if (t && t.type === 'NAME' && t.value === 'or') {
       const right = await parseAnd(toks, left.pos + 1, env);
-      left = { val: isTruthy(left.val) ? left.val : right.val, pos: right.pos };
+      left = { val: isTruthy(left.val) ? right.val : left.val, pos: right.pos };
     } else break;
   }
   return left;
@@ -1454,24 +1459,22 @@ const LESSON_GOALS = [
   "Build a smart home climate controller based on temperature and humidity."
 ];
 
-// Generate full 50 structured lessons with 10 Indian Language translations
-const LESSONS = LESSON_TITLES.map((title, idx) => {
-  return {
-    code: LESSON_CODES[idx],
-    i18n: {
-      en: { title: title, goal: `<strong>Task:</strong> ${LESSON_GOALS[idx]}<br>1. Run the code and watch the Decision Gate inspect and compare values live.` },
-      hi: { title: title, goal: `<strong>कार्य:</strong> ${LESSON_GOALS[idx]}<br>1. कोड चलाएं और डिसीजन गेट को मानों की तुलना करते हुए देखें।` },
-      mr: { title: title, goal: `<strong>कृती:</strong> ${LESSON_GOALS[idx]}<br>1. कोड चालवा आणि गेटवर मूल्यांची तपासणी पहा.` },
-      ta: { title: title, goal: `<strong>பணி:</strong> ${LESSON_GOALS[idx]}<br>1. குறியீட்டை இயக்கி நிபந்தனை சரிபார்ப்பைக் காண்க.` },
-      te: { title: title, goal: `<strong>టాస్క్:</strong> ${LESSON_GOALS[idx]}<br>1. కోడ్ రన్ చేసి గేట్ విలువలను ఎలా పోల్చుతుందో చూడండి.` },
-      bn: { title: title, goal: `<strong>কাজ:</strong> ${LESSON_GOALS[idx]}<br>1. কোড চালান এবং ডিসিশন গেটের মান তুলনা দেখুন।` },
-      gu: { title: title, goal: `<strong>કાર્ય:</strong> ${LESSON_GOALS[idx]}<br>1. કોડ ચલાવો અને ગેટ પર કિંમતોની ચકાસણી જુઓ.` },
-      kn: { title: title, goal: `<strong>ಕಾರ್ಯ:</strong> ${LESSON_GOALS[idx]}<br>1. ಕೋಡ್ ರನ್ ಮಾಡಿ ಗೇಟ್ ಪರೀಕ್ಷೆ ನೋಡಿ.` },
-      ml: { title: title, goal: `<strong>ടാസ്ക്:</strong> ${LESSON_GOALS[idx]}<br>1. കോഡ് റൺ ചെയ്ത് താരതമ്യം കാണുക.` },
-      pa: { title: title, goal: `<strong>ਕੰਮ:</strong> ${LESSON_GOALS[idx]}<br>1. ਕੋਡ ਚਲਾਓ ਅਤੇ ਗੇਟ ਤੇ ਮੁੱਲਾਂ ਦੀ ਜਾਂਚ ਦੇਖੋ।` }
-    }
-  };
-});
+// Complete multilingual translations across 10 Indian regional languages
+const LESSONS = LESSON_TITLES.map((title, idx) => ({
+  code: LESSON_CODES[idx],
+  i18n: {
+    en: { title: title, goal: `<strong>Task:</strong> ${LESSON_GOALS[idx]}<br>1. Run the code and watch the Decision Gate inspect and compare values live.` },
+    hi: { title: title, goal: `<strong>कार्य:</strong> ${LESSON_GOALS[idx]}<br>1. कोड चलाएं और डिसीजन गेट को मानों की तुलना करते हुए देखें।` },
+    mr: { title: title, goal: `<strong>कृती:</strong> ${LESSON_GOALS[idx]}<br>1. कोड चालवा आणि गेटवर मूल्यांची तपासणी पहा.` },
+    ta: { title: title, goal: `<strong>பணி:</strong> ${LESSON_GOALS[idx]}<br>1. குறியீட்டை இயக்கி நிபந்தனை சரிபார்ப்பைக் காண்க.` },
+    te: { title: title, goal: `<strong>టాస్క్:</strong> ${LESSON_GOALS[idx]}<br>1. కోడ్ రన్ చేసి గేట్ విలువలను ఎలా పోల్చుతుందో చూడండి.` },
+    bn: { title: title, goal: `<strong>কাজ:</strong> ${LESSON_GOALS[idx]}<br>1. কোড চালান এবং ডিসিশন গেটের মান তুলনা দেখুন।` },
+    gu: { title: title, goal: `<strong>કાર્ય:</strong> ${LESSON_GOALS[idx]}<br>1. કોડ ચલાવો અને ગેટ પર કિંમતોની ચકાસણી જુઓ.` },
+    kn: { title: title, goal: `<strong>ಕಾರ್ಯ:</strong> ${LESSON_GOALS[idx]}<br>1. ಕೋಡ್ ರನ್ ಮಾಡಿ ಗೇಟ್ ಪರೀಕ್ಷೆ ನೋಡಿ.` },
+    ml: { title: title, goal: `<strong>ടാസ്ക്:</strong> ${LESSON_GOALS[idx]}<br>1. കോഡ് റൺ ചെയ്ത് താരതമ്യം കാണുക.` },
+    pa: { title: title, goal: `<strong>ਕੰਮ:</strong> ${LESSON_GOALS[idx]}<br>1. ਕੋਡ ਚਲਾਓ ਅਤੇ ਗੇਟ ਤੇ ਮੁੱਲਾਂ ਦੀ ਜਾਂਚ ਦੇਖੋ।` }
+  }
+}));
 
 const STEP_LABELS = {
   en: (i, n) => `Lesson ${i} of ${n}`,
@@ -1487,7 +1490,7 @@ const STEP_LABELS = {
 };
 
 const KID_TYPE_INFO = {
-  bool: { emoji: '🚦', name: 'Decision Gate Result', desc: 'True or False (bool)', shadow: '#fbd38d', color: '#dd6b20' },
+  bool: { emoji: '🚦', name: 'Decision Result', desc: 'True or False (bool)', shadow: '#fbd38d', color: '#dd6b20' },
   int: { emoji: '🔢', name: 'Whole Number', desc: 'Number in memory (int)', shadow: '#90cdf4', color: '#3182ce' },
   float: { emoji: '🎯', name: 'Decimal Number', desc: 'Decimal in memory (float)', shadow: '#d6bcfa', color: '#805ad5' },
   str: { emoji: '💬', name: 'Text / Word', desc: 'Text in memory (str)', shadow: '#9ae6b4', color: '#38a169' },
@@ -1498,8 +1501,28 @@ const TYPE_COLOR = { bool: 'var(--amber)', int: 'var(--blue)', float: 'var(--vio
 const TYPE_TINT = { bool: 'rgba(217,162,75,0.22)', int: 'rgba(91,141,239,0.18)', float: 'rgba(182,124,224,0.20)', str: 'rgba(79,157,99,0.18)', none: 'rgba(144,152,163,0.20)' };
 const TYPE_DESC = { bool: 'True or False', int: 'whole number', float: 'decimal number', str: 'text', none: 'no value yet' };
 
+const LINE_HEIGHT = 22;
+const STEP_DELAY = 450;
+const STEP_GAP = 200;
+const PROGRESS_KEY = 'conditions-lab-progress-v4';
+const USER_CODE_KEY = 'conditions-lab-user-code-v4';
+const KIDS_MODE_KEY = 'conditions-lab-kids-mode';
+
+let state = { running: false, lessonIndex: 0 };
+let userCodeStore = {};
+let isPeeking = false;
+let prePeekDraft = '';
+let currentLanguage = 'en';
+let isKidsMode = localStorage.getItem(KIDS_MODE_KEY) !== 'false';
+
+try { userCodeStore = JSON.parse(localStorage.getItem(USER_CODE_KEY) || '{}'); } catch { userCodeStore = {}; }
+function saveUserCodes() { try { localStorage.setItem(USER_CODE_KEY, JSON.stringify(userCodeStore)); } catch {} }
+function loadProgress() { try { return new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || '[]')); } catch { return new Set(); } }
+function saveProgress(done) { try { localStorage.setItem(PROGRESS_KEY, JSON.stringify([...done])); } catch {} }
+let completed = loadProgress();
+
 // ============================================================
-// UI Wiring
+// UI Elements Mapping
 // ============================================================
 const els = {
   lessons: document.getElementById('lessons'),
@@ -1532,36 +1555,6 @@ const els = {
   levelBadge: document.getElementById('lesson-level'),
   langSelect: document.getElementById('lang-select')
 };
-
-const LINE_HEIGHT = 22;
-const STEP_DELAY = 450;
-const STEP_GAP = 200;
-const PROGRESS_KEY = 'conditions-lab-progress-v2';
-const USER_CODE_KEY = 'conditions-lab-user-code-v2';
-const KIDS_MODE_KEY = 'conditions-lab-kids-mode';
-
-let state = { running: false, lessonIndex: 0 };
-let userCodeStore = {};
-let isPeeking = false;
-let prePeekDraft = '';
-let currentLanguage = 'en';
-let isKidsMode = localStorage.getItem(KIDS_MODE_KEY) !== 'false';
-
-try { userCodeStore = JSON.parse(localStorage.getItem(USER_CODE_KEY) || '{}'); }
-catch { userCodeStore = {}; }
-
-function saveUserCodes() {
-  try { localStorage.setItem(USER_CODE_KEY, JSON.stringify(userCodeStore)); } catch {}
-}
-
-function loadProgress() {
-  try { return new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || '[]')); }
-  catch { return new Set(); }
-}
-function saveProgress(done) {
-  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify([...done])); } catch {}
-}
-let completed = loadProgress();
 
 function levelFor(i) {
   if (i < 15) return { text: 'Beginner', cls: '' };
@@ -1596,7 +1589,6 @@ function updateQuestionUI(i) {
   const localized = l.i18n[currentLanguage] || l.i18n.en;
   els.title.textContent = localized.title;
   els.goal.innerHTML = localized.goal;
-  
   const stepFormatter = STEP_LABELS[currentLanguage] || STEP_LABELS.en;
   els.step.textContent = stepFormatter(i + 1, LESSONS.length);
 }
@@ -1734,14 +1726,6 @@ function renderVars(env, order, created, updated, referenced) {
       box.title = `${name} = ${pyDisplay(val)} — ${TYPE_DESC[val.t] || pyTypeName(val)}`;
       box.innerHTML = `<div class="val">${escapeHtml(pyDisplay(val))}</div><div class="type">${pyTypeName(val)}</div>`;
     }
-
-    if (created.has(name)) box.classList.add('is-new');
-    else if (updated.has(name)) box.classList.add('is-updated');
-    else if (referenced && referenced.has(name)) {
-      box.classList.add('is-referenced');
-      box.style.setProperty('--tag-tint', TYPE_TINT[val.t] || TYPE_TINT.none);
-    }
-
     els.boxes.appendChild(box);
   });
 }
@@ -1809,7 +1793,6 @@ function writeCursor() {
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-// Generate substituted inspection string (e.g. "age >= 18" -> "20 >= 18")
 function getSubstitutedExpression(toks, env) {
   return toks.map(t => {
     if (t.type === 'NAME' && t.value in env) {
@@ -1820,7 +1803,6 @@ function getSubstitutedExpression(toks, env) {
   }).join(' ');
 }
 
-// Line-by-Line Conditional Evaluator with Visible Decision Delay
 async function runProgram() {
   if (state.running || isPeeking) return;
   state.running = true;
@@ -1877,7 +1859,6 @@ async function runProgram() {
     try {
       const toks = tokenize(stripped);
 
-      // if Statement
       if (toks[0].type === 'NAME' && toks[0].value === 'if') {
         const colonIdx = toks.findLastIndex(t => t.type === 'COLON');
         if (colonIdx === -1) throw pyErr('SyntaxError', "expected ':' at end of if");
@@ -1885,23 +1866,20 @@ async function runProgram() {
         const condText = stripped.slice(2, stripped.lastIndexOf(':')).trim();
         const subDetail = getSubstitutedExpression(condToks, env);
 
-        // Visual Step 1: Evaluating
-        setGateEvaluating(`if ${condText}:`, `Substituting: ${subDetail}`);
-        await sleep(650); // Visible inspection time
+        setGateEvaluating(`if ${condText}:`, `Comparing: ${subDetail}`);
+        await sleep(700);
 
         const condVal = await evalGroup(condToks, env);
         const passed = isTruthy(condVal);
         chainState[indent] = { matched: passed };
 
-        // Visual Step 2: Gate Open/Close Result
         setGateResult(`if ${condText}:`, passed, 'IF', `${subDetail} ➔ ${passed ? 'TRUE' : 'FALSE'}`);
-        await sleep(500);
+        await sleep(550);
 
         if (!passed) {
           skipLevel = indent + 1;
         }
       }
-      // elif Statement
       else if (toks[0].type === 'NAME' && toks[0].value === 'elif') {
         const colonIdx = toks.findLastIndex(t => t.type === 'COLON');
         if (colonIdx === -1) throw pyErr('SyntaxError', "expected ':' at end of elif");
@@ -1911,11 +1889,11 @@ async function runProgram() {
 
         const chain = chainState[indent];
         if (chain && chain.matched) {
-          setGateResult(`elif ${condText}:`, false, 'ELIF (prior branch ran)', 'Skipped because a previous condition was already TRUE');
+          setGateResult(`elif ${condText}:`, false, 'ELIF (prior branch ran)', 'Skipped because earlier condition was TRUE');
           skipLevel = indent + 1;
         } else {
-          setGateEvaluating(`elif ${condText}:`, `Substituting: ${subDetail}`);
-          await sleep(650);
+          setGateEvaluating(`elif ${condText}:`, `Comparing: ${subDetail}`);
+          await sleep(700);
           const condVal = await evalGroup(condToks, env);
           const passed = isTruthy(condVal);
           if (passed) {
@@ -1925,22 +1903,20 @@ async function runProgram() {
             setGateResult(`elif ${condText}:`, false, 'ELIF', `${subDetail} ➔ FALSE`);
             skipLevel = indent + 1;
           }
-          await sleep(500);
+          await sleep(550);
         }
       }
-      // else Statement
       else if (toks[0].type === 'NAME' && toks[0].value === 'else') {
         const chain = chainState[indent];
         if (chain && chain.matched) {
-          setGateResult('else:', false, 'ELSE (prior branch ran)', 'Skipped because a previous branch was already executed');
+          setGateResult('else:', false, 'ELSE (prior branch ran)', 'Skipped because earlier branch executed');
           skipLevel = indent + 1;
         } else {
-          setGateResult('else:', true, 'ELSE', 'No previous condition matched ➔ Executing fallback block');
+          setGateResult('else:', true, 'ELSE', 'Executing fallback else block');
           if (chain) chain.matched = true;
-          await sleep(450);
+          await sleep(500);
         }
       }
-      // Normal statements
       else {
         await executeSimpleStatement(toks, env, order, created, updated, referenced,
           (txt) => { writeTerminalLine(txt); anyOutput = true; },
@@ -2033,6 +2009,116 @@ els.kidsToggleBtn.addEventListener('click', () => {
   }
 });
 
+// ============================================================
+// IDLE-like Smart Code Editor (Auto-close pairs, Indentation, Tab)
+// ============================================================
+const AUTO_PAIRS = {
+  '(': ')',
+  '[': ']',
+  '{': '}',
+  '"': '"',
+  "'": "'"
+};
+
+els.code.addEventListener('keydown', (e) => {
+  const textarea = els.code;
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const val = textarea.value;
+
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    if (e.shiftKey) {
+      const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+      if (val.slice(lineStart, lineStart + 4) === '    ') {
+        textarea.value = val.slice(0, lineStart) + val.slice(lineStart + 4);
+        textarea.selectionStart = textarea.selectionEnd = Math.max(lineStart, start - 4);
+      }
+    } else {
+      textarea.value = val.slice(0, start) + '    ' + val.slice(end);
+      textarea.selectionStart = textarea.selectionEnd = start + 4;
+    }
+    if (!isPeeking) {
+      userCodeStore[state.lessonIndex] = textarea.value;
+      saveUserCodes();
+    }
+    syncGutter();
+    return;
+  }
+
+  if (AUTO_PAIRS[e.key]) {
+    const open = e.key;
+    const close = AUTO_PAIRS[open];
+
+    if ((open === '"' || open === "'") && val[start] === open && start === end) {
+      e.preventDefault();
+      textarea.selectionStart = textarea.selectionEnd = start + 1;
+      return;
+    }
+
+    e.preventDefault();
+    const selectedText = val.slice(start, end);
+    textarea.value = val.slice(0, start) + open + selectedText + close + val.slice(end);
+    textarea.selectionStart = start + 1;
+    textarea.selectionEnd = end + 1;
+
+    if (!isPeeking) {
+      userCodeStore[state.lessonIndex] = textarea.value;
+      saveUserCodes();
+    }
+    syncGutter();
+    return;
+  }
+
+  if ((e.key === ')' || e.key === ']' || e.key === '}') && val[start] === e.key && start === end) {
+    e.preventDefault();
+    textarea.selectionStart = textarea.selectionEnd = start + 1;
+    return;
+  }
+
+  if (e.key === 'Backspace' && start === end && start > 0) {
+    const prevChar = val[start - 1];
+    const nextChar = val[start];
+    if (AUTO_PAIRS[prevChar] === nextChar) {
+      e.preventDefault();
+      textarea.value = val.slice(0, start - 1) + val.slice(start + 1);
+      textarea.selectionStart = textarea.selectionEnd = start - 1;
+      if (!isPeeking) {
+        userCodeStore[state.lessonIndex] = textarea.value;
+        saveUserCodes();
+      }
+      syncGutter();
+      return;
+    }
+  }
+
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+    const currentLine = val.slice(lineStart, start);
+    
+    let indentMatch = currentLine.match(/^[ \t]*/);
+    let currentIndent = indentMatch ? indentMatch[0] : '';
+    
+    const trimmedBeforeCursor = currentLine.trim();
+    let extraIndent = '';
+    if (trimmedBeforeCursor.endsWith(':')) {
+      extraIndent = '    ';
+    }
+
+    const insertText = '\n' + currentIndent + extraIndent;
+    textarea.value = val.slice(0, start) + insertText + val.slice(end);
+    textarea.selectionStart = textarea.selectionEnd = start + insertText.length;
+
+    if (!isPeeking) {
+      userCodeStore[state.lessonIndex] = textarea.value;
+      saveUserCodes();
+    }
+    syncGutter();
+    return;
+  }
+});
+
 els.code.addEventListener('input', () => {
   if (!isPeeking) {
     userCodeStore[state.lessonIndex] = els.code.value;
@@ -2043,19 +2129,6 @@ els.code.addEventListener('input', () => {
 els.code.addEventListener('scroll', () => {
   els.gutter.scrollTop = els.code.scrollTop;
 });
-els.code.addEventListener('keydown', (e) => {
-  if (e.key === 'Tab') {
-    e.preventDefault();
-    const s = els.code.selectionStart, en = els.code.selectionEnd;
-    els.code.value = els.code.value.slice(0, s) + '    ' + els.code.value.slice(en);
-    els.code.selectionStart = els.code.selectionEnd = s + 4;
-    if (!isPeeking) {
-      userCodeStore[state.lessonIndex] = els.code.value;
-      saveUserCodes();
-    }
-    syncGutter();
-  }
-});
 
 els.langSelect.addEventListener('change', (e) => {
   currentLanguage = e.target.value;
@@ -2063,6 +2136,7 @@ els.langSelect.addEventListener('change', (e) => {
   buildLessonPills();
 });
 
+// Initialize UI safely after all declarations
 updateKidsModeUI();
 buildLessonPills();
 loadLesson(0);
