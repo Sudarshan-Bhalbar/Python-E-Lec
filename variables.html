@@ -75,10 +75,11 @@
     box-shadow:0 0 0 4px rgba(67,201,184,0.18);
   }
   .brand p{
-    margin:2px 0 0;
+    margin:4px 0 0;
     color:var(--muted-dark);
     font-size:14.5px;
-    max-width:46ch;
+    line-height:1.55;
+    /* max-width:65ch; */
   }
 
   .lessons{
@@ -367,10 +368,17 @@
   .editor-controls{
     display:flex;
     align-items:center;
+    justify-content:space-between;
     gap:10px;
     padding:12px 16px;
     border-top:1px solid var(--line-dark);
     background:var(--panel-dark-2);
+    flex-wrap:wrap;
+  }
+  .btn-group{
+    display:flex;
+    align-items:center;
+    gap:8px;
     flex-wrap:wrap;
   }
   button{ font-family:'Inter',sans-serif; cursor:pointer; }
@@ -419,9 +427,12 @@
   }
 
   .run-hint{
-    margin-left:auto;
     font-size:12px;
     color:var(--muted-dark);
+    white-space:normal;
+    text-align:right;
+    flex:1;
+    min-width:180px;
   }
 
   /* ---------- Visual panel ---------- */
@@ -589,9 +600,7 @@
     pointer-events:none;
   }
 
-  /* ========================================================
-     KIDS MODE STYLES (Gamified & Highly Intuitive)
-     ======================================================== */
+  /* Kids Mode Styles */
   .vbox.kid-card{
     background:#ffffff;
     border:2.5px solid var(--tag-color, #4a5568);
@@ -715,7 +724,7 @@
       <div class="dot"></div>
       <div>
         <h1>Variable Lab</h1>
-        <p>Write real Python on the left, watch each variable appear as a labeled box, and see the program's output in the terminal — one line at a time.[cite: 1]</p>
+        <p>A variable is a named storage box in your computer's memory that holds information—like numbers, words, or True/False states. We use variables so our programs can remember, change, and reuse data anywhere in our code without retyping raw values.</p>
       </div>
     </div>
   </header>
@@ -770,10 +779,12 @@
           </div>
         </div>
         <div class="editor-controls">
-          <button class="btn btn-run" id="run-btn">Run ▶</button>
-          <button class="btn btn-ghost" id="reset-btn">Reset</button>
-          <button class="btn btn-peek" id="peek-btn" title="Press & hold to view the solution">👁️ Hold to View Answer</button>
-          <span class="run-hint" id="run-hint">Runs line by line so you can watch it happen[cite: 1]</span>
+          <div class="btn-group">
+            <button class="btn btn-run" id="run-btn">Run ▶</button>
+            <button class="btn btn-ghost" id="reset-btn">Reset</button>
+            <button class="btn btn-peek" id="peek-btn" title="Press & hold to view the solution">👁️ Hold to View Answer</button>
+          </div>
+          <span class="run-hint" id="run-hint">Runs line by line so you can watch it happen</span>
         </div>
       </div>
     </div>
@@ -1318,7 +1329,7 @@ const LESSONS = [
       en: { title: 'Checking Types with type()', goal: '<strong>Task:</strong> Inspect data types.<br>1. Create <code>speed = 45</code> and <code>is_racing = True</code>.<br>2. Inspect with <code>print(type(speed))</code> and <code>print(type(is_racing))</code>.' },
       hi: { title: 'type() से डेटा प्रकार जांचना', goal: '<strong>कार्य:</strong> डेटा प्रकार का निरीक्षण करें।<br>1. <code>speed = 45</code> और <code>is_racing = True</code> बनाएं।<br>2. <code>print(type(...))</code> से प्रकार प्रिंट करें।' },
       mr: { title: 'type() ने प्रकार तपासणे', goal: '<strong>कृती:</strong> व्हेरिएबलचा डेटा प्रकार तपासा.<br>1. <code>speed = 45</code> आणि <code>is_racing = True</code> तयार करा.<br>2. <code>print(type(...))</code> चा वापर करा.' },
-      ta: { title: 'type() மூலம் தரவு வகையை அறிதல்', goal: '<strong>பணி:</strong> தரவு வகைகளைச் சரிபார்க்கவும்.<br>1. <code>speed = 45</code> மற்றும் <code>is_racing = True</code> உருவாக்கவும்.<br>2. <code>print(type(...))</code> ஐப் pattern செய்யவும்.' },
+      ta: { title: 'type() மூலம் தரவு வகையை அறிதல்', goal: '<strong>பணி:</strong> தரவு வகைகளைச் சரிபார்க்கவும்.<br>1. <code>speed = 45</code> மற்றும் <code>is_racing = True</code> உருவாக்கவும்.<br>2. <code>print(type(...))</code> ஐப் பயன்படுத்தவும்.' },
       te: { title: 'type() తో రకాలను తనిఖీ చేయడం', goal: '<strong>టాస్క్:</strong> డేటా రకాలను తనిఖీ చేయండి.<br>1. వేరియబుల్స్ సృష్టించండి.<br>2. <code>print(type(...))</code> ఉపయోగించండి.' },
       bn: { title: 'type() দিয়ে ডেটা টাইপ দেখা', goal: '<strong>কাজ:</strong> টাইপ পরীক্ষা করুন।<br>1. <code>speed = 45</code> ও <code>is_racing = True</code> লিখুন।<br>2. <code>print(type(...))</code> দিয়ে প্রিন্ট করুন।' },
       gu: { title: 'type() વડે પ્રકાર તપાસવો', goal: '<strong>કાર્ય:</strong> ડેટા પ્રકાર તપાસો.<br>1. વેરિયેબલ્સ બનાવો.<br>2. <code>print(type(...))</code> વાપરો.' },
@@ -1623,7 +1634,7 @@ const LESSONS = [
       bn: { title: 'বর্ণমালার ক্রমানুসারে তুলনা', goal: '<strong>কাজ:</strong> টেক্সট তুলনা করুন।<br>1. দুটি শব্দ দিন।<br>2. প্রিন্ট করুন।' },
       gu: { title: 'કક્કાવારી મુજબ સરખામણી', goal: '<strong>કાર્ય:</strong> અક્ષરો મુજબ સરખાવો.<br>1. બે શબ્દો સેટ કરો.<br>2. પ્રિન્ટ કરો.' },
       kn: { title: 'ವರ್ಣಮಾಲೆಯ ಹೋಲಿಕೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಅಕ್ಷರಮಾಲೆಯಂತೆ ಹೋಲಿಸಿ.<br>1. ಎರಡು ಪದಗಳನ್ನು ನೀಡಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'അക്ഷരമാലാക്രമത്തിൽ താരതമ്യം', goal: '<strong>ടാസ്ക്:</strong> ടെക്സ്റ്റ് താരതമ്യം ചെയ്യുക.<br>1. രണ്ട് വാക്കുകൾ നൽകുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
+      ml: { title: 'അക്ഷരമാലാക്രമത്തിൽ താരതമ്യം', goal: '<strong>ടാസ്ക്:</strong> ടെക്സ്റ്റ് താരതമ്യം ചെയ്യുക.<br>1. രണ്ട് വാക്കുകൾ നൽകുക.<br>2. ಪ್ರിന്റ് ചെയ്യുക.' },
       pa: { title: 'ਵਰਣਮਾਲਾ ਅਨੁਸਾਰ ਤੁਲਨਾ', goal: '<strong>ਕੰਮ:</strong> ਵਰਣਮਾਲਾ ਅਨੁਸਾਰ ਤੁਲਨਾ ਕਰੋ।<br>1. ਦੋ ਸ਼ਬਦ ਲਓ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
@@ -1786,7 +1797,7 @@ let userCodeStore = {};
 let isPeeking = false;
 let prePeekDraft = '';
 let currentLanguage = 'en';
-let isKidsMode = localStorage.getItem(KIDS_MODE_KEY) !== 'false'; // Enabled by default for learners
+let isKidsMode = localStorage.getItem(KIDS_MODE_KEY) !== 'false';
 
 try {
   userCodeStore = JSON.parse(localStorage.getItem(USER_CODE_KEY) || '{}');
@@ -1929,7 +1940,6 @@ function renderVars(env, order, created, updated, referenced) {
     const box = document.createElement('div');
     
     if (isKidsMode) {
-      // Kid-friendly playful visual card
       const kidInfo = KID_TYPE_INFO[val.t] || KID_TYPE_INFO.none;
       box.className = 'vbox kid-card';
       box.style.setProperty('--tag-color', kidInfo.color);
@@ -1958,7 +1968,6 @@ function renderVars(env, order, created, updated, referenced) {
         </div>
       `;
     } else {
-      // Standard professional visual card
       box.className = 'vbox';
       box.setAttribute('data-name', name);
       box.style.setProperty('--tag-color', color);

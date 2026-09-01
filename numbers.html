@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Numbers & Math Lab · Learn Python</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14161f;
+    --panel-dark:#1b1e29;
+    --panel-dark-2:#20232f;
+    --line-dark:#2c3040;
+    --text-dark:#e7e9ee;
+    --muted-dark:#8991a6;
+
+    --paper:#e7ebee;
+    --paper-2:#dde3e7;
+    --line-light:#c7cfd5;
+    --text-light:#20232b;
+    --muted-light:#5b6270;
+
+    --teal:#43c9b8;
+    --blue:#5b8def;
+    --blue-dim:#3b6bc7;
+    --violet:#b67ce0;
+    --green:#4f9d63;
+    --amber:#d9a24b;
+    --grey:#9098a3;
+    --error:#e8685f;
+
+    --radius-lg:20px;
+    --radius-md:12px;
+    --radius-sm:8px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--text-dark);
+    font-family:'Inter',system-ui,sans-serif;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:1400px;
+    margin:0 auto;
+    padding:28px 28px 60px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex;
+    align-items:flex-end;
+    gap:24px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+  }
+  .brand h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:28px;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .brand .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--blue);
+    box-shadow:0 0 0 4px rgba(91,141,239,0.22);
+  }
+  .brand p{
+    margin:4px 0 0;
+    color:var(--muted-dark);
+    font-size:14.5px;
+    line-height:1.55;
+    /* max-width:65ch; */
+  }
+
+  .lessons{
+    display:flex;
+    flex-wrap:nowrap;
+    align-items:center;
+    gap:6px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 2px 12px;
+    margin-bottom:12px;
+    scrollbar-width:thin;
+    scrollbar-color:var(--blue-dim) transparent;
+  }
+  .lessons::-webkit-scrollbar{ height:5px; }
+  .lessons::-webkit-scrollbar-track{
+    background:var(--line-dark);
+    border-radius:999px;
+    margin:0 2px;
+  }
+  .lessons::-webkit-scrollbar-thumb{
+    background:var(--blue-dim);
+    border-radius:999px;
+  }
+  .lessons::-webkit-scrollbar-thumb:hover{ background:var(--blue); }
+  .lesson-pill{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--muted-dark);
+    background:var(--panel-dark);
+    border:1px solid var(--line-dark);
+    width:30px;
+    height:30px;
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    cursor:pointer;
+    transition:border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .lesson-pill:hover{ color:var(--text-dark); border-color:#3a3f52; }
+  .lesson-pill.active{
+    color:#0f1712;
+    background:var(--blue);
+    border-color:var(--blue);
+  }
+  .lesson-pill.done:not(.active){
+    color:var(--blue);
+    border-color:var(--blue-dim);
+    background:rgba(91,141,239,0.12);
+  }
+
+  /* ---------- Topics link & progress ---------- */
+  .topics-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    font-weight:500;
+    color:var(--muted-dark);
+    text-decoration:none;
+    margin-bottom:16px;
+    transition:color .15s ease;
+  }
+  .topics-link:hover{ color:var(--blue); }
+
+  .progress-track{
+    height:5px;
+    border-radius:999px;
+    background:var(--panel-dark);
+    border:1px solid var(--line-dark);
+    overflow:hidden;
+    margin-bottom:16px;
+  }
+  .progress-bar{
+    height:100%;
+    width:0%;
+    background:var(--blue);
+    border-radius:999px;
+    transition:width .35s ease;
+  }
+
+  /* ---------- Instructions ---------- */
+  .instructions{
+    background:var(--panel-dark);
+    border:1px solid var(--line-dark);
+    border-radius:var(--radius-lg);
+    padding:18px 20px;
+    margin-bottom:16px;
+  }
+  .instructions-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+  }
+  .instructions-meta{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .instructions .step{
+    font-size:12.5px;
+    color:var(--blue);
+    font-weight:600;
+    margin:0;
+  }
+  .level-badge{
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.01em;
+    padding:3px 9px;
+    border-radius:999px;
+    color:#0f1712;
+    background:var(--blue);
+  }
+  .level-badge.mid{ background:var(--amber); }
+  .level-badge.adv{ background:var(--violet); color:#1a1424; }
+
+  .lang-selector-wrap{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:var(--panel-dark-2);
+    border:1px solid var(--line-dark);
+    border-radius:var(--radius-sm);
+    padding:4px 8px;
+  }
+  .lang-icon{ font-size:13px; line-height:1; }
+  .lang-select{
+    background:transparent;
+    color:var(--text-dark);
+    border:none;
+    outline:none;
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:12px;
+    font-weight:500;
+    cursor:pointer;
+  }
+  .lang-select option{
+    background:var(--panel-dark-2);
+    color:var(--text-dark);
+  }
+
+  .instructions h2{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:19px;
+    margin:0 0 6px;
+  }
+  .instructions p{
+    margin:0;
+    color:#c3c8d4;
+    font-size:14.5px;
+    line-height:1.55;
+    max-width:70ch;
+  }
+
+  /* ---------- Grid ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    align-items:stretch;
+  }
+  @media (max-width:920px){ .grid{ grid-template-columns:1fr; } }
+  .col{ display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+  .panel{
+    border-radius:var(--radius-lg);
+    border:1px solid var(--line-dark);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .panel-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 16px;
+    border-bottom:1px solid var(--line-dark);
+    background:var(--panel-dark-2);
+  }
+  .panel-head .title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.01em;
+    color:var(--text-dark);
+  }
+  .panel-head .title .swatch{ width:8px;height:8px;border-radius:2px; }
+  .panel-head .sub{ font-size:12px; color:var(--muted-dark); }
+
+  .peek-badge{
+    display:none;
+    font-size:11px;
+    font-weight:700;
+    background:var(--amber);
+    color:#11131a;
+    padding:2px 7px;
+    border-radius:4px;
+    letter-spacing:0.03em;
+  }
+
+  /* ---------- Editor ---------- */
+  .editor-panel{ background:var(--panel-dark); flex:1; min-height:360px; }
+  .editor-panel.peeking{ border-color:var(--amber); }
+  .editor-body{
+    position:relative;
+    flex:1;
+    display:flex;
+    min-height:300px;
+  }
+  .gutter{
+    background:var(--panel-dark-2);
+    color:#4a5064;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13.5px;
+    line-height:22px;
+    padding:14px 10px 14px 0;
+    text-align:right;
+    width:44px;
+    flex-shrink:0;
+    overflow:hidden;
+    user-select:none;
+    white-space:pre;
+    border-right:1px solid var(--line-dark);
+  }
+  .code-col{ position:relative; flex:1; min-width:0; }
+  .current-line{
+    position:absolute;
+    left:0; right:0; top:0;
+    height:22px;
+    background:rgba(91,141,239,0.12);
+    border-top:1px solid rgba(91,141,239,0.35);
+    border-bottom:1px solid rgba(91,141,239,0.35);
+    transform:translateY(14px);
+    transition:transform .18s ease;
+    display:none;
+    pointer-events:none;
+  }
+  .current-line.err{
+    background:rgba(232,104,95,0.12);
+    border-color:rgba(232,104,95,0.5);
+  }
+  textarea.code-input{
+    position:relative;
+    z-index:1;
+    display:block;
+    width:100%;
+    height:100%;
+    min-height:300px;
+    resize:none;
+    border:none;
+    outline:none;
+    background:transparent;
+    color:var(--text-dark);
+    caret-color:var(--blue);
+    font-family:'JetBrains Mono',monospace;
+    font-size:13.5px;
+    line-height:22px;
+    padding:14px 16px;
+    white-space:pre;
+    overflow:auto;
+    tab-size:4;
+  }
+  .editor-controls{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px 16px;
+    border-top:1px solid var(--line-dark);
+    background:var(--panel-dark-2);
+    flex-wrap:wrap;
+  }
+  .btn-group{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  button{ font-family:'Inter',sans-serif; cursor:pointer; }
+  .btn{
+    border-radius:10px;
+    padding:9px 16px;
+    font-size:13.5px;
+    font-weight:600;
+    border:1px solid transparent;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    transition:opacity .15s ease, transform .05s ease;
+    user-select:none;
+  }
+  .btn:active{ transform:scale(0.98); }
+  .btn:disabled{ opacity:0.5; cursor:not-allowed; }
+  .btn-run{ background:var(--blue); color:#ffffff; }
+  .btn-run:hover:not(:disabled){ background:#729df3; }
+  .btn-ghost{
+    background:transparent;
+    color:var(--muted-dark);
+    border-color:var(--line-dark);
+  }
+  .btn-ghost:hover:not(:disabled){ color:var(--text-dark); border-color:#454b60; }
+  
+  .btn-peek{
+    background:rgba(217, 162, 75, 0.12);
+    color:var(--amber);
+    border-color:rgba(217, 162, 75, 0.35);
+  }
+  .btn-peek:hover:not(:disabled){
+    background:rgba(217, 162, 75, 0.22);
+    color:#f4c478;
+  }
+  .btn-peek.is-holding{
+    background:var(--amber);
+    color:#12141c;
+    border-color:var(--amber);
+    transform:scale(0.96);
+  }
+
+  .run-hint{
+    font-size:12px;
+    color:var(--muted-dark);
+    text-align:right;
+    flex:1;
+    min-width:180px;
+  }
+
+  /* ---------- Visual panel ---------- */
+  .visual-panel{
+    background:var(--paper);
+    color:var(--text-light);
+    border:1px solid var(--line-light);
+    min-height:230px;
+    transition:background-color .25s ease;
+  }
+  .visual-panel.kids-active{
+    background:#eef6fc;
+    border-color:#b9d9f2;
+  }
+  .visual-panel .panel-head{
+    background:var(--paper-2);
+    border-bottom:1px solid var(--line-light);
+  }
+  .visual-panel .panel-head .title{ color:var(--text-light); }
+  .visual-panel .panel-head .sub{ color:var(--muted-light); }
+
+  .kids-toggle-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'Fredoka','Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    padding:4px 10px;
+    border-radius:20px;
+    border:1.5px solid #bdc7d0;
+    background:#ffffff;
+    color:#4a5568;
+    cursor:pointer;
+    transition:all .2s ease;
+    box-shadow:0 1px 2px rgba(0,0,0,0.05);
+  }
+  .kids-toggle-btn:hover{
+    transform:translateY(-1px);
+    border-color:#5b8def;
+    color:#2b6cb0;
+  }
+  .kids-toggle-btn.is-active{
+    background:linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+    border-color:#5b8def;
+    color:#1a365d;
+    box-shadow:0 2px 6px rgba(91,141,239,0.3);
+  }
+
+  .legend{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    padding:10px 16px;
+    border-bottom:1px solid var(--line-light);
+    background:var(--paper);
+    transition:background-color .25s ease;
+  }
+  .kids-active .legend{ background:#e1effa; }
+  .legend-item{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:11.5px;
+    color:var(--muted-light);
+    font-weight:500;
+  }
+  .legend-dot{ width:8px;height:8px;border-radius:50%; }
+
+  .boxes{
+    flex:1;
+    padding:16px;
+    display:flex;
+    flex-wrap:wrap;
+    align-content:flex-start;
+    gap:14px;
+    min-height:150px;
+    background-image:radial-gradient(circle, rgba(32,35,43,0.07) 1px, transparent 1px);
+    background-size:15px 15px;
+    background-position:-3px -3px;
+  }
+  .empty-state{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:var(--muted-light);
+    padding:30px 10px;
+    gap:8px;
+  }
+  .empty-state .icon{
+    width:38px;height:30px;
+    border:2px dashed #b7bfc6;
+    border-radius:8px;
+    position:relative;
+  }
+  .empty-state .icon::after{
+    content:'';
+    position:absolute;
+    left:8px; top:-6px;
+    width:14px;height:6px;
+    border:2px dashed #b7bfc6;
+    border-bottom:none;
+    border-radius:4px 4px 0 0;
+  }
+  .empty-state p{ margin:0; font-size:13.5px; max-width:30ch; }
+
+  .vbox{
+    position:relative;
+    background:#ffffff;
+    border:1.5px solid var(--line-light);
+    border-radius:var(--radius-sm);
+    padding:12px 14px 11px;
+    min-width:118px;
+    box-shadow:0 1px 0 rgba(20,23,30,0.03);
+    transition:transform .15s ease, box-shadow .15s ease; 
+    cursor:default;
+  }
+  .vbox::before{
+    content:attr(data-name);
+    position:absolute;
+    top:-10px;
+    left:10px;
+    background:var(--tag-color, var(--grey));
+    color:#ffffff;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    font-weight:600;
+    padding:2px 7px;
+    border-radius:5px;
+  }
+  .vbox .val{
+    font-family:'JetBrains Mono',monospace;
+    font-size:14.5px;
+    font-weight:500;
+    margin-top:6px;
+    word-break:break-word;
+    color:#1c1f27;
+  }
+  .vbox .type{
+    margin-top:5px;
+    font-size:10.5px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    color:var(--tag-color, var(--grey));
+  }
+  .vbox:hover{ transform:translateY(-2px); box-shadow:0 6px 16px rgba(20,23,30,0.09); }
+  .vbox.is-new{ animation:popIn .38s cubic-bezier(.2,.9,.3,1.3); }
+  .vbox.is-updated{ animation:flash .6s ease; }
+  .vbox.is-referenced{ animation:refPulse 1.3s ease; }
+
+  /* Kids Mode Styles */
+  .vbox.kid-card{
+    background:#ffffff;
+    border:2.5px solid var(--tag-color, #4a5568);
+    border-radius:16px;
+    padding:16px 16px 14px;
+    min-width:150px;
+    box-shadow:0 6px 0 var(--kid-shadow, #cbd5e0), 0 8px 15px rgba(0,0,0,0.06);
+  }
+  .vbox.kid-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 9px 0 var(--kid-shadow, #cbd5e0), 0 12px 20px rgba(0,0,0,0.09);
+  }
+  .vbox.kid-card::before{
+    font-family:'Fredoka','Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:12px;
+    top:-12px;
+    left:12px;
+    color:#ffffff;
+  }
+  .kid-inner{ display:flex; flex-direction:column; gap:4px; margin-top:6px; }
+  .kid-val-row{ display:flex; align-items:center; gap:8px; }
+  .kid-emoji{ font-size:22px; line-height:1; }
+  .kid-val{
+    font-family:'Fredoka','JetBrains Mono',monospace;
+    font-size:17px;
+    font-weight:700;
+    color:#1a202c;
+  }
+  .kid-desc{
+    font-size:11.5px;
+    font-weight:600;
+    color:#4a5568;
+    background:rgba(0,0,0,0.04);
+    padding:3px 6px;
+    border-radius:6px;
+    margin-top:4px;
+  }
+
+  @keyframes popIn{ 0%{ transform:scale(0.6); opacity:0; } 100%{ transform:scale(1); opacity:1; } }
+  @keyframes flash{ 0%{ border-color:var(--line-light); } 30%{ border-color:var(--blue); } 100%{ border-color:var(--line-light); } }
+  @keyframes refPulse{
+    0%{ transform:scale(1); }
+    18%{ transform:scale(1.045); border-color:var(--tag-color, var(--blue)); }
+    100%{ transform:scale(1); }
+  }
+
+  /* ---------- Terminal panel ---------- */
+  .terminal-panel{ background:var(--panel-dark); flex:1; min-height:180px; }
+  .terminal-body{
+    flex:1;
+    background:#101219;
+    padding:14px 16px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    line-height:1.65;
+    overflow-y:auto;
+    min-height:150px;
+  }
+  .term-line{ white-space:pre-wrap; word-break:break-word; color:#d7dae2; }
+  .term-line.is-error{ color:var(--error); }
+  .term-line.is-muted{ color:#565c70; }
+  .cursor-line{ color:var(--blue); }
+  .blink{ animation:blink 1s steps(2) infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  ::-webkit-scrollbar{ width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb{ background:#33384a; border-radius:6px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="topics-link" href="index.html">&larr; All topics</a>
+
+  <header>
+    <div class="brand">
+      <div class="dot"></div>
+      <div>
+        <h1>Numbers & Math Lab</h1>
+        <p>Numbers represent quantities like whole counts (<code>int</code>) and decimal measurements (<code>float</code>). Python acts as an ultra-fast calculator with built-in math rules, letting your programs calculate costs, measure time, and solve complex formulas with ease.</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="lessons" id="lessons"></div>
+
+  <div class="progress-track">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <div class="instructions" id="instructions-container">
+    <div class="instructions-top">
+      <div class="instructions-meta">
+        <p class="step" id="lesson-step">Lesson 1 of 30</p>
+        <span class="level-badge" id="lesson-level">Beginner</span>
+      </div>
+      <div class="lang-selector-wrap" title="Translate instructions to Indian languages">
+        <span class="lang-icon">🌐</span>
+        <select id="lang-select" class="lang-select" aria-label="Select Indian language">
+          <option value="en" selected>English (India)</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="mr">मराठी (Marathi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="gu">ગુજરાતી (Gujarati)</option>
+          <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          <option value="ml">മലയാളം (Malayalam)</option>
+          <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+        </select>
+      </div>
+    </div>
+    <h2 id="lesson-title">Integers vs Decimals</h2>
+    <p id="lesson-goal">Loading lesson details...</p>
+  </div>
+
+  <div class="grid">
+    <div class="col">
+      <div class="panel editor-panel" id="editor-panel">
+        <div class="panel-head">
+          <div class="title">
+            <span class="swatch" style="background:var(--blue)"></span>code.py
+            <span class="peek-badge" id="peek-badge">SOLUTION PREVIEW</span>
+          </div>
+          <div class="sub" id="line-count">2 lines</div>
+        </div>
+        <div class="editor-body">
+          <div class="gutter" id="gutter">1</div>
+          <div class="code-col">
+            <div class="current-line" id="current-line"></div>
+            <textarea class="code-input" id="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+          </div>
+        </div>
+        <div class="editor-controls">
+          <div class="btn-group">
+            <button class="btn btn-run" id="run-btn">Run ▶</button>
+            <button class="btn btn-ghost" id="reset-btn">Reset</button>
+            <button class="btn btn-peek" id="peek-btn" title="Press & hold to view the solution">👁️ Hold to View Answer</button>
+          </div>
+          <span class="run-hint" id="run-hint">Runs line by line so you can watch it happen</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="panel visual-panel" id="visual-panel" style="flex:1.15;">
+        <div class="panel-head">
+          <div class="title"><span class="swatch" style="background:var(--blue)"></span>Math Variables</div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <button class="kids-toggle-btn" id="kids-toggle-btn" title="Toggle 12-Year-Old Kid Friendly Mode">🧸 Kids Mode: ON</button>
+            <div class="sub" id="live-sub">live view</div>
+          </div>
+        </div>
+        <div class="legend" id="legend-bar">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>int (Whole #)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--violet)"></span>float (Decimal)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>str (Text)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>bool (Yes/No)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--grey)"></span>None (Empty)</div>
+        </div>
+        <div class="boxes" id="boxes">
+          <div class="empty-state">
+            <div class="icon"></div>
+            <p id="empty-state-text">Run your code to see the numbers calculate in real-time!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel terminal-panel">
+        <div class="panel-head">
+          <div class="title"><span class="swatch" style="background:#565c70"></span>Terminal</div>
+          <div class="sub">output</div>
+        </div>
+        <div class="terminal-body" id="terminal">
+          <div class="term-line is-muted">Waiting for you to press Run…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// Mini Python Interpreter Engine
+// ============================================================
+const mkInt = v => ({ t: 'int', v: Math.trunc(v) });
+const mkFloat = v => ({ t: 'float', v });
+const mkStr = v => ({ t: 'str', v });
+const mkBool = v => ({ t: 'bool', v: !!v });
+const mkNone = () => ({ t: 'none', v: null });
+
+function pyErr(type, message) {
+  const e = new Error(`${type}: ${message}`);
+  e.isPyErr = true; e.pyType = type; e.pyMessage = message;
+  return e;
+}
+
+const TYPE_NAMES = { int: 'int', float: 'float', str: 'str', bool: 'bool', none: 'NoneType' };
+const pyTypeName = v => TYPE_NAMES[v.t];
+
+function fmtFloat(v) {
+  if (!isFinite(v)) return v > 0 ? 'inf' : (v < 0 ? '-inf' : 'nan');
+  let s = parseFloat(v.toPrecision(12)).toString();
+  if (!s.includes('.') && !s.includes('e')) s += '.0';
+  return s;
+}
+function pyStr(val) {
+  switch (val.t) {
+    case 'int': return String(val.v);
+    case 'float': return fmtFloat(val.v);
+    case 'str': return val.v;
+    case 'bool': return val.v ? 'True' : 'False';
+    case 'none': return 'None';
+  }
+}
+function pyDisplay(val) { return val.t === 'str' ? `"${val.v}"` : pyStr(val); }
+
+function isNumeric(v) { return v.t === 'int' || v.t === 'float' || v.t === 'bool'; }
+function isIntty(v) { return v.t === 'int' || v.t === 'bool'; }
+function numVal(v) { return v.t === 'bool' ? (v.v ? 1 : 0) : v.v; }
+function isTruthy(v) {
+  switch (v.t) {
+    case 'int': case 'float': return v.v !== 0;
+    case 'str': return v.v.length > 0;
+    case 'bool': return v.v;
+    case 'none': return false;
+  }
+}
+
+function scanRawString(line, start, quote) {
+  let i = start;
+  while (i < line.length) {
+    if (line[i] === '\\') { i += 2; continue; }
+    if (line[i] === quote) return { content: line.slice(start, i), end: i + 1 };
+    i++;
+  }
+  throw pyErr('SyntaxError', 'unterminated string literal');
+}
+function processEscapes(s) {
+  return s.replace(/\\(.)/g, (m, ch) => ({ n: '\n', t: '\t', "'": "'", '"': '"', '\\': '\\' }[ch] ?? ch));
+}
+
+function tokenize(line) {
+  const toks = []; let i = 0; const n = line.length;
+  while (i < n) {
+    const c = line[i];
+    if (c === ' ' || c === '\t') { i++; continue; }
+    if (/[0-9]/.test(c) || (c === '.' && /[0-9]/.test(line[i + 1] || ''))) {
+      let j = i, isFloat = false;
+      while (j < n && /[0-9]/.test(line[j])) j++;
+      if (line[j] === '.') { isFloat = true; j++; while (j < n && /[0-9]/.test(line[j])) j++; }
+      const text = line.slice(i, j);
+      toks.push({ type: 'NUM', value: isFloat ? parseFloat(text) : parseInt(text, 10), isFloat });
+      i = j; continue;
+    }
+    if ((c === 'f' || c === 'F') && (line[i + 1] === '"' || line[i + 1] === "'")) {
+      const q = line[i + 1];
+      const { content, end } = scanRawString(line, i + 2, q);
+      toks.push({ type: 'FSTR', raw: content }); i = end; continue;
+    }
+    if (c === '"' || c === "'") {
+      const { content, end } = scanRawString(line, i + 1, c);
+      toks.push({ type: 'STR', value: processEscapes(content) }); i = end; continue;
+    }
+    if (/[A-Za-z_]/.test(c)) {
+      let j = i + 1;
+      while (j < n && /[A-Za-z0-9_]/.test(line[j])) j++;
+      toks.push({ type: 'NAME', value: line.slice(i, j) }); i = j; continue;
+    }
+    const three = line.slice(i, i + 3);
+    if (['//=', '**='].includes(three)) { toks.push({ type: 'OP', value: three }); i += 3; continue; }
+    const two = line.slice(i, i + 2);
+    if (['**', '//', '==', '!=', '<=', '>=', '+=', '-=', '*=', '/=', '%='].includes(two)) {
+      toks.push({ type: 'OP', value: two }); i += 2; continue;
+    }
+    if (c === '(') { toks.push({ type: 'LPAREN' }); i++; continue; }
+    if (c === ')') { toks.push({ type: 'RPAREN' }); i++; continue; }
+    if (c === ',') { toks.push({ type: 'COMMA' }); i++; continue; }
+    if ('+-*/%=<>'.includes(c)) { toks.push({ type: 'OP', value: c }); i++; continue; }
+    throw pyErr('SyntaxError', `invalid character '${c}'`);
+  }
+  return toks;
+}
+
+function stripComment(line) {
+  let i = 0, out = '';
+  while (i < line.length) {
+    const c = line[i];
+    if (c === '"' || c === "'") {
+      const start = i; i++;
+      while (i < line.length) {
+        if (line[i] === '\\') { i += 2; continue; }
+        if (line[i] === c) { i++; break; }
+        i++;
+      }
+      out += line.slice(start, i); continue;
+    }
+    if (c === '#') break;
+    out += c; i++;
+  }
+  return out;
+}
+
+function evalFString(raw, env) {
+  let out = '', i = 0;
+  while (i < raw.length) {
+    const c = raw[i];
+    if (c === '{') {
+      if (raw[i + 1] === '{') { out += '{'; i += 2; continue; }
+      let depth = 1, j = i + 1;
+      while (j < raw.length && depth > 0) {
+        if (raw[j] === '{') depth++; else if (raw[j] === '}') depth--;
+        if (depth > 0) j++;
+      }
+      if (depth !== 0) throw pyErr('SyntaxError', "f-string: expecting '}'");
+      const exprSrc = raw.slice(i + 1, j);
+      const toks = tokenize(exprSrc);
+      const { val, pos } = parseExprTop(toks, 0, env);
+      if (pos !== toks.length) throw pyErr('SyntaxError', 'invalid syntax');
+      out += pyStr(val); i = j + 1; continue;
+    }
+    if (c === '}' && raw[i + 1] === '}') { out += '}'; i += 2; continue; }
+    if (c === '\\') { out += processEscapes(raw.slice(i, i + 2)); i += 2; continue; }
+    out += c; i++;
+  }
+  return mkStr(out);
+}
+
+function applyBinOp(op, l, r) {
+  if (op === '+') {
+    if (isNumeric(l) && isNumeric(r)) {
+      const isF = l.t === 'float' || r.t === 'float';
+      const val = numVal(l) + numVal(r);
+      return isF ? mkFloat(val) : mkInt(val);
+    }
+    if (l.t === 'str' && r.t === 'str') return mkStr(l.v + r.v);
+    throw pyErr('TypeError', `unsupported operand type(s) for +: '${pyTypeName(l)}' and '${pyTypeName(r)}'`);
+  }
+  if (op === '*') {
+    if (isNumeric(l) && isNumeric(r)) {
+      const isF = l.t === 'float' || r.t === 'float';
+      const val = numVal(l) * numVal(r);
+      return isF ? mkFloat(val) : mkInt(val);
+    }
+    if (l.t === 'str' && isIntty(r)) return mkStr(numVal(r) > 0 ? l.v.repeat(numVal(r)) : '');
+    throw pyErr('TypeError', `unsupported operand type(s) for *: '${pyTypeName(l)}' and '${pyTypeName(r)}'`);
+  }
+  if (['-', '/', '//', '%', '**'].includes(op)) {
+    if (!isNumeric(l) || !isNumeric(r)) throw pyErr('TypeError', `unsupported operand type(s) for ${op}: '${pyTypeName(l)}' and '${pyTypeName(r)}'`);
+    const isF = l.t === 'float' || r.t === 'float';
+    const a = numVal(l), b = numVal(r);
+    if (op === '-') { const val = a - b; return isF ? mkFloat(val) : mkInt(val); }
+    if (op === '/') { if (b === 0) throw pyErr('ZeroDivisionError', 'division by zero'); return mkFloat(a / b); }
+    if (op === '//') {
+      if (b === 0) throw pyErr('ZeroDivisionError', 'integer division or modulo by zero');
+      const val = Math.floor(a / b); return isF ? mkFloat(val) : mkInt(val);
+    }
+    if (op === '%') {
+      if (b === 0) throw pyErr('ZeroDivisionError', 'integer division or modulo by zero');
+      const val = ((a % b) + b) % b; return isF ? mkFloat(val) : mkInt(val);
+    }
+    if (op === '**') {
+      const val = Math.pow(a, b);
+      const resF = isF || b < 0;
+      return resF ? mkFloat(val) : mkInt(val);
+    }
+  }
+  if (op === '==') return mkBool(numVal(l) === numVal(r));
+  if (op === '!=') return mkBool(numVal(l) !== numVal(r));
+  if (['<', '>', '<=', '>='].includes(op)) {
+    if (!isNumeric(l) || !isNumeric(r)) throw pyErr('TypeError', `'${op}' not supported between instances of '${pyTypeName(l)}' and '${pyTypeName(r)}'`);
+    const a = numVal(l), b = numVal(r);
+    if (op === '<') return mkBool(a < b);
+    if (op === '>') return mkBool(a > b);
+    if (op === '<=') return mkBool(a <= b);
+    if (op === '>=') return mkBool(a >= b);
+  }
+  throw pyErr('SyntaxError', `unknown operator ${op}`);
+}
+
+let activeWrite = () => {};
+function toIntVal(v) {
+  if (v.t === 'int') return v.v;
+  if (v.t === 'float') return Math.trunc(v.v);
+  if (v.t === 'bool') return v.v ? 1 : 0;
+  if (v.t === 'str') {
+    const s = v.v.trim();
+    if (!/^[+-]?\d+$/.test(s)) throw pyErr('ValueError', `invalid literal for int(): '${v.v}'`);
+    return parseInt(s, 10);
+  }
+  throw pyErr('TypeError', `int() argument must be a string or a number, not '${pyTypeName(v)}'`);
+}
+function toFloatVal(v) {
+  if (v.t === 'int' || v.t === 'float') return v.v;
+  if (v.t === 'bool') return v.v ? 1 : 0;
+  if (v.t === 'str') {
+    const s = v.v.trim();
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(s)) throw pyErr('ValueError', `could not convert string to float: '${v.v}'`);
+    return parseFloat(s);
+  }
+  throw pyErr('TypeError', `float() argument must be a string or a number, not '${pyTypeName(v)}'`);
+}
+function callFunction(name, args) {
+  switch (name) {
+    case 'print': activeWrite(args.map(pyStr).join(' ')); return mkNone();
+    case 'type': return mkStr(`<class '${pyTypeName(args[0])}'>`);
+    case 'int': return mkInt(toIntVal(args[0]));
+    case 'float': return mkFloat(toFloatVal(args[0]));
+    case 'str': return mkStr(pyStr(args[0]));
+    case 'abs':
+      if (!isNumeric(args[0])) throw pyErr('TypeError', `bad operand type for abs(): '${pyTypeName(args[0])}'`);
+      return args[0].t === 'float' ? mkFloat(Math.abs(args[0].v)) : mkInt(Math.abs(args[0].v));
+    case 'round':
+      if (!isNumeric(args[0])) throw pyErr('TypeError', `type '${pyTypeName(args[0])}' doesn't define round`);
+      return mkInt(Math.round(numVal(args[0])));
+    default: throw pyErr('NameError', `name '${name}' is not defined`);
+  }
+}
+
+const KEYWORDS = ['True', 'False', 'None', 'and', 'or', 'not'];
+function parseAtom(toks, pos, env) {
+  const t = toks[pos];
+  if (!t) throw pyErr('SyntaxError', 'unexpected end of expression');
+  if (t.type === 'NUM') return { val: t.isFloat ? mkFloat(t.value) : mkInt(t.value), pos: pos + 1 };
+  if (t.type === 'STR') return { val: mkStr(t.value), pos: pos + 1 };
+  if (t.type === 'FSTR') return { val: evalFString(t.raw, env), pos: pos + 1 };
+  if (t.type === 'LPAREN') {
+    const inner = parseExprTop(toks, pos + 1, env);
+    if (!toks[inner.pos] || toks[inner.pos].type !== 'RPAREN') throw pyErr('SyntaxError', 'missing ")"');
+    return { val: inner.val, pos: inner.pos + 1 };
+  }
+  if (t.type === 'NAME') {
+    if (t.value === 'True') return { val: mkBool(true), pos: pos + 1 };
+    if (t.value === 'False') return { val: mkBool(false), pos: pos + 1 };
+    if (t.value === 'None') return { val: mkNone(), pos: pos + 1 };
+    if (toks[pos + 1] && toks[pos + 1].type === 'LPAREN') {
+      let p = pos + 2; const args = [];
+      if (!(toks[p] && toks[p].type === 'RPAREN')) {
+        while (true) {
+          const r = parseExprTop(toks, p, env);
+          args.push(r.val); p = r.pos;
+          if (toks[p] && toks[p].type === 'COMMA') { p++; continue; }
+          break;
+        }
+      }
+      if (!toks[p] || toks[p].type !== 'RPAREN') throw pyErr('SyntaxError', 'missing ")"');
+      return { val: callFunction(t.value, args), pos: p + 1 };
+    }
+    if (!(t.value in env)) throw pyErr('NameError', `name '${t.value}' is not defined`);
+    return { val: env[t.value], pos: pos + 1 };
+  }
+  throw pyErr('SyntaxError', 'invalid syntax');
+}
+function parseUnary(toks, pos, env) {
+  const t = toks[pos];
+  if (t && t.type === 'OP' && (t.value === '-' || t.value === '+')) {
+    const r = parseUnary(toks, pos + 1, env);
+    if (!isNumeric(r.val)) throw pyErr('TypeError', `bad operand type for unary ${t.value}`);
+    if (t.value === '-') {
+      const val = r.val.t === 'float' ? mkFloat(-r.val.v) : mkInt(-numVal(r.val));
+      return { val, pos: r.pos };
+    }
+    return { val: r.val, pos: r.pos };
+  }
+  return parsePow(toks, pos, env);
+}
+function parsePow(toks, pos, env) {
+  const left = parseAtom(toks, pos, env);
+  const t = toks[left.pos];
+  if (t && t.type === 'OP' && t.value === '**') {
+    const right = parseUnary(toks, left.pos + 1, env);
+    return { val: applyBinOp('**', left.val, right.val), pos: right.pos };
+  }
+  return left;
+}
+function parseMul(toks, pos, env) {
+  let left = parseUnary(toks, pos, env);
+  while (true) {
+    const t = toks[left.pos];
+    if (t && t.type === 'OP' && ['*', '/', '//', '%'].includes(t.value)) {
+      const right = parseUnary(toks, left.pos + 1, env);
+      left = { val: applyBinOp(t.value, left.val, right.val), pos: right.pos };
+    } else break;
+  }
+  return left;
+}
+function parseAdd(toks, pos, env) {
+  let left = parseMul(toks, pos, env);
+  while (true) {
+    const t = toks[left.pos];
+    if (t && t.type === 'OP' && (t.value === '+' || t.value === '-')) {
+      const right = parseMul(toks, left.pos + 1, env);
+      left = { val: applyBinOp(t.value, left.val, right.val), pos: right.pos };
+    } else break;
+  }
+  return left;
+}
+function parseCompare(toks, pos, env) {
+  let left = parseAdd(toks, pos, env);
+  while (true) {
+    const t = toks[left.pos];
+    if (t && t.type === 'OP' && ['==', '!=', '<', '>', '<=', '>='].includes(t.value)) {
+      const right = parseAdd(toks, left.pos + 1, env);
+      left = { val: applyBinOp(t.value, left.val, right.val), pos: right.pos };
+    } else break;
+  }
+  return left;
+}
+function parseExprTop(toks, pos, env) { return parseCompare(toks, pos, env); }
+function evalGroup(toks, env) {
+  if (toks.length === 0) throw pyErr('SyntaxError', 'invalid syntax');
+  const { val, pos } = parseExprTop(toks, 0, env);
+  if (pos !== toks.length) throw pyErr('SyntaxError', 'invalid syntax');
+  return val;
+}
+function splitByComma(toks) {
+  const groups = []; let depth = 0, cur = [];
+  for (const t of toks) {
+    if (t.type === 'LPAREN') depth++;
+    if (t.type === 'RPAREN') depth--;
+    if (t.type === 'COMMA' && depth === 0) { groups.push(cur); cur = []; continue; }
+    cur.push(t);
+  }
+  groups.push(cur);
+  return groups;
+}
+const ASSIGN_OPS = ['=', '+=', '-=', '*=', '/=', '//=', '%=', '**='];
+function findAssignIndex(toks) {
+  let depth = 0;
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (t.type === 'LPAREN') depth++;
+    else if (t.type === 'RPAREN') depth--;
+    else if (depth === 0 && t.type === 'OP' && ASSIGN_OPS.includes(t.value)) return i;
+  }
+  return -1;
+}
+function setVar(env, order, name, val, created, updated) {
+  if (!(name in env)) { order.push(name); created.add(name); }
+  else { updated.add(name); }
+  env[name] = val;
+}
+function executeStatement(toks, env, order, created, updated, referenced, write) {
+  activeWrite = write;
+  if (toks.length === 1 && toks[0].type === 'NAME' && !KEYWORDS.includes(toks[0].value)) {
+    const name = toks[0].value;
+    if (!(name in env)) throw pyErr('NameError', `name '${name}' is not defined`);
+    referenced.add(name);
+    return;
+  }
+  const idx = findAssignIndex(toks);
+  if (idx === -1) { evalGroup(toks, env); return; }
+  const opTok = toks[idx];
+  const lhsToks = toks.slice(0, idx);
+  const rhsToks = toks.slice(idx + 1);
+  const lhsGroups = splitByComma(lhsToks);
+  const targets = lhsGroups.map(g => {
+    if (g.length !== 1 || g[0].type !== 'NAME' || KEYWORDS.includes(g[0].value)) throw pyErr('SyntaxError', 'cannot assign to expression');
+    return g[0].value;
+  });
+  if (opTok.value !== '=') {
+    if (targets.length !== 1) throw pyErr('SyntaxError', 'invalid syntax');
+    const name = targets[0];
+    if (!(name in env)) throw pyErr('NameError', `name '${name}' is not defined`);
+    const rhsVal = evalGroup(rhsToks, env);
+    const base = opTok.value.slice(0, -1);
+    const newVal = applyBinOp(base, env[name], rhsVal);
+    setVar(env, order, name, newVal, created, updated);
+    return;
+  }
+  const rhsGroups = splitByComma(rhsToks);
+  if (targets.length === 1 && rhsGroups.length === 1) {
+    setVar(env, order, targets[0], evalGroup(rhsGroups[0], env), created, updated);
+    return;
+  }
+  if (targets.length > 1 && targets.length === rhsGroups.length) {
+    const vals = rhsGroups.map(g => evalGroup(g, env));
+    targets.forEach((name, i) => setVar(env, order, name, vals[i], created, updated));
+    return;
+  }
+  throw pyErr('SyntaxError', 'invalid assignment');
+}
+
+// ============================================================
+// 30 Lessons on Numbers & Math (Full Indian Language Support)
+// ============================================================
+const LESSONS = [
+  {
+    code: 'cookies = 12\nprice = 2.50\nprint(type(cookies))\nprint(type(price))',
+    i18n: {
+      en: { title: 'Integers vs. Floats', goal: '<strong>Task:</strong> Explore numeric types.<br>1. Set <code>cookies = 12</code> (int).<br>2. Set <code>price = 2.50</code> (float).<br>3. Inspect both using <code>type()</code>.' },
+      hi: { title: 'पूर्णांक (int) बनाम दशमलव (float)', goal: '<strong>कार्य:</strong> दो संख्या प्रकार बनाएं।<br>1. <code>cookies = 12</code> सेट करें।<br>2. <code>price = 2.50</code> सेट करें और प्रकार देखें।' },
+      mr: { title: 'पूर्णांक आणि दशांश संख्या', goal: '<strong>कृती:</strong> संख्या प्रकार तपासा.<br>1. <code>cookies = 12</code> सेट करा.<br>2. <code>price = 2.50</code> सेट करा व प्रकार तपासा.' },
+      ta: { title: 'முழு எண்கள் மற்றும் தசம எண்கள்', goal: '<strong>பணி:</strong> எண் வகைகளை அறியவும்.<br>1. <code>cookies = 12</code> அமைக்கவும்.<br>2. <code>price = 2.50</code> அமைத்து வகைகளை அச்சிடவும்.' },
+      te: { title: 'పూర్ణాంకాలు మరియు దశాంశాలు', goal: '<strong>టాస్క్:</strong> సంఖ్యల రకాలను చూడండి.<br>1. <code>cookies = 12</code> సెట్ చేయండి.<br>2. <code>price = 2.50</code> ఇచ్చి రకాలను ప్రింట్ చేయండి.' },
+      bn: { title: 'পূর্ণসংখ্যা ও দশমিক সংখ্যা', goal: '<strong>কাজ:</strong> সংখ্যার টাইপ পরীক্ষা করুন।<br>1. <code>cookies = 12</code> লিখুন।<br>2. <code>price = 2.50</code> লিখে টাইপ দেখুন।' },
+      gu: { title: 'પૂર્ણાંક અને દશાંશ સંખ્યાઓ', goal: '<strong>કાર્ય:</strong> સંખ્યા પ્રકાર તપાસો.<br>1. <code>cookies = 12</code> સેટ કરો.<br>2. <code>price = 2.50</code> સેટ કરો.' },
+      kn: { title: 'ಪೂರ್ಣಾಂಕಗಳು ಮತ್ತು ದಶಮಾಂಶಗಳು', goal: '<strong>ಕಾರ್ಯ:</strong> ಸಂಖ್ಯೆ ಪ್ರಕಾರ ತಿಳಿಯಿರಿ.<br>1. <code>cookies = 12</code> ಹೊಂದಿಸಿ.<br>2. <code>price = 2.50</code> ನಮೂದಿಸಿ ಪ್ರಕಾರ ನೋಡಿ.' },
+      ml: { title: 'പൂർണ്ണസംഖ്യകളും ദശാംശങ്ങളും', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യാ തരങ്ങൾ പരിശോധിക്കുക.<br>1. <code>cookies = 12</code> നൽകുക.<br>2. <code>price = 2.50</code> നൽകി പരിശോധിക്കുക.' },
+      pa: { title: 'ਪੂਰਨ ਅੰਕ ਅਤੇ ਦਸ਼ਮਲਵ', goal: '<strong>ਕੰਮ:</strong> ਨੰਬਰਾਂ ਦੀਆਂ ਕਿਸਮਾਂ ਦੇਖੋ।<br>1. <code>cookies = 12</code> ਸੈੱਟ ਕਰੋ।<br>2. <code>price = 2.50</code> ਸੈੱਟ ਕਰਕੇ ਕਿਸਮ ਦੇਖੋ।' }
+    }
+  },
+  {
+    code: 'level1_score = 450\nlevel2_score = 320\ntotal_score = level1_score + level2_score\nprint(total_score)',
+    i18n: {
+      en: { title: 'Basic Addition (+)', goal: '<strong>Task:</strong> Sum two integers.<br>1. Set scores for two levels.<br>2. Add them: <code>total_score = level1_score + level2_score</code>.<br>3. Print the total.' },
+      hi: { title: 'बुनियादी जोड़ (+)', goal: '<strong>कार्य:</strong> दो संख्याओं का योग निकालें।<br>1. दो लेवल के स्कोर सेट करें।<br>2. <code>+</code> का उपयोग करके जोड़ें और प्रिंट करें।' },
+      mr: { title: 'साधी बेरीज (+)', goal: '<strong>कृती:</strong> दोन संख्यांची बेरीज करा.<br>1. स्कोअर सेट करा.<br>2. <code>+</code> वापरून बेरीज प्रिंट करा.' },
+      ta: { title: 'கூட்டல் (+)', goal: '<strong>பணி:</strong> எண்களைக் கூட்டவும்.<br>1. மதிப்பெண்களை அமைக்கவும்.<br>2. <code>+</code> மூலம் கூட்டி அச்சிடவும்.' },
+      te: { title: 'కూడిక (+)', goal: '<strong>టాస్క్:</strong> రెండు సంఖ్యలను కూడండి.<br>1. స్కోర్‌లు నమోదు చేయండి.<br>2. కూడిక ఫలితం ప్రింట్ చేయండి.' },
+      bn: { title: 'সহজ যোগ (+)', goal: '<strong>কাজ:</strong> দুটি সংখ্যা যোগ করুন।<br>1. স্কোর নির্ধারণ করুন।<br>2. যোগফল প্রিন্ট করুন।' },
+      gu: { title: 'સરવાળો (+)', goal: '<strong>કાર્ય:</strong> બે સંખ્યાઓનો સરવાળો કરો.<br>1. સ્કોર સેટ કરો.<br>2. સરવાળો પ્રિન્ટ કરો.' },
+      kn: { title: 'ಸಂಕಲನ (+)', goal: '<strong>ಕಾರ್ಯ:</strong> ಎರಡು ಸಂಖ್ಯೆಗಳನ್ನು ಕೂಡಿಸಿ.<br>1. ಅಂಕಗಳನ್ನು ನಮೂದಿಸಿ.<br>2. ಒಟ್ಟು ಮೊತ್ತ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'സങ്കലനം (+)', goal: '<strong>ടാസ്ക്:</strong> രണ്ട് സംഖ്യകൾ കൂട്ടുക.<br>1. സ്കോറുകൾ നൽകുക.<br>2. ആകെ തുക പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਜੋੜ (+)', goal: '<strong>ਕੰਮ:</strong> ਦੋ ਸੰਖਿਆਵਾਂ ਨੂੰ ਜੋੜੋ।<br>1. ਸਕੋਰ ਸੈੱਟ ਕਰੋ।<br>2. ਕੁੱਲ ਸਕੋਰ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'coins = 100\nspent = 35\nremaining = coins - spent\nprint(remaining)',
+    i18n: {
+      en: { title: 'Subtraction (-)', goal: '<strong>Task:</strong> Subtract values.<br>1. Set <code>coins = 100</code>.<br>2. Compute: <code>remaining = coins - spent</code>.<br>3. Print the remaining coins.' },
+      hi: { title: 'घटाव (-)', goal: '<strong>कार्य:</strong> मान घटाएं।<br>1. <code>coins = 100</code> और <code>spent = 35</code> सेट करें।<br>2. शेष राशि निकालें और प्रिंट करें।' },
+      mr: { title: 'वजाबाकी (-)', goal: '<strong>कृती:</strong> संख्या वजा करा.<br>1. नाणी आणि खर्च सेट करा.<br>2. उर्वरित नाणी प्रिंट करा.' },
+      ta: { title: 'கழித்தல் (-)', goal: '<strong>பணி:</strong> மதிப்புகளைக் கழிக்கவும்.<br>1. மாறிகளை அமைக்கவும்.<br>2. கழித்து அச்சிடவும்.' },
+      te: { title: 'తీసివేత (-)', goal: '<strong>టాస్క్:</strong> విలువలను తీసివేయండి.<br>1. నాణేలు, ఖర్చు నమోదు చేయండి.<br>2. మిగిలినవి ప్రింట్ చేయండి.' },
+      bn: { title: 'বিয়োগ (-)', goal: '<strong>কাজ:</strong> মান বিয়োগ করুন।<br>1. কয়েন ও খরচের মান দিন।<br>2. অবশিষ্ট মান প্রিন্ট করুন।' },
+      gu: { title: 'બાદબાકી (-)', goal: '<strong>કાર્ય:</strong> કિંમત બાદ કરો.<br>1. સિક્કા અને ખર્ચ સેટ કરો.<br>2. બાકી સિક્કા પ્રિન્ટ કરો.' },
+      kn: { title: 'ವ್ಯವಕಲನ (-)', goal: '<strong>ಕಾರ್ಯ:</strong> ಮೌಲ್ಯವನ್ನು ಕಳೆಯಿರಿ.<br>1. ನಾಣ್ಯಗಳು ಮತ್ತು ಖರ್ಚು ನಮೂದಿಸಿ.<br>2. ಉಳಿದ ಮೊತ್ತ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'വ്യവകലനം (-)', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യകൾ കുറയ്ക്കുക.<br>1. നാണയങ്ങളും ചെലവും നൽകുക.<br>2. ബാക്കി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਘਟਾਓ (-)', goal: '<strong>ਕੰਮ:</strong> ਮੁੱਲ ਘਟਾਓ।<br>1. ਸਿੱਕੇ ਅਤੇ ਖਰਚ ਸੈੱਟ ਕਰੋ।<br>2. ਬਾਕੀ ਬਚੇ ਸਿੱਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'item_count = 6\nunit_cost = 14.5\ntotal_cost = item_count * unit_cost\nprint(total_cost)',
+    i18n: {
+      en: { title: 'Multiplication (*)', goal: '<strong>Task:</strong> Multiply integers and floats.<br>1. Set count and unit cost.<br>2. Compute: <code>total_cost = item_count * unit_cost</code>.<br>3. Print the product.' },
+      hi: { title: 'गुणा (*)', goal: '<strong>कार्य:</strong> दो संख्याओं का गुणनफल ज्ञात करें।<br>1. वस्तु की संख्या और दर सेट करें।<br>2. कुल लागत की गणना करें।' },
+      mr: { title: 'गुणाकार (*)', goal: '<strong>कृती:</strong> संख्यांचा गुणाकार करा.<br>1. नग व दर सेट करा.<br>2. एकूण किंमत प्रिंट करा.' },
+      ta: { title: 'பெருக்கல் (*)', goal: '<strong>பணி:</strong> எண்களைப் பெருக்கவும்.<br>1. எண்ணிக்கை மற்றும் விலையை அமைக்கவும்.<br>2. பெருக்கி அச்சிடவும்.' },
+      te: { title: 'గుణకారం (*)', goal: '<strong>టాస్క్:</strong> సంఖ్యలను గుణించండి.<br>1. సంఖ్య, ధర ఇవ్వండి.<br>2. మొత్తం గుణకారం ప్రింట్ చేయండి.' },
+      bn: { title: 'গুণফল (*)', goal: '<strong>কাজ:</strong> সংখ্যা গুণ করুন।<br>1. সংখ্যা ও মূল্য দিন।<br>2. মোট খরচ প্রিন্ট করুন।' },
+      gu: { title: 'ગુણાકાર (*)', goal: '<strong>કાર્ય:</strong> ગુણાકાર કરો.<br>1. જથ્થો અને ભાવ સેટ કરો.<br>2. કુલ કિંમત પ્રિન્ટ કરો.' },
+      kn: { title: 'ಗುಣಾಕಾರ (*)', goal: '<strong>ಕಾರ್ಯ:</strong> ಸಂಖ್ಯೆಗಳನ್ನು ಗುಣಿಸಿ.<br>1. ಪ್ರಮಾಣ ಮತ್ತು ದರ ನಮೂದಿಸಿ.<br>2. ಒಟ್ಟು ಮೊತ್ತ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ഗുണനം (*)', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യകൾ ഗുണിക്കുക.<br>1. എണ്ണവും വിലയും നൽകുക.<br>2. ആകെ തുക പ്രಿന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਗੁਣਾ (*)', goal: '<strong>ਕੰਮ:</strong> ਨੰਬਰਾਂ ਨੂੰ ਗੁਣਾ ਕਰੋ।<br>1. ਗਿਣਤੀ ਅਤੇ ਮੁੱਲ ਸੈੱਟ ਕਰੋ।<br>2. ਕੁੱਲ ਮੁੱਲ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'total_bill = 100\nfriends = 4\neach_share = total_bill / friends\nprint(each_share)\nprint(type(each_share))',
+    i18n: {
+      en: { title: 'True Division (/ always gives float)', goal: '<strong>Task:</strong> Observe that <code>/</code> creates a float.<br>1. Divide 100 by 4.<br>2. Note the result is <code>25.0</code>, not <code>25</code>.' },
+      hi: { title: 'सटीक भाग (Division / हमेशा float देता है)', goal: '<strong>कार्य:</strong> देखें कि <code>/</code> दशमलव मान देता है।<br>1. 100 को 4 से भाग दें।<br>2. परिणाम <code>25.0</code> होगा।' },
+      mr: { title: 'भागाकार (/ नेहमी float देतो)', goal: '<strong>कृती:</strong> <code>/</code> नेहमी दशांश देतो हे पहा.<br>1. 100 ला 4 ने भागा.<br>2. उत्तर <code>25.0</code> येईल.' },
+      ta: { title: 'வகுத்தல் (/ எப்போதும் float தரும்)', goal: '<strong>பணி:</strong> <code>/</code> தசம எண்ணைத் தரும் என்பதை அறிக.<br>1. 100 ஐ 4 ஆல் வகுக்கவும்.<br>2. விடை <code>25.0</code> ஆகும்.' },
+      te: { title: 'భాగాహారం (/ ఎల్లప్పుడూ float ఇస్తుంది)', goal: '<strong>టాస్క్:</strong> <code>/</code> దశాంశ ఫలితాన్ని ఇస్తుంది.<br>1. 100 ను 4 తో భాగించండి.<br>2. ఫలితం <code>25.0</code> చూడండి.' },
+      bn: { title: 'ভাগ (/ সর্বদা float দেয়)', goal: '<strong>কাজ:</strong> ভাগফল সবসময় দশমিক হয়।<br>1. ১০০ কে ৪ দিয়ে ভাগ করুন।<br>2. ফলাফল <code>25.0</code> লক্ষ্য করুন।' },
+      gu: { title: 'ભાગાકાર (/ હંમેશા float આપે છે)', goal: '<strong>કાર્ય:</strong> <code>/</code> દશાંશ આપે છે તે જુઓ.<br>1. 100 ને 4 વડે ભાગો.<br>2. પરિણામ <code>25.0</code> આવશે.' },
+      kn: { title: 'ಭಾಗಾಕಾರ (/ ಯಾವಾಗಲೂ float ನೀಡುತ್ತದೆ)', goal: '<strong>ಕಾರ್ಯ:</strong> <code>/</code> ದಶಮಾಂಶ ನೀಡುವುದನ್ನು ಗಮನಿಸಿ.<br>1. 100 ನ್ನು 4 ರಿಂದ ಭಾಗಿಸಿ.<br>2. ಫಲಿತಾಂಶ <code>25.0</code> ಆಗಿರುತ್ತದೆ.' },
+      ml: { title: 'ഹരണം (/ എപ്പോഴും float തരുന്നു)', goal: '<strong>ടാസ്ക്:</strong> <code>/</code> ദശാംശം നൽകുന്നത് കാണുക.<br>1. 100 നെ 4 കൊണ്ട് ഹരിക്കുക.<br>2. ഉത്തരം <code>25.0</code> ആയിരിക്കും.' },
+      pa: { title: 'ਭਾਗ (/ ਹਮੇਸ਼ਾ float ਦਿੰਦਾ ਹੈ)', goal: '<strong>ਕੰਮ:</strong> ਦੇਖੋ ਕਿ <code>/</code> ਹਮੇਸ਼ਾ ਦਸ਼ਮਲਵ ਦਿੰਦਾ ਹੈ।<br>1. 100 ਨੂੰ 4 ਨਾਲ ਭਾਗ ਕਰੋ।<br>2. ਨਤੀਜਾ <code>25.0</code> ਆਵੇਗਾ।' }
+    }
+  },
+  {
+    code: 'total_slices = 19\nkids = 4\nslices_per_kid = total_slices // kids\nprint(slices_per_kid)',
+    i18n: {
+      en: { title: 'Floor Division (//)', goal: '<strong>Task:</strong> Drop the remainder and keep the whole number.<br>1. Divide 19 by 4 with <code>//</code>.<br>2. Print the whole number quotient.' },
+      hi: { title: 'फ्लोर डिवीजन (//)', goal: '<strong>कार्य:</strong> केवल पूर्ण भागफल रखें।<br>1. 19 को 4 से <code>//</code> करें।<br>2. परिणाम 4 आएगा।' },
+      mr: { title: 'पूर्णांक भागाकार (//)', goal: '<strong>कृती:</strong> फक्त पूर्ण भागफल मिळवा.<br>1. <code>19 // 4</code> करा.<br>2. उत्तर 4 येईल.' },
+      ta: { title: 'முழு எண் வகுத்தல் (//)', goal: '<strong>பணி:</strong> முழு ஈவை மட்டும் பெறவும்.<br>1. <code>19 // 4</code> செய்யவும்.<br>2. அச்சிடவும்.' },
+      te: { title: 'ఫ్లోర్ డివిజన్ (//)', goal: '<strong>టాస్క్:</strong> పూర్ణాంక భాగహారం చేయండి.<br>1. <code>19 // 4</code> చేయండి.<br>2. ఫలితం ప్రింట్ చేయండి.' },
+      bn: { title: 'ফ্লোর ডিভিশন (//)', goal: '<strong>কাজ:</strong> শুধু পূর্ণসংখ্যা অংশ রাখুন।<br>1. <code>19 // 4</code> করুন।<br>2. উত্তর প্রিন্ট করুন।' },
+      gu: { title: 'પૂર્ણાંક ભાગાકાર (//)', goal: '<strong>કાર્ય:</strong> માત્ર પૂર્ણાંક ભાગફળ મેળવો.<br>1. <code>19 // 4</code> કરો.<br>2. પ્રિન્ટ કરો.' },
+      kn: { title: 'ಪೂರ್ಣಾಂಕ ಭಾಗಾಕಾರ (//)', goal: '<strong>ಕಾರ್ಯ:</strong> ಕೇವಲ ಪೂರ್ಣಾಂಕ ಭಾಗಲಬ್ಧ ಪಡೆಯಿರಿ.<br>1. <code>19 // 4</code> ಮಾಡಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ഫ്ലോർ ഡിവിഷൻ (//)', goal: '<strong>ടാസ്ക്:</strong> പൂർണ്ണസംഖ്യ മാത്രം എടുക്കുക.<br>1. <code>19 // 4</code> ചെയ്യുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਫਲੋਰ ਡਿਵੀਜ਼ਨ (//)', goal: '<strong>ਕੰਮ:</strong> ਪੂਰਾ ਭਾਗਫਲ ਪ੍ਰਾਪਤ ਕਰੋ।<br>1. <code>19 // 4</code> ਕਰੋ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'total_slices = 19\nkids = 4\nleftovers = total_slices % kids\nprint(leftovers)',
+    i18n: {
+      en: { title: 'Modulo / Remainder (%)', goal: '<strong>Task:</strong> Find what is left over.<br>1. Compute: <code>leftovers = 19 % 4</code>.<br>2. Print the remainder (3).' },
+      hi: { title: 'मॉड्यूलस / शेषफल (%)', goal: '<strong>कार्य:</strong> विभाजन का शेषफल निकालें।<br>1. <code>leftovers = 19 % 4</code> निकालें।<br>2. शेषफल 3 आएगा।' },
+      mr: { title: 'बाकी शोधणे (%)', goal: '<strong>कृती:</strong> भागाकाराची बाकी शोधा.<br>1. <code>19 % 4</code> करा.<br>2. बाकी 3 प्रिंट करा.' },
+      ta: { title: 'மீதி காணுதல் (%)', goal: '<strong>பணி:</strong> மீதியைக் கண்டறியவும்.<br>1. <code>19 % 4</code> கணக்கிடவும்.<br>2. அச்சிடவும்.' },
+      te: { title: 'శేషం (%)', goal: '<strong>టాస్క్:</strong> శేషాన్ని కనుగొనండి.<br>1. <code>19 % 4</code> చేయండి.<br>2. శేషం ప్రింట్ చేయండి.' },
+      bn: { title: 'ভাগশেষ (%)', goal: '<strong>কাজ:</strong> অবশিষ্ট অংশ বের করুন।<br>1. <code>19 % 4</code> লিখুন।<br>2. ভাগশেষ ৩ প্রিন্ট করুন।' },
+      gu: { title: 'શેષ (%)', goal: '<strong>કાર્ય:</strong> વધેલી શેષ મેળવો.<br>1. <code>19 % 4</code> ગણો.<br>2. શેષ પ્રિન્ટ કરો.' },
+      kn: { title: 'ಶೇಷ (%)', goal: '<strong>ಕಾರ್ಯ:</strong> ಭಾಗಾಕಾರದ ಶೇಷವನ್ನು ಪಡೆಯಿರಿ.<br>1. <code>19 % 4</code> ಮಾಡಿ.<br>2. ಶೇಷ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ശിഷ്ടം കണ്ടെത്തുക (%)', goal: '<strong>ടാസ്ക്:</strong> ശിഷ്ടം കണ്ടെത്തുക.<br>1. <code>19 % 4</code> ചെയ്യുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਬਾਕੀ (%)', goal: '<strong>ਕੰਮ:</strong> ਬਾਕੀ ਬਚਿਆ ਮੁੱਲ ਲੱਭੋ।<br>1. <code>19 % 4</code> ਕਰੋ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'base = 5\npower = 3\nresult = base ** power\nprint(result)',
+    i18n: {
+      en: { title: 'Exponents / Powers (**)', goal: '<strong>Task:</strong> Raise a number to a power.<br>1. Calculate 5 to the power of 3 (5 × 5 × 5 = 125).<br>2. Use <code>base ** power</code>.' },
+      hi: { title: 'घातांक / घात (**)', goal: '<strong>कार्य:</strong> घात की गणना करें।<br>1. 5 की घात 3 निकालें (5 ** 3 = 125)।<br>2. प्रिंट करें।' },
+      mr: { title: 'घातांक (**)', goal: '<strong>कृती:</strong> संख्येचा घात काढा.<br>1. <code>5 ** 3</code> करा (125).<br>2. प्रिंट करा.' },
+      ta: { title: 'அடுக்குக் குறிகள் (**)', goal: '<strong>பணி:</strong> அடுக்கைக் கணக்கிடவும்.<br>1. <code>5 ** 3</code> கணக்கிடவும் (125).<br>2. அச்சிடவும்.' },
+      te: { title: 'ఘాతాంకాలు (**)', goal: '<strong>టాస్క్:</strong> పవర్ లెక్కించండి.<br>1. <code>5 ** 3</code> చేయండి (125).<br>2. ప్రింట్ చేయండి.' },
+      bn: { title: 'পাওয়ার ও ঘাত (**)', goal: '<strong>কাজ:</strong> ঘাতের হিসাব করুন।<br>1. <code>5 ** 3</code> লিখুন (১২৫)।<br>2. প্রিন্ট করুন।' },
+      gu: { title: 'ઘાતાંક (**)', goal: '<strong>કાર્ય:</strong> ઘાતની ગણતરી કરો.<br>1. <code>5 ** 3</code> ગણો.<br>2. પ્રિન્ટ કરો.' },
+      kn: { title: 'ಘಾತಾಂಕಗಳು (**)', goal: '<strong>ಕಾರ್ಯ:</strong> ಘಾತದ ಲೆಕ್ಕಾಚಾರ ಮಾಡಿ.<br>1. <code>5 ** 3</code> ಲೆಕ್ಕ ಹಾಕಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ഘാതം കണക്കാക്കുക (**)', goal: '<strong>ടാസ്ക്:</strong> പവർ കണ്ടെത്തുക.<br>1. <code>5 ** 3</code> ചെയ്യുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਘਾਤ (**)', goal: '<strong>ਕੰਮ:</strong> ਪਾਵਰ ਦੀ ਗਣਨਾ ਕਰੋ।<br>1. <code>5 ** 3</code> ਕਰੋ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'temp = -15\nwarmer = -temp\nprint(temp, warmer)',
+    i18n: {
+      en: { title: 'Negative Numbers & Negation', goal: '<strong>Task:</strong> Flip the sign of a number.<br>1. Set <code>temp = -15</code>.<br>2. Flip it with <code>warmer = -temp</code>.<br>3. Print both values.' },
+      hi: { title: 'ऋणात्मक संख्याएँ और चिह्न बदलना', goal: '<strong>कार्य:</strong> चिह्न उल्टा करें।<br>1. <code>temp = -15</code> सेट करें।<br>2. <code>-temp</code> से धनात्मक बनाएं।' },
+      mr: { title: 'ऋण संख्या आणि चिन्ह बदल', goal: '<strong>कृती:</strong> चिन्ह उलटे करा.<br>1. <code>temp = -15</code> सेट करा.<br>2. <code>-temp</code> करून प्रिंट करा.' },
+      ta: { title: 'எதிர்மறை எண்கள்', goal: '<strong>பணி:</strong> குறியீட்டை மாற்றவும்.<br>1. <code>temp = -15</code> அமைக்கவும்.<br>2. <code>-temp</code> அச்சிடவும்.' },
+      te: { title: 'రుణ సంఖ్యలు', goal: '<strong>టాస్క్:</strong> గుర్తును తిప్పండి.<br>1. <code>temp = -15</code> ఇవ్వండి.<br>2. <code>-temp</code> ప్రింట్ చేయండి.' },
+      bn: { title: 'ঋণাত্মক সংখ্যা', goal: '<strong>কাজ:</strong> চিহ্ন উল্টে দিন।<br>1. <code>temp = -15</code> লিখুন।<br>2. চিহ্ন পরিবর্তন করে প্রিন্ট করুন।' },
+      gu: { title: 'ઋણ સંખ્યાઓ', goal: '<strong>કાર્ય:</strong> ચિહ્ન ઉલટાવો.<br>1. <code>temp = -15</code> સેટ કરો.<br>2. પ્રિન્ટ કરો.' },
+      kn: { title: 'ಋಣಾತ್ಮಕ ಸಂಖ್ಯೆಗಳು', goal: '<strong>ಕಾರ್ಯ:</strong> ಚಿಹ್ನೆಯನ್ನು ಬದಲಾಯಿಸಿ.<br>1. <code>temp = -15</code> ಹೊಂದಿಸಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'നെഗറ്റീവ് സംഖ്യകൾ', goal: '<strong>ടാസ്ക്:</strong> ചിഹ്നം മാറ്റുക.<br>1. <code>temp = -15</code> നൽകുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਰਿਣਾਤਮਕ ਨੰਬਰ', goal: '<strong>ਕੰਮ:</strong> ਚਿੰਨ੍ਹ ਬਦਲੋ।<br>1. <code>temp = -15</code> ਸੈੱਟ ਕਰੋ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'result = 2 + 3 * 4\nprint(result)',
+    i18n: {
+      en: { title: 'Math Precedence (PEMDAS)', goal: '<strong>Task:</strong> Learn operator order.<br>1. Notice that <code>3 * 4</code> runs first (12).<br>2. Then <code>2 + 12</code> gives 14.' },
+      hi: { title: 'गणना का क्रम (BODMAS)', goal: '<strong>कार्य:</strong> गुणन पहले होता है।<br>1. <code>3 * 4</code> पहले होगा (12)।<br>2. फिर <code>2 + 12 = 14</code> मिलेगा।' },
+      mr: { title: 'गणितीय अग्रक्रम', goal: '<strong>कृती:</strong> गुणाकार आधी होतो.<br>1. <code>3 * 4</code> आधी होईल (12).<br>2. उत्तर 14 येईल.' },
+      ta: { title: 'கணித முன்னுரிமை', goal: '<strong>பணி:</strong> பெருக்கல் முதலில் நடக்கும்.<br>1. <code>3 * 4</code> முதலில் கணக்கிடப்படும்.<br>2. விடை 14.' },
+      te: { title: 'గణిత ప్రాధాన్యత', goal: '<strong>టాస్క్:</strong> గుణకారం ముందుగా జరుగుతుంది.<br>1. <code>3 * 4</code> ముందుగా అవుతుంది.<br>2. ఫలితం 14.' },
+      bn: { title: 'হিসাবের অগ্রাধিকার', goal: '<strong>কাজ:</strong> গুণের কাজ আগে হয়।<br>1. <code>3 * 4</code> আগে হবে (১২)।<br>2. উত্তর ১৪ প্রিন্ট করুন।' },
+      gu: { title: 'ગણતરીનો ક્રમ', goal: '<strong>કાર્ય:</strong> ગુણાકાર પહેલા થાય.<br>1. <code>3 * 4 = 12</code>.<br>2. જવાબ 14 આવશે.' },
+      kn: { title: 'ಗಣಿತದ ಆದ್ಯತೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಗುಣಾಕಾರ ಮೊದಲು ನಡೆಯುತ್ತದೆ.<br>1. <code>3 * 4</code> ಮೊದಲು ಆಗುತ್ತದೆ.<br>2. ಉತ್ತರ 14.' },
+      ml: { title: 'മുൻഗണനാ ക്രമം', goal: '<strong>ടാസ്ക്:</strong> ഗുണനം ആദ്യം നടക്കുന്നു.<br>1. <code>3 * 4</code> ആദ്യം ചെയ്യും.<br>2. ഉത്തരം 14.' },
+      pa: { title: 'ਗਣਿਤ ਦੀ ਤਰਤੀਬ', goal: '<strong>ਕੰਮ:</strong> ਗੁਣਾ ਪਹਿਲਾਂ ਹੁੰਦੀ ਹੈ।<br>1. <code>3 * 4</code> ਪਹਿਲਾਂ ਹੋਵੇਗਾ।<br>2. ਉੱਤਰ 14 ਆਵੇਗਾ।' }
+    }
+  },
+  {
+    code: 'result = (2 + 3) * 4\nprint(result)',
+    i18n: {
+      en: { title: 'Grouping with Parentheses', goal: '<strong>Task:</strong> Force addition first.<br>1. Parentheses <code>(2 + 3)</code> evaluate to 5.<br>2. Then <code>5 * 4</code> equals 20.' },
+      hi: { title: 'कोष्ठक से प्राथमिकता बदलना', goal: '<strong>कार्य:</strong> कोष्ठक को पहले हल करें।<br>1. <code>(2 + 3) = 5</code> होगा।<br>2. फिर <code>5 * 4 = 20</code> मिलेगा।' },
+      mr: { title: 'कंसाचा वापर', goal: '<strong>कृती:</strong> कंस आधी सोडवा.<br>1. <code>(2 + 3)</code> आधी 5 होईल.<br>2. मग <code>5 * 4 = 20</code>.' },
+      ta: { title: 'அடைப்புக்குறிகள்', goal: '<strong>பணி:</strong> அடைப்புக்குறிக்குள் உள்ளதை முதலில் கணக்கிடவும்.<br>1. <code>(2 + 3) = 5</code>.<br>2. விடை 20.' },
+      te: { title: 'బ్రాకెట్ల వినియోగం', goal: '<strong>టాస్క్:</strong> బ్రాకెట్ల గణితం ముందు చేయండి.<br>1. <code>(2 + 3) = 5</code>.<br>2. ఫలితం 20.' },
+      bn: { title: 'বন্ধনীর ব্যবহার', goal: '<strong>কাজ:</strong> বন্ধনীর ভেতরের যোগ আগে করুন।<br>1. <code>(2 + 3) = 5</code>.<br>2. উত্তর ২০ প্রিন্ট করুন।' },
+      gu: { title: 'કૌંસનો ઉપયોગ', goal: '<strong>કાર્ય:</strong> કૌંસ પહેલા ઉકેલો.<br>1. <code>(2 + 3) = 5</code>.<br>2. જવાબ 20 આવશે.' },
+      kn: { title: 'ಆವರಣ ಚಿಹ್ನೆಗಳ ಬಳಕೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಬ್ರಾಕೆಟ್‌ಗಳನ್ನು ಮೊದಲು ಪರಿಹರಿಸಿ.<br>1. <code>(2 + 3) = 5</code>.<br>2. ಉತ್ತರ 20.' },
+      ml: { title: 'ബ്രാക്കറ്റുകളുടെ ഉപയോഗം', goal: '<strong>ടാസ്ക്:</strong> ബ്രാക്കറ്റിലുള്ളത് ആദ്യം ചെയ്യുക.<br>1. <code>(2 + 3) = 5</code>.<br>2. ഉത്തരം 20.' },
+      pa: { title: 'ਬਰੈਕਟਾਂ ਦੀ ਵਰਤੋਂ', goal: '<strong>ਕੰਮ:</strong> ਬਰੈਕਟਾਂ ਨੂੰ ਪਹਿਲਾਂ ਹੱਲ ਕਰੋ।<br>1. <code>(2 + 3) = 5</code>.<br>2. ਉੱਤਰ 20 ਆਵੇਗਾ।' }
+    }
+  },
+  {
+    code: 'gold = 50\ngold += 20\nprint(gold)',
+    i18n: {
+      en: { title: 'Add and Assign (+=)', goal: '<strong>Task:</strong> Shortcut for <code>gold = gold + 20</code>.<br>1. Start with 50.<br>2. Add 20 in place with <code>gold += 20</code>.' },
+      hi: { title: 'जोड़ें और असाइन करें (+=)', goal: '<strong>कार्य:</strong> मान में 20 जोड़ें।<br>1. <code>gold = 50</code> लें।<br>2. <code>gold += 20</code> करके प्रिंट करें (70)।' },
+      mr: { title: 'बेरीज करून असाइन करणे (+=)', goal: '<strong>कृती:</strong> संक्षेप वापरा.<br>1. <code>gold = 50</code> घ्या.<br>2. <code>gold += 20</code> करा (70).' },
+      ta: { title: 'கூட்டி ஒதுக்குதல் (+=)', goal: '<strong>பணி:</strong> மதிப்பை நேரடியாக கூட்டவும்.<br>1. <code>gold = 50</code> அமைக்கவும்.<br>2. <code>gold += 20</code> செய்து அச்சிடவும்.' },
+      te: { title: 'కూడి అసైన్ చేయడం (+=)', goal: '<strong>టాస్క్:</strong> నేరుగా 20 కలపండి.<br>1. <code>gold = 50</code> ఇవ్వండి.<br>2. <code>gold += 20</code> ప్రింట్ చేయండి.' },
+      bn: { title: 'যোগ করে অ্যাসাইন (+=)', goal: '<strong>কাজ:</strong> সংক্ষেপে মান বৃদ্ধি করুন।<br>1. <code>gold = 50</code> লিখুন।<br>2. <code>gold += 20</code> করে প্রিন্ট করুন।' },
+      gu: { title: 'ઉમેરો અને અસાઇન કરો (+=)', goal: '<strong>કાર્ય:</strong> કિંમત વધારો.<br>1. <code>gold = 50</code> લો.<br>2. <code>gold += 20</code> કરો.' },
+      kn: { title: 'ಕೂಡಿಸಿ ನಿಯೋಜಿಸಿ (+=)', goal: '<strong>ಕಾರ್ಯ:</strong> ಮೌಲ್ಯವನ್ನು ಹೆಚ್ಚಿಸಿ.<br>1. <code>gold = 50</code> ಹೊಂದಿಸಿ.<br>2. <code>gold += 20</code> ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'കൂട്ടി അസൈൻ ചെയ്യുക (+=)', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യ കൂട്ടുക.<br>1. <code>gold = 50</code> നൽകുക.<br>2. <code>gold += 20</code> പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਜੋੜ ਕੇ ਅਸਾਈਨ ਕਰੋ (+=)', goal: '<strong>ਕੰਮ:</strong> ਮੁੱਲ ਵਿੱਚ ਵਾਧਾ ਕਰੋ।<br>1. <code>gold = 50</code> ਲਓ।<br>2. <code>gold += 20</code> ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'health = 100\nhealth -= 15\nprint(health)',
+    i18n: {
+      en: { title: 'Subtract and Assign (-=)', goal: '<strong>Task:</strong> Shortcut for <code>health = health - 15</code>.<br>1. Start with 100.<br>2. Reduce by 15 with <code>health -= 15</code>.' },
+      hi: { title: 'घटाएं और असाइन करें (-=)', goal: '<strong>कार्य:</strong> मान 15 घटाएं।<br>1. <code>health = 100</code> लें।<br>2. <code>health -= 15</code> करके प्रिंट करें (85)।' },
+      mr: { title: 'वजा करून असाइन करणे (-=)', goal: '<strong>कृती:</strong> 15 ने कमी करा.<br>1. <code>health = 100</code> घ्या.<br>2. <code>health -= 15</code> करा.' },
+      ta: { title: 'கழித்து ஒதுக்குதல் (-=)', goal: '<strong>பணி:</strong> மதிப்பை நேரடியாக கழிக்கவும்.<br>1. <code>health = 100</code> அமைக்கவும்.<br>2. <code>health -= 15</code> அச்சிடவும்.' },
+      te: { title: 'తీసివేసి అసైన్ చేయడం (-=)', goal: '<strong>టాస్క్:</strong> 15 తగ్గించండి.<br>1. <code>health = 100</code> ఇవ్వండి.<br>2. <code>health -= 15</code> ప్రింట్ చేయండి.' },
+      bn: { title: 'বিয়োগ করে অ্যাসাইন (-=)', goal: '<strong>কাজ:</strong> ১৫ কমান।<br>1. <code>health = 100</code> লিখুন।<br>2. <code>health -= 15</code> করে প্রিন্ট করুন।' },
+      gu: { title: 'બાદ કરો અને અસાઇન કરો (-=)', goal: '<strong>કાર્ય:</strong> કિંમત ઘટાડો.<br>1. <code>health = 100</code> લો.<br>2. <code>health -= 15</code> કરો.' },
+      kn: { title: 'ಕಳೆದು ನಿಯೋಜಿಸಿ (-=)', goal: '<strong>ಕಾರ್ಯ:</strong> 15 ಕಡಿಮೆ ಮಾಡಿ.<br>1. <code>health = 100</code> ಹೊಂದಿಸಿ.<br>2. <code>health -= 15</code> ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'കുറച്ച് അസൈൻ ചെയ്യുക (-=)', goal: '<strong>ടാസ്ക്:</strong> 15 കുറയ്ക്കുക.<br>1. <code>health = 100</code> നൽകുക.<br>2. <code>health -= 15</code> പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਘਟਾ ਕੇ ਅਸਾਈਨ ਕਰੋ (-=)', goal: '<strong>ਕੰਮ:</strong> 15 ਘਟਾਓ।<br>1. <code>health = 100</code> ਲਓ।<br>2. <code>health -= 15</code> ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'score = 25\nscore *= 4\nprint(score)',
+    i18n: {
+      en: { title: 'Multiply and Assign (*=)', goal: '<strong>Task:</strong> Multiply in place.<br>1. Start with 25.<br>2. Multiply by 4 using <code>score *= 4</code> (100).' },
+      hi: { title: 'गुणा करें और असाइन करें (*=)', goal: '<strong>कार्य:</strong> 4 से गुणा करें।<br>1. <code>score = 25</code> लें।<br>2. <code>score *= 4</code> करके 100 प्राप्त करें।' },
+      mr: { title: 'गुणून असाइन करणे (*=)', goal: '<strong>कृती:</strong> 4 ने गुणा.<br>1. <code>score = 25</code> घ्या.<br>2. <code>score *= 4</code> करा (100).' },
+      ta: { title: 'பெருக்கி ஒதுக்குதல் (*=)', goal: '<strong>பணி:</strong> 4 ஆல் பெருக்கவும்.<br>1. <code>score = 25</code> அமைக்கவும்.<br>2. <code>score *= 4</code> அச்சிடவும்.' },
+      te: { title: 'గుణించి అసైన్ చేయడం (*=)', goal: '<strong>టాస్క్:</strong> 4 తో గుణించండి.<br>1. <code>score = 25</code> ఇవ్వండి.<br>2. <code>score *= 4</code> ప్రింట్ చేయండి.' },
+      bn: { title: 'গুণ করে অ্যাসাইন (*=)', goal: '<strong>কাজ:</strong> ৪ দিয়ে গুণ করুন।<br>1. <code>score = 25</code> লিখুন।<br>2. <code>score *= 4</code> করে ১০০ প্রিন্ট করুন।' },
+      gu: { title: 'ગુણો અને અસાઇન કરો (*=)', goal: '<strong>કાર્ય:</strong> 4 વડે ગુણો.<br>1. <code>score = 25</code> લો.<br>2. <code>score *= 4</code> કરો.' },
+      kn: { title: 'ಗುಣಿಸಿ ನಿಯೋಜಿಸಿ (*=)', goal: '<strong>ಕಾರ್ಯ:</strong> 4 ರಿಂದ ಗುಣಿಸಿ.<br>1. <code>score = 25</code> ಹೊಂದಿಸಿ.<br>2. <code>score *= 4</code> ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ഗുണിച്ച് അസൈൻ ചെയ്യുക (*=)', goal: '<strong>ടാസ്ക്:</strong> 4 കൊണ്ട് ഗുണിക്കുക.<br>1. <code>score = 25</code> നൽകുക.<br>2. <code>score *= 4</code> പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਗੁਣਾ ਕਰਕੇ ਅਸਾਈਨ ਕਰੋ (*=)', goal: '<strong>ਕੰਮ:</strong> 4 ਨਾਲ ਗੁਣਾ ਕਰੋ।<br>1. <code>score = 25</code> ਲਓ।<br>2. <code>score *= 4</code> ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'prize_pool = 500\nprize_pool /= 2\nprint(prize_pool)',
+    i18n: {
+      en: { title: 'Divide and Assign (/=)', goal: '<strong>Task:</strong> Halve a value.<br>1. Set <code>prize_pool = 500</code>.<br>2. Divide with <code>prize_pool /= 2</code> (250.0).' },
+      hi: { title: 'भाग दें और असाइन करें (/=)', goal: '<strong>कार्य:</strong> आधा करें।<br>1. <code>prize_pool = 500</code> सेट करें।<br>2. <code>prize_pool /= 2</code> करके 250.0 प्राप्त करें।' },
+      mr: { title: 'भागून असाइन करणे (/=)', goal: '<strong>कृती:</strong> अर्धे करा.<br>1. <code>prize_pool = 500</code> घ्या.<br>2. <code>prize_pool /= 2</code> करा.' },
+      ta: { title: 'வகுத்து ஒதுக்குதல் (/=)', goal: '<strong>பணி:</strong> பாதியாக வகுக்கவும்.<br>1. <code>prize_pool = 500</code> அமைக்கவும்.<br>2. <code>/= 2</code> அச்சிடவும்.' },
+      te: { title: 'భాగించి అసైన్ చేయడం (/=)', goal: '<strong>టాస్క్:</strong> సగం చేయండి.<br>1. <code>prize_pool = 500</code> ఇవ్వండి.<br>2. <code>/= 2</code> ప్రింట్ చేయండి.' },
+      bn: { title: 'ভাগ করে অ্যাসাইন (/=)', goal: '<strong>কাজ:</strong> অর্ধেক করুন।<br>1. <code>prize_pool = 500</code> লিখুন।<br>2. <code>prize_pool /= 2</code> করে ২৫০.০ প্রিন্ট করুন।' },
+      gu: { title: 'ભાગો અને અસાઇન કરો (/=)', goal: '<strong>કાર્ય:</strong> અડધી કિંમત કરો.<br>1. <code>prize_pool = 500</code> લો.<br>2. <code>prize_pool /= 2</code> કરો.' },
+      kn: { title: 'ಭಾಗಿಸಿ ನಿಯೋಜಿಸಿ (/=)', goal: '<strong>ಕಾರ್ಯ:</strong> ಅರ್ಧದಷ್ಟು ಮಾಡಿ.<br>1. <code>prize_pool = 500</code> ಹೊಂದಿಸಿ.<br>2. <code>/= 2</code> ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ഹരിച്ച് അസൈൻ ചെയ്യുക (/=)', goal: '<strong>ടാസ്ക്:</strong> പകുതിയാക്കുക.<br>1. <code>prize_pool = 500</code> നൽകുക.<br>2. <code>/= 2</code> പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਭਾਗ ਕਰਕੇ ਅਸਾਈਨ ਕਰੋ (/=)', goal: '<strong>ਕੰਮ:</strong> ਅੱਧਾ ਕਰੋ।<br>1. <code>prize_pool = 500</code> ਲਓ।<br>2. <code>prize_pool /= 2</code> ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'num = 20\nnum %= 6\nprint(num)',
+    i18n: {
+      en: { title: 'Modulo and Assign (%=)', goal: '<strong>Task:</strong> In-place remainder calculation.<br>1. Start with 20.<br>2. <code>num %= 6</code> leaves 2 (since 20 = 3 × 6 + 2).' },
+      hi: { title: 'मॉड्यूलस और असाइन (%=)', goal: '<strong>कार्य:</strong> शेषफल असाइन करें।<br>1. <code>num = 20</code> लें।<br>2. <code>num %= 6</code> करने पर 2 बचेगा।' },
+      mr: { title: 'बाकी असाइन करणे (%=)', goal: '<strong>कृती:</strong> बाकी थेट असाइन करा.<br>1. <code>num = 20</code> घ्या.<br>2. <code>num %= 6</code> करा (2).' },
+      ta: { title: 'மீதி ஒதுக்குதல் (%=)', goal: '<strong>பணி:</strong> மீதியை நேரடியாக ஒதுக்கவும்.<br>1. <code>num = 20</code> அமைக்கவும்.<br>2. <code>num %= 6</code> அச்சிடவும்.' },
+      te: { title: 'శేషం అసైన్ చేయడం (%=)', goal: '<strong>టాస్క్:</strong> శేషాన్ని అసైన్ చేయండి.<br>1. <code>num = 20</code> ఇవ్వండి.<br>2. <code>num %= 6</code> ప్రింట్ చేయండి.' },
+      bn: { title: 'ভাগশেষ অ্যাসাইন (%=)', goal: '<strong>কাজ:</strong> ভাগশেষ সরাসরি রাখুন।<br>1. <code>num = 20</code> লিখুন।<br>2. <code>num %= 6</code> করে ২ প্রিন্ট করুন।' },
+      gu: { title: 'શેષ અસાઇન કરો (%=)', goal: '<strong>કાર્ય:</strong> શેષ મેળવો.<br>1. <code>num = 20</code> લો.<br>2. <code>num %= 6</code> કરો (2).' },
+      kn: { title: 'ಶೇಷ ನಿಯೋಜನೆ (%=)', goal: '<strong>ಕಾರ್ಯ:</strong> ಶೇಷವನ್ನು ನೇರವಾಗಿ ಪಡೆಯಿರಿ.<br>1. <code>num = 20</code> ಹೊಂದಿಸಿ.<br>2. <code>num %= 6</code> ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ശിഷ്ടം അസൈൻ ചെയ്യുക (%=)', goal: '<strong>ടാസ്ക്:</strong> ശിഷ്ടം അസൈൻ ചെയ്യുക.<br>1. <code>num = 20</code> നൽകുക.<br>2. <code>num %= 6</code> പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਬਾਕੀ ਅਸਾਈਨ ਕਰੋ (%=)', goal: '<strong>ਕੰਮ:</strong> ਬਾਕੀ ਬਚਿਆ ਮੁੱਲ ਸੈੱਟ ਕਰੋ।<br>1. <code>num = 20</code> ਲਓ।<br>2. <code>num %= 6</code> ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'str_val = "150"\nnum = int(str_val)\nprint(num + 50)',
+    i18n: {
+      en: { title: 'Converting Text to int()', goal: '<strong>Task:</strong> Parse numbers from strings.<br>1. Convert <code>"150"</code> using <code>int("150")</code>.<br>2. Add 50 to get 200.' },
+      hi: { title: 'टेक्स्ट को int() में बदलना', goal: '<strong>कार्य:</strong> टेक्स्ट को पूर्णांक बनाएं।<br>1. <code>int("150")</code> का उपयोग करें।<br>2. 50 जोड़कर 200 प्राप्त करें।' },
+      mr: { title: 'मजकूराचे पूर्णांकात रूपांतर (int)', goal: '<strong>कृती:</strong> <code>int()</code> वापरा.<br>1. <code>"150"</code> चे संख्येत रूपांतर करा.<br>2. 50 मिळवून 200 प्रिंट करा.' },
+      ta: { title: 'உரையை int() ஆக மாற்றுதல்', goal: '<strong>பணி:</strong> உரையை எண்ணாக மாற்றவும்.<br>1. <code>int("150")</code> பயன்படுத்தவும்.<br>2. 50 கூட்டி 200 பெறவும்.' },
+      te: { title: 'టెక్స్ట్‌ను int() గా మార్చడం', goal: '<strong>టాస్క్:</strong> <code>int()</code> తో మార్చండి.<br>1. <code>int("150")</code> చేయండి.<br>2. 50 కలిపి 200 ప్రింట్ చేయండి.' },
+      bn: { title: 'টেক্সটকে int() এ রূপান্তর', goal: '<strong>কাজ:</strong> স্ট্রিংকে পূর্ণসংখ্যায় রূপান্তর করুন।<br>1. <code>int("150")</code> ব্যবহার করুন।<br>2. ৫০ যোগ করে ২০০ প্রিন্ট করুন।' },
+      gu: { title: 'ટેક્સ્ટને int() માં ફેરવવું', goal: '<strong>કાર્ય:</strong> <code>int()</code> વાપરો.<br>1. <code>"150"</code> ને નંબરમાં ફેરવો.<br>2. 50 ઉમેરી 200 મેળવો.' },
+      kn: { title: 'ಪಠ್ಯವನ್ನು int() ಆಗಿ ಪರಿವರ್ತಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> <code>int()</code> ಬಳಸಿ ಸಂಖ್ಯೆ ಮಾಡಿ.<br>1. <code>int("150")</code> ಬಳಸಿ.<br>2. 50 ಸೇರಿಸಿ 200 ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ടെക്സ്റ്റിനെ int() ആക്കുക', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യയാക്കി മാറ്റുക.<br>1. <code>int("150")</code> ഉപയോഗിക്കുക.<br>2. 50 കൂട്ടി 200 പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਟੈਕਸਟ ਨੂੰ int() ਵਿੱਚ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> ਟੈਕਸਟ ਨੂੰ ਨੰਬਰ ਬਣਾਓ।<br>1. <code>int("150")</code> ਵਰਤੋ।<br>2. 50 ਜੋੜ ਕੇ 200 ਪ੍ਰਾਪਤ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'str_val = "12.75"\nnum = float(str_val)\nprint(num * 2)',
+    i18n: {
+      en: { title: 'Converting Text to float()', goal: '<strong>Task:</strong> Parse decimal values from strings.<br>1. Convert with <code>float("12.75")</code>.<br>2. Multiply by 2 to get 25.5.' },
+      hi: { title: 'टेक्स्ट को float() में बदलना', goal: '<strong>कार्य:</strong> दशमलव टेक्स्ट को संख्या बनाएं।<br>1. <code>float("12.75")</code> करें।<br>2. 2 से गुणा करके 25.5 प्राप्त करें।' },
+      mr: { title: 'मजकूराचे दशांशात रूपांतर (float)', goal: '<strong>कृती:</strong> <code>float()</code> वापरा.<br>1. <code>float("12.75")</code> करा.<br>2. 2 ने गुणून 25.5 प्रिंट करा.' },
+      ta: { title: 'உரையை float() ஆக மாற்றுதல்', goal: '<strong>பணி:</strong> தசம எண்ணாக மாற்றவும்.<br>1. <code>float("12.75")</code> பயன்படுத்தவும்.<br>2. 2 ஆல் பெருக்கவும்.' },
+      te: { title: 'టెక్స్ట్‌ను float() గా మార్చడం', goal: '<strong>టాస్క్:</strong> <code>float()</code> తో మార్చండి.<br>1. <code>float("12.75")</code> చేయండి.<br>2. 2 తో గుణించండి.' },
+      bn: { title: 'টেক্সটকে float() এ রূপান্তর', goal: '<strong>কাজ:</strong> দশমিক সংখ্যায় রূপান্তর করুন।<br>1. <code>float("12.75")</code> ব্যবহার করুন।<br>2. ২ দিয়ে গুণ করুন।' },
+      gu: { title: 'ટેક્સ્ટને float() માં ફેરવવું', goal: '<strong>કાર્ય:</strong> દશાંશમાં ફેરવો.<br>1. <code>float("12.75")</code> વાપરો.<br>2. 2 વડે ગુણો.' },
+      kn: { title: 'ಪಠ್ಯವನ್ನು float() ಆಗಿ ಪರಿವರ್ತಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ದಶಮಾಂಶವಾಗಿ ಪರಿವರ್ತಿಸಿ.<br>1. <code>float("12.75")</code> ಬಳಸಿ.<br>2. 2 ರಿಂದ ಗುಣಿಸಿ.' },
+      ml: { title: 'ടെക്സ്റ്റിനെ float() ആക്കുക', goal: '<strong>ടാസ്ക്:</strong> ദശാംശമാക്കി മാറ്റുക.<br>1. <code>float("12.75")</code> ഉപയോഗിക്കുക.<br>2. 2 കൊണ്ട് ഗുണിക്കുക.' },
+      pa: { title: 'ਟੈਕਸਟ ਨੂੰ float() ਵਿੱਚ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> ਦਸ਼ਮਲਵ ਵਿੱਚ ਬਦਲੋ।<br>1. <code>float("12.75")</code> ਵਰਤੋ।<br>2. 2 ਨਾਲ ਗੁਣਾ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'pi = 3.14159\nwhole_pi = int(pi)\nprint(whole_pi)',
+    i18n: {
+      en: { title: 'Truncating with int()', goal: '<strong>Task:</strong> Chop off decimals.<br>1. <code>int(3.14159)</code> discards everything after the dot.<br>2. The result is 3.' },
+      hi: { title: 'दशमलव हटाना (int() द्वारा)', goal: '<strong>कार्य:</strong> दशमलव के बाद का हिस्सा हटाएं।<br>1. <code>int(3.14159)</code> केवल 3 रखेगा।<br>2. प्रिंट करें।' },
+      mr: { title: 'दशांश वगळणे (int())', goal: '<strong>कृती:</strong> दशांश काढून टाका.<br>1. <code>int(3.14159)</code> फक्त 3 ठेवेल.<br>2. प्रिंट करा.' },
+      ta: { title: 'தசமத்தை நீக்குதல் (int())', goal: '<strong>பணி:</strong> தசமப் பகுதியை நீக்கவும்.<br>1. <code>int(3.14159)</code> 3 ஆக மாறும்.<br>2. அச்சிடவும்.' },
+      te: { title: 'దశాంశాన్ని తొలగించడం (int())', goal: '<strong>టాస్క్:</strong> దశాంశ భాగాన్ని తీసివేయండి.<br>1. <code>int(3.14159)</code> ఫలితం 3.<br>2. ప్రింట్ చేయండి.' },
+      bn: { title: 'দশমিক বাদ দেওয়া (int())', goal: '<strong>কাজ:</strong> দশমিকের অংশ ফেলে দিন।<br>1. <code>int(3.14159)</code> শুধু ৩ রাখবে।<br>2. প্রিন্ট করুন।' },
+      gu: { title: 'દશાંશ કાઢી નાખવું (int())', goal: '<strong>કાર્ય:</strong> પોઇન્ટ પછીનું કાઢી નાખો.<br>1. <code>int(3.14159)</code> માત્ર 3 રાખશે.<br>2. પ્રિન્ટ કરો.' },
+      kn: { title: 'ದಶಮಾಂಶ ಕತ್ತರಿಸುವುದು (int())', goal: '<strong>ಕಾರ್ಯ:</strong> ದಶಮಾಂಶ ಭಾಗವನ್ನು ತೆಗೆಯಿರಿ.<br>1. <code>int(3.14159)</code> ಕೇವಲ 3 ನೀಡುತ್ತದೆ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ദശാംശം ഒഴിവാക്കുക (int())', goal: '<strong>ടാസ്ക്:</strong> ദശാംശ ഭാഗം ഒഴിവാക്കുക.<br>1. <code>int(3.14159)</code> 3 നൽകും.<br>2. പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਦਸ਼ਮਲਵ ਹਟਾਉਣਾ (int())', goal: '<strong>ਕੰਮ:</strong> ਦਸ਼ਮਲਵ ਤੋਂ ਬਾਅਦ ਦਾ ਹਿੱਸਾ ਹਟਾਓ।<br>1. <code>int(3.14159)</code> ਸਿਰਫ਼ 3 ਰੱਖੇਗਾ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'distance = -42\npositive_dist = abs(distance)\nprint(positive_dist)',
+    i18n: {
+      en: { title: 'Absolute Value with abs()', goal: '<strong>Task:</strong> Measure positive magnitude.<br>1. <code>abs(-42)</code> strips the minus sign.<br>2. Result is 42.' },
+      hi: { title: 'निरपेक्ष मान (abs())', goal: '<strong>कार्य:</strong> ऋणात्मक चिह्न हटाएं।<br>1. <code>abs(-42)</code> का मान 42 होगा।<br>2. प्रिंट करें।' },
+      mr: { title: 'निरपेक्ष मूल्य (abs())', goal: '<strong>कृती:</strong> उणे चिन्ह काढून टाका.<br>1. <code>abs(-42)</code> चे मूल्य 42 होईल.<br>2. प्रिंट करा.' },
+      ta: { title: 'முழுமையான மதிப்பு (abs())', goal: '<strong>பணி:</strong> நேர்மறை மதிப்பை மட்டும் பெறவும்.<br>1. <code>abs(-42)</code> 42 ஆகும்.<br>2. அச்சிடவும்.' },
+      te: { title: 'ఖచ్చితమైన విలువ (abs())', goal: '<strong>టాస్క్:</strong> పాజిటివ్ విలువను పొందండి.<br>1. <code>abs(-42)</code> విలువ 42.<br>2. ప్రింట్ చేయండి.' },
+      bn: { title: 'পরম মান (abs())', goal: '<strong>কাজ:</strong> ঋণাত্মক চিহ্ন বাদ দিন।<br>1. <code>abs(-42)</code> এর মান ৪২ হবে।<br>2. প্রিন্ট করুন।' },
+      gu: { title: 'ધન મૂલ્ય (abs())', goal: '<strong>કાર્ય:</strong> માઈનસ દૂર કરો.<br>1. <code>abs(-42)</code> 42 બનશે.<br>2. પ્રિન્ટ કરો.' },
+      kn: { title: 'ಪೂರ್ಣ ಮೌಲ್ಯ (abs())', goal: '<strong>ಕಾರ್ಯ:</strong> ಧನಾತ್ಮಕ ಮೌಲ್ಯ ಪಡೆಯಿರಿ.<br>1. <code>abs(-42)</code> 42 ಆಗುತ್ತದೆ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'കേവലവില (abs())', goal: '<strong>ടാസ്ക്:</strong> പോസിറ്റീവ് വില കണ്ടെത്തുക.<br>1. <code>abs(-42)</code> 42 നൽകും.<br>2. പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਨਿਰਪੱਖ ਮੁੱਲ (abs())', goal: '<strong>ਕੰਮ:</strong> ਮਾਈਨਸ ਚਿੰਨ੍ਹ ਹਟਾਓ।<br>1. <code>abs(-42)</code> 42 ਹੋਵੇਗਾ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'rating1 = 4.8\nrating2 = 4.2\nprint(round(rating1))\nprint(round(rating2))',
+    i18n: {
+      en: { title: 'Rounding with round()', goal: '<strong>Task:</strong> Round to nearest whole integer.<br>1. <code>round(4.8)</code> becomes 5.<br>2. <code>round(4.2)</code> becomes 4.' },
+      hi: { title: 'निकटतम पूर्णांक (round())', goal: '<strong>कार्य:</strong> निकटतम संख्या में बदलें।<br>1. <code>round(4.8)</code> 5 बनेगा।<br>2. <code>round(4.2)</code> 4 बनेगा।' },
+      mr: { title: 'जवळचा पूर्णांक (round())', goal: '<strong>कृती:</strong> जवळच्या संख्येत रूपांतर करा.<br>1. <code>round(4.8)</code> 5 होईल.<br>2. <code>round(4.2)</code> 4 होईल.' },
+      ta: { title: 'முழுமைப்படுத்துதல் (round())', goal: '<strong>பணி:</strong> அருகிலுள்ள முழு எண்ணாக மாற்றவும்.<br>1. <code>round(4.8) = 5</code>.<br>2. <code>round(4.2) = 4</code>.' },
+      te: { title: 'రౌండ్ చేయడం (round())', goal: '<strong>టాస్క్:</strong> సమీప సంఖ్యగా మార్చండి.<br>1. <code>round(4.8) = 5</code>.<br>2. <code>round(4.2) = 4</code>.' },
+      bn: { title: 'রাউন্ড করা (round())', goal: '<strong>কাজ:</strong> নিকটবর্তী পূর্ণসংখ্যা করুন।<br>1. <code>round(4.8) = 5</code>.<br>2. <code>round(4.2) = 4</code>.' },
+      gu: { title: 'રાઉન્ડ કરવું (round())', goal: '<strong>કાર્ય:</strong> નજીકની સંખ્યા બનાવો.<br>1. <code>round(4.8) = 5</code>.<br>2. <code>round(4.2) = 4</code>.' },
+      kn: { title: 'ಪೂರ್ಣಾಂಕಗೊಳಿಸು (round())', goal: '<strong>ಕಾರ್ಯ:</strong> ಹತ್ತಿರದ ಪೂರ್ಣ ಸಂಖ್ಯೆ ಮಾಡಿ.<br>1. <code>round(4.8) = 5</code>.<br>2. <code>round(4.2) = 4</code>.' },
+      ml: { title: 'റൗണ്ട് ചെയ്യുക (round())', goal: '<strong>ടാസ്ക്:</strong> അടുത്തുള്ള സംഖ്യയാക്കുക.<br>1. <code>round(4.8) = 5</code>.<br>2. <code>round(4.2) = 4</code>.' },
+      pa: { title: 'ਰਾਊਂਡ ਕਰਨਾ (round())', goal: '<strong>ਕੰਮ:</strong> ਨਜ਼ਦੀਕੀ ਨੰਬਰ ਬਣਾਓ।<br>1. <code>round(4.8) = 5</code>.<br>2. <code>round(4.2) = 4</code>.' }
+    }
+  },
+  {
+    code: 'number = 37\nis_even = (number % 2 == 0)\nprint(is_even)',
+    i18n: {
+      en: { title: 'Even or Odd Test', goal: '<strong>Task:</strong> Check divisibility by 2.<br>1. Even numbers give remainder 0.<br>2. 37 % 2 is 1, so <code>is_even</code> is False.' },
+      hi: { title: 'सम या विषम की पहचान', goal: '<strong>कार्य:</strong> 2 से विभाज्यता जांचें।<br>1. <code>37 % 2 == 0</code> False देगा।' },
+      mr: { title: 'सम किंवा विषम चाचणी', goal: '<strong>कृती:</strong> 2 ने भागून पहा.<br>1. 37 ही विषम संख्या आहे.<br>2. निकाल False येईल.' },
+      ta: { title: 'இரட்டைப்படை / ஒற்றைப்படை', goal: '<strong>பணி:</strong> 2 ஆல் வகுபடுமா எனப் பார்க்கவும்.<br>1. 37 ஒற்றைப்படை எண்.<br>2. False கிடைக்கும்.' },
+      te: { title: 'సరి లేదా బేసి పరీక్ష', goal: '<strong>టాస్క్:</strong> 2 తో భాగాహారం చూడండి.<br>1. 37 బేసి సంఖ్య.<br>2. False వస్తుంది.' },
+      bn: { title: 'জোড় বা বিজোড় যাচাই', goal: '<strong>কাজ:</strong> ২ দিয়ে বিভাজ্য কিনা দেখুন।<br>1. ৩৭ বিজোড় সংখ্যা।<br>2. ফলাফল False আসবে।' },
+      gu: { title: 'બેકી કે એકી ચકાસણી', goal: '<strong>કાર્ય:</strong> 2 વડે ભાગીને જુઓ.<br>1. 37 એકી સંખ્યા છે.<br>2. False આવશે.' },
+      kn: { title: 'ಸಮ ಅಥವಾ ಬೆಸ ಸಂಖ್ಯೆ', goal: '<strong>ಕಾರ್ಯ:</strong> 2 ರಿಂದ ಭಾಗಿಸಿ ಪರೀಕ್ಷಿಸಿ.<br>1. 37 ಬೆಸ ಸಂಖ್ಯೆ.<br>2. False ಬರುತ್ತದೆ.' },
+      ml: { title: 'ഇരട്ടയോ ഒറ്റയോ എന്ന് നോക്കുക', goal: '<strong>ടാസ്ക്:</strong> 2 കൊണ്ട് ഹരിക്കുക.<br>1. 37 ഒറ്റസംഖ്യയാണ്.<br>2. False ലഭിക്കും.' },
+      pa: { title: 'ਜਿਸਤ ਜਾਂ ਟਾਂਕ ਪਰਖ', goal: '<strong>ਕੰਮ:</strong> 2 ਨਾਲ ਭਾਗ ਕਰਕੇ ਦੇਖੋ।<br>1. 37 ਟਾਂਕ ਨੰਬਰ ਹੈ।<br>2. False ਆਵੇਗਾ।' }
+    }
+  },
+  {
+    code: 'total_apples = 47\nbox_size = 6\nfull_boxes = total_apples // box_size\nleftovers = total_apples % box_size\nprint(full_boxes, leftovers)',
+    i18n: {
+      en: { title: 'Packaging Problem (// and %)', goal: '<strong>Task:</strong> Split items into boxes.<br>1. Full boxes: <code>47 // 6 = 7</code>.<br>2. Leftover loose apples: <code>47 % 6 = 5</code>.' },
+      hi: { title: 'पैकिंग समस्या (// और %)', goal: '<strong>कार्य:</strong> सेबों को डिब्बों में बांटें।<br>1. भरे डिब्बे: <code>47 // 6 = 7</code>.<br>2. बचे सेब: <code>47 % 6 = 5</code>.' },
+      mr: { title: 'पॅकिंग समस्या (// आणि %)', goal: '<strong>कृती:</strong> पेट्यांमध्ये वाटप करा.<br>1. पूर्ण पेट्या: 7.<br>2. उरलेले: 5.' },
+      ta: { title: 'பெட்டிகளில் அடைத்தல் (// மற்றும் %)', goal: '<strong>பணி:</strong> பொருட்களைப் பெட்டிகளில் பிரிக்கவும்.<br>1. முழு பெட்டிகள்: 7.<br>2. மீதம்: 5.' },
+      te: { title: 'ప్యాకింగ్ సమస్య (// మరియు %)', goal: '<strong>టాస్క్:</strong> పెట్టెలలో సర్దండి.<br>1. నిండిన పెట్టెలు: 7.<br>2. మిగిలినవి: 5.' },
+      bn: { title: 'প্যাকিং সমস্যা (// ও %)', goal: '<strong>কাজ:</strong> বক্সে ভাগ করুন।<br>1. পূর্ণ বক্স: ৭.<br>2. অবশিষ্ট: ৫.' },
+      gu: { title: 'પેકિંગ સમસ્યા (// અને %)', goal: '<strong>કાર્ય:</strong> બોક્સમાં વહેંચો.<br>1. ભરેલા બોક્સ: 7.<br>2. બાકી: 5.' },
+      kn: { title: 'ಪ್ಯಾಕಿಂಗ್ ಸಮಸ್ಯೆ (// ಮತ್ತು %)', goal: '<strong>ಕಾರ್ಯ:</strong> ಪೆಟ್ಟಿಗೆಗಳಲ್ಲಿ ಹಂಚಿ.<br>1. ಪೂರ್ಣ ಪೆಟ್ಟಿಗೆಗಳು: 7.<br>2. ಉಳಿದವು: 5.' },
+      ml: { title: 'പാക്കിംഗ് പ്രശ്നം (//, %)', goal: '<strong>ടാസ്ക്:</strong> ബോക്സുകളിൽ നിറയ്ക്കുക.<br>1. നിറഞ്ഞ ബോക്സുകൾ: 7.<br>2. ബാക്കി: 5.' },
+      pa: { title: 'ਪੈਕਿੰਗ ਸਮੱਸਿਆ (// ਅਤੇ %)', goal: '<strong>ਕੰਮ:</strong> ਡੱਬਿਆਂ ਵਿੱਚ ਵੰਡੋ।<br>1. ਭਰੇ ਡੱਬੇ: 7.<br>2. ਬਚੇ: 5.' }
+    }
+  },
+  {
+    code: 'a = 85\nb = 90\nc = 95\naverage = (a + b + c) / 3\nprint(average)',
+    i18n: {
+      en: { title: 'Calculating Averages', goal: '<strong>Task:</strong> Compute the mean score.<br>1. Sum scores in parentheses <code>(85 + 90 + 95)</code>.<br>2. Divide by 3 (90.0).' },
+      hi: { title: 'औसत निकालना (Average)', goal: '<strong>कार्य:</strong> औसत स्कोर ज्ञात करें।<br>1. तीनों को जोड़ें <code>(a + b + c)</code>.<br>2. 3 से भाग देकर 90.0 प्राप्त करें।' },
+      mr: { title: 'सरासरी काढणे', goal: '<strong>कृती:</strong> सरासरी काढा.<br>1. तिन्ही गुणांची बेरीज करा.<br>2. 3 ने भागून 90.0 मिळवा.' },
+      ta: { title: 'சராசரி கணக்கிடுதல்', goal: '<strong>பணி:</strong> சராசரியைக் கணக்கிடவும்.<br>1. மூன்றையும் கூட்டவும்.<br>2. 3 ஆல் வகுத்து 90.0 பெறவும்.' },
+      te: { title: 'సగటు లెక్కించడం', goal: '<strong>టాస్క్:</strong> సగటు కనుగొనండి.<br>1. మూడింటిని కూడండి.<br>2. 3 తో భాగించి 90.0 పొందండి.' },
+      bn: { title: 'গড় নির্ণয়', goal: '<strong>কাজ:</strong> গড় মান বের করুন।<br>1. তিনটি সংখ্যা যোগ করুন।<br>2. ৩ দিয়ে ভাগ করে ৯০.০ পান।' },
+      gu: { title: 'સરેરાશ શોધવી', goal: '<strong>કાર્ય:</strong> સરેરાશ ગણો.<br>1. ત્રણેયનો સરવાળો કરો.<br>2. 3 વડે ભાગી 90.0 મેળવો.' },
+      kn: { title: 'ಸರಾಸರಿ ಲೆಕ್ಕಾಚಾರ', goal: '<strong>ಕಾರ್ಯ:</strong> ಸರಾಸರಿ ಕಂಡುಹಿಡಿಯಿರಿ.<br>1. ಮೂರನ್ನು ಕೂಡಿಸಿ.<br>2. 3 ರಿಂದ ಭಾಗಿಸಿ 90.0 ಪಡೆಯಿರಿ.' },
+      ml: { title: 'ശരാശരി കണക്കാക്കുക', goal: '<strong>ടാസ്ക്:</strong> ശരാശരി കണ്ടെത്തുക.<br>1. മൂന്നും കൂട്ടുക.<br>2. 3 കൊണ്ട് ഹരിച്ച് 90.0 നേടുക.' },
+      pa: { title: 'ਔਸਤ ਕੱਢਣਾ', goal: '<strong>ਕੰਮ:</strong> ਔਸਤ ਮੁੱਲ ਲੱਭੋ।<br>1. ਤਿੰਨਾਂ ਨੂੰ ਜੋੜੋ।<br>2. 3 ਨਾਲ ਭਾਗ ਕਰਕੇ 90.0 ਪ੍ਰਾਪਤ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'score = 42\ntotal = 50\npercent = (score / total) * 100\nprint(f"{percent}%")',
+    i18n: {
+      en: { title: 'Percentage Formula', goal: '<strong>Task:</strong> Convert fraction to percent.<br>1. <code>(42 / 50) * 100</code>.<br>2. Output 84.0%.' },
+      hi: { title: 'प्रतिशत निकालना (%)', goal: '<strong>कार्य:</strong> प्रतिशत की गणना करें।<br>1. <code>(score / total) * 100</code>.<br>2. परिणाम 84.0% होगा।' },
+      mr: { title: 'टक्केवारी काढणे', goal: '<strong>कृती:</strong> टक्केवारी काढा.<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% प्रिंट करा.' },
+      ta: { title: 'சதவீதம் கணக்கிடுதல்', goal: '<strong>பணி:</strong> சதவீதமாக மாற்றவும்.<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% அச்சிடவும்.' },
+      te: { title: 'శాతం లెక్కించడం', goal: '<strong>టాస్క్:</strong> శాతాన్ని లెక్కించండి.<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% ప్రింట్ చేయండి.' },
+      bn: { title: 'শতকরা নির্ণয়', goal: '<strong>কাজ:</strong> শতকরায় প্রকাশ করুন।<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% প্রিন্ট করুন।' },
+      gu: { title: 'ટકાવારી ગણવી', goal: '<strong>કાર્ય:</strong> ટકાવારી શોધો.<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% પ્રિન્ટ કરો.' },
+      kn: { title: 'ಶೇಕಡಾವಾರು ಲೆಕ್ಕಾಚಾರ', goal: '<strong>ಕಾರ್ಯ:</strong> ಶೇಕಡಾವಾರು ತಿಳಿಯಿರಿ.<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ശതമാനം കണ്ടെത്തുക', goal: '<strong>ടാസ്ക്:</strong> ശതമാനമാക്കുക.<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਪ੍ਰਤੀਸ਼ਤ ਕੱਢਣਾ', goal: '<strong>ਕੰਮ:</strong> ਪ੍ਰਤੀਸ਼ਤ ਵਿੱਚ ਬਦਲੋ।<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'length = 12\nwidth = 5\narea = length * width\nperimeter = 2 * (length + width)\nprint(area, perimeter)',
+    i18n: {
+      en: { title: 'Area and Perimeter', goal: '<strong>Task:</strong> Rectangle geometry.<br>1. Area = length × width (60).<br>2. Perimeter = 2 × (length + width) (34).' },
+      hi: { title: 'क्षेत्रफल और परिमाप', goal: '<strong>कार्य:</strong> आयत की गणना करें।<br>1. क्षेत्रफल = 12 × 5 = 60.<br>2. परिमाप = 2 × (12 + 5) = 34.' },
+      mr: { title: 'क्षेत्रफळ आणि परिमिती', goal: '<strong>कृती:</strong> आयताची गणना करा.<br>1. क्षेत्रफळ = 60.<br>2. परिमिती = 34.' },
+      ta: { title: 'பரப்பளவு மற்றும் சுற்றளவு', goal: '<strong>பணி:</strong> செவ்வகத்தைக் கணக்கிடவும்.<br>1. பரப்பளவு = 60.<br>2. சுற்றளவு = 34.' },
+      te: { title: 'వైశాల్యం మరియు చుట్టుకొలత', goal: '<strong>టాస్క్:</strong> దీర్ఘచతురస్రం లెక్కలు చేయండి.<br>1. వైశాల్యం = 60.<br>2. చుట్టుకొలత = 34.' },
+      bn: { title: 'ক্ষেত্রফল ও পরিসীমা', goal: '<strong>কাজ:</strong> আয়তক্ষেত্রের হিসাব করুন।<br>1. ক্ষেত্রফল = ৬০.<br>2. পরিসীমা = ৩৪.' },
+      gu: { title: 'ક્ષેત્રફળ અને પરિમિતિ', goal: '<strong>કાર્ય:</strong> લંબચોરસની ગણતરી કરો.<br>1. ક્ષેત્રફળ = 60.<br>2. પરિમિતિ = 34.' },
+      kn: { title: 'ವಿಸ್ತೀರ್ಣ ಮತ್ತು ಸುತ್ತಳತೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಆಯತದ ಲೆಕ್ಕಾಚಾರ ಮಾಡಿ.<br>1. ವಿಸ್ತೀರ್ಣ = 60.<br>2. ಸುತ್ತಳತೆ = 34.' },
+      ml: { title: 'വിസ്തീർണ്ണവും ചുറ്റളവും', goal: '<strong>ടാസ്ക്:</strong> കണക്കുകൂട്ടുക.<br>1. വിസ്തീർണ്ണം = 60.<br>2. ചുറ്റളവ് = 34.' },
+      pa: { title: 'ਖੇਤਰਫਲ ਅਤੇ ਪਰਿਮਾਪ', goal: '<strong>ਕੰਮ:</strong> ਆਇਤ ਦੀ ਗਣਨਾ ਕਰੋ।<br>1. ਖੇਤਰਫਲ = 60.<br>2. ਪਰਿਮਾਪ = 34.' }
+    }
+  },
+  {
+    code: 'total_seconds = 135\nminutes = total_seconds // 60\nseconds = total_seconds % 60\nprint(f"{minutes}m {seconds}s")',
+    i18n: {
+      en: { title: 'Time Converter (Minutes & Seconds)', goal: '<strong>Task:</strong> Convert seconds.<br>1. Minutes: <code>135 // 60 = 2</code>.<br>2. Seconds: <code>135 % 60 = 15</code>.<br>3. Print <code>2m 15s</code>.' },
+      hi: { title: 'समय रूपांतरण (मिनट और सेकंड)', goal: '<strong>कार्य:</strong> 135 सेकंड को बदलें।<br>1. मिनट: <code>135 // 60 = 2</code>.<br>2. सेकंड: <code>135 % 60 = 15</code>.' },
+      mr: { title: 'वेळ रूपांतरण (मिनिटे व सेकंद)', goal: '<strong>कृती:</strong> सेकंदांचे मिनिट करा.<br>1. मिनिटे: 2.<br>2. सेकंद: 15.' },
+      ta: { title: 'நேர மாற்றம் (நிமிடங்கள் & வினாடிகள்)', goal: '<strong>பணி:</strong> வினாடிகளை மாற்றவும்.<br>1. நிமிடங்கள்: 2.<br>2. வினாடிகள்: 15.' },
+      te: { title: 'సమయ మార్పిడి (నిమిషాలు & సెకన్లు)', goal: '<strong>టాస్క్:</strong> సెకన్లను మార్చండి.<br>1. నిమిషాలు: 2.<br>2. సెకన్లు: 15.' },
+      bn: { title: 'সময় রূপান্তর (মিনিট ও সেকেন্ড)', goal: '<strong>কাজ:</strong> সেকেন্ডকে রূপান্তর করুন।<br>1. মিনিট: ২.<br>2. সেকেন্ড: ১৫.' },
+      gu: { title: 'સમય રૂપાંતરણ (મિનિટ અને સેકન્ડ)', goal: '<strong>કાર્ય:</strong> સેકન્ડ ફેરવો.<br>1. મિનિટ: 2.<br>2. સેકન્ડ: 15.' },
+      kn: { title: 'ಸಮಯ ಪರಿವರ್ತನೆ (ನಿಮಿಷ & ಸೆಕೆಂಡು)', goal: '<strong>ಕಾರ್ಯ:</strong> ಸೆಕೆಂಡುಗಳನ್ನು ಪರಿವರ್ತಿಸಿ.<br>1. ನಿಮಿಷ: 2.<br>2. ಸೆಕೆಂಡು: 15.' },
+      ml: { title: 'സമയ പരിവർത്തനം', goal: '<strong>ടാസ്ക്:</strong> സെക്കൻഡുകൾ മാറ്റുക.<br>1. മിനിറ്റുകൾ: 2.<br>2. സെക്കൻഡുകൾ: 15.' },
+      pa: { title: 'ਸਮਾਂ ਪਰਿਵਰਤਨ', goal: '<strong>ਕੰਮ:</strong> ਸਕਿੰਟਾਂ ਨੂੰ ਬਦਲੋ।<br>1. ਮਿੰਟ: 2.<br>2. ਸਕਿੰਟ: 15.' }
+    }
+  },
+  {
+    code: 'price = 45.0\nquantity = 3\ntax_rate = 0.05\ndiscount = 10.0\nsubtotal = (price * quantity) - discount\ntotal = subtotal + (subtotal * tax_rate)\nprint(total)',
+    i18n: {
+      en: { title: 'Receipt Total with Tax & Discount', goal: '<strong>Task:</strong> Real-world billing calculation.<br>1. <code>(45.0 * 3) - 10.0 = 125.0</code>.<br>2. Add 5% tax (6.25) to get 131.25.' },
+      hi: { title: 'छूट और कर के साथ कुल बिल', goal: '<strong>कार्य:</strong> बिलिंग गणना करें।<br>1. 3 वस्तुओं की कीमत में से 10 छूट घटाएं।<br>2. 5% टैक्स जोड़कर 131.25 प्राप्त करें।' },
+      mr: { title: 'कर आणि सवलतीसह बिल', goal: '<strong>कृती:</strong> एकूण बिल काढा.<br>1. सवलत वजा करा.<br>2. 5% कर जोडून 131.25 प्रिंट करा.' },
+      ta: { title: 'வரி மற்றும் தள்ளுபடியுடன் பில்', goal: '<strong>பணி:</strong> பில் கணக்கிடவும்.<br>1. தள்ளுபடியைக் கழிக்கவும்.<br>2. வரி சேர்த்து 131.25 பெறவும்.' },
+      te: { title: 'పన్ను మరియు డిస్కౌంట్‌తో బిల్లు', goal: '<strong>టాస్క్:</strong> మొత్తం బిల్లు లెక్కించండి.<br>1. డిస్కౌంట్ తీసివేయండి.<br>2. టాక్స్ కలిపి 131.25 పొందండి.' },
+      bn: { title: 'ছাড় ও ট্যাক্সসহ মোট বিল', goal: '<strong>কাজ:</strong> বিলের হিসাব করুন।<br>1. ডিসকাউন্ট বাদ দিন।<br>2. ট্যাক্স যোগ করে ১৩১.২৫ প্রিন্ট করুন।' },
+      gu: { title: 'ટેક્સ અને ડિસ્કાઉન્ટ સાથે બિલ', goal: '<strong>કાર્ય:</strong> બિલિંગ ગણો.<br>1. ડિસ્કાઉન્ટ બાદ કરો.<br>2. ટેક્સ ઉમેરી 131.25 મેળવો.' },
+      kn: { title: 'ತೆರಿಗೆ ಮತ್ತು ರಿಯಾಯಿತಿಯೊಂದಿಗೆ ಬಿಲ್', goal: '<strong>ಕಾರ್ಯ:</strong> ಒಟ್ಟು ಬಿಲ್ ಲೆಕ್ಕ ಹಾಕಿ.<br>1. ರಿಯಾಯಿತಿ ಕಳೆಯಿರಿ.<br>2. ತೆರಿಗೆ ಸೇರಿಸಿ 131.25 ಪಡೆಯಿರಿ.' },
+      ml: { title: 'നികുതിയും കിഴിവും ചേർത്ത ബിൽ', goal: '<strong>ടാസ്ക്:</strong> ബിൽ കണക്കാക്കുക.<br>1. ഡിസ്കൗണ്ട് കുറയ്ക്കുക.<br>2. ടാക്സ് ചേർത്ത് 131.25 നേടുക.' },
+      pa: { title: 'ਟੈਕਸ ਅਤੇ ਛੋਟ ਸਮੇਤ ਬਿੱਲ', goal: '<strong>ਕੰਮ:</strong> ਬਿੱਲ ਦੀ ਗਣਨਾ ਕਰੋ।<br>1. ਛੋਟ ਘਟਾਓ।<br>2. ਟੈਕਸ ਜੋੜ ਕੇ 131.25 ਪ੍ਰਾਪਤ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'principal = 1000\nrate = 1.05\nyears = 3\nfuture_val = principal * (rate ** years)\nprint(future_val)',
+    i18n: {
+      en: { title: 'Compound Growth Calculation', goal: '<strong>Task:</strong> Compute exponential growth.<br>1. <code>1000 * (1.05 ** 3)</code>.<br>2. Output future value (approx 1157.625).' },
+      hi: { title: 'चक्रवृद्धि वृद्धि की गणना', goal: '<strong>कार्य:</strong> घातीय वृद्धि निकालें।<br>1. <code>1000 * (1.05 ** 3)</code> करें।<br>2. परिणाम 1157.625 होगा।' },
+      mr: { title: 'चक्रवाढ वाढ गणना', goal: '<strong>कृती:</strong> चक्रवाढ वाढ काढा.<br>1. <code>1000 * (1.05 ** 3)</code> करा.<br>2. 1157.625 प्रिंट करा.' },
+      ta: { title: 'கூட்டு வளர்ச்சி கணக்கீடு', goal: '<strong>பணி:</strong> வளர்ச்சியைப் கணக்கிடவும்.<br>1. <code>1000 * (1.05 ** 3)</code>.<br>2. அச்சிடவும்.' },
+      te: { title: 'చక్రవడ్డీ వృద్ధి గణన', goal: '<strong>టాస్క్:</strong> గ్రోత్ లెక్కించండి.<br>1. <code>1000 * (1.05 ** 3)</code>.<br>2. ఫలితం ప్రింట్ చేయండి.' },
+      bn: { title: 'চক্রবৃদ্ধি বৃদ্ধি নির্ণয়', goal: '<strong>কাজ:</strong> চক্রবৃদ্ধি হিসাব করুন।<br>1. <code>1000 * (1.05 ** 3)</code> লিখুন।<br>2. প্রিন্ট করুন।' },
+      gu: { title: 'ચક્રવૃદ્ધિ ગણતરી', goal: '<strong>કાર્ય:</strong> ગણતરી કરો.<br>1. <code>1000 * (1.05 ** 3)</code>.<br>2. પ્રિન્ટ કરો.' },
+      kn: { title: 'ಚಕ್ರಬಡ್ಡಿ ಬೆಳವಣಿಗೆಯ ಲೆಕ್ಕ', goal: '<strong>ಕಾರ್ಯ:</strong> ಬೆಳವಣಿಗೆಯನ್ನು ಲೆಕ್ಕ ಹಾಕಿ.<br>1. <code>1000 * (1.05 ** 3)</code>.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'കൂട്ടുപലിശ വളർച്ച', goal: '<strong>ടാസ്ക്:</strong> കണക്കുകൂട്ടുക.<br>1. <code>1000 * (1.05 ** 3)</code>.<br>2. പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਮਿਸ਼ਰਿਤ ਵਾਧਾ ਗਣਨਾ', goal: '<strong>ਕੰਮ:</strong> ਵਾਧੇ ਦਾ ਹਿਸਾਬ ਲਗਾਓ।<br>1. <code>1000 * (1.05 ** 3)</code>.<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'num_students = 58\nbus_capacity = 20\nneeded_buses = (num_students + bus_capacity - 1) // bus_capacity\nprint(needed_buses)',
+    i18n: {
+      en: { title: 'Capstone: Ceiling Division (Rounding Up)', goal: '<strong>Task:</strong> Calculate full buses needed.<br>1. 58 students in 20-seat buses need 3 buses.<br>2. Formula <code>(n + k - 1) // k</code> rounds up to 3.' },
+      hi: { title: 'अंतिम चुनौती: सीलिंग डिवीजन (ऊपर पूर्णांकन)', goal: '<strong>कार्य:</strong> आवश्यक बसों की संख्या निकालें।<br>1. 58 छात्रों के लिए 20 सीटों वाली 3 बसें चाहिए।<br>2. परिणाम 3 प्राप्त करें।' },
+      mr: { title: 'अंतिम आव्हान: वरचा पूर्णांक काढणे', goal: '<strong>कृती:</strong> लागणाऱ्या बसेसची संख्या काढा.<br>1. 58 विद्यार्थ्यांसाठी 3 बसेस हव्यात.<br>2. 3 प्रिंट करा.' },
+      ta: { title: 'இறுதி சவால்: முழுமையாக்கல்', goal: '<strong>பணி:</strong> தேவையான பேருந்துகளைக் கணக்கிடவும்.<br>1. 58 மாணவர்களுக்கு 3 பேருந்துகள் தேவை.<br>2. 3 அச்சிடவும்.' },
+      te: { title: 'చివరి సవాలు: సీలింగ్ డివిజన్', goal: '<strong>టాస్క్:</strong> బస్సుల సంఖ్యను లెక్కించండి.<br>1. 58 మందికి 3 బస్సులు అవసరం.<br>2. 3 ప్రింట్ చేయండి.' },
+      bn: { title: 'চূড়ান্ত চ্যালেঞ্জ: সিলিং ডিভিশন', goal: '<strong>কাজ:</strong> কয়টি বাস লাগবে হিসাব করুন।<br>1. ৫৮ জন শিক্ষার্থীর জন্য ৩টি বাস প্রয়োজন।<br>2. ৩ প্রিন্ট করুন।' },
+      gu: { title: 'અંતિમ પડકાર: સીલિંગ ડિવિઝન', goal: '<strong>કાર્ય:</strong> જરૂરી બસોની ગણતરી કરો.<br>1. 58 વિદ્યાર્થીઓ માટે 3 બસ જોઈએ.<br>2. 3 પ્રિન્ટ કરો.' },
+      kn: { title: 'ಅಂತಿಮ ಸವಾಲು: ಸೀಲಿಂಗ್ ಭಾಗಾಕಾರ', goal: '<strong>ಕಾರ್ಯ:</strong> ಅಗತ್ಯವಿರುವ ಬಸ್‌ಗಳನ್ನು ಲೆಕ್ಕ ಹಾಕಿ.<br>1. 58 ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ 3 ಬಸ್‌ಗಳು ಬೇಕು.<br>2. 3 ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'അവസാന ചലഞ്ച്: സീലിംഗ് ഡിവിഷൻ', goal: '<strong>ടാസ്ക്:</strong> ആവശ്യമായ ബസുകൾ കണ്ടെത്തുക.<br>1. 58 കുട്ടികൾക്ക് 3 ബസുകൾ വേണം.<br>2. 3 പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਆਖਰੀ ਚੁਣੌਤੀ: ਸੀਲਿੰਗ ਡਿਵੀਜ਼ਨ', goal: '<strong>ਕੰਮ:</strong> ਲੋੜੀਂਦੀਆਂ ਬੱਸਾਂ ਦੀ ਗਣਨਾ ਕਰੋ।<br>1. 58 ਵਿਦਿਆਰਥੀਆਂ ਲਈ 3 ਬੱਸਾਂ ਚਾਹੀਦੀਆਂ ਹਨ।<br>2. 3 ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  }
+];
+
+const STEP_LABELS = {
+  en: (i, n) => `Lesson ${i} of ${n}`,
+  hi: (i, n) => `पाठ ${i} / ${n}`,
+  mr: (i, n) => `धडा ${i} / ${n}`,
+  ta: (i, n) => `பாடம் ${i} / ${n}`,
+  te: (i, n) => `పాఠం ${i} / ${n}`,
+  bn: (i, n) => `পাঠ ${i} / ${n}`,
+  gu: (i, n) => `પાઠ ${i} / ${n}`,
+  kn: (i, n) => `ಪಾಠ ${i} / ${n}`,
+  ml: (i, n) => `പാഠം ${i} / ${n}`,
+  pa: (i, n) => `ਪਾਠ ${i} / ${n}`
+};
+
+const KID_TYPE_INFO = {
+  int: { emoji: '🔢', name: 'Whole Number', desc: 'Counting number (int)', shadow: '#90cdf4', color: '#3182ce' },
+  float: { emoji: '🎯', name: 'Decimal Number', desc: 'Number with dot . (float)', shadow: '#d6bcfa', color: '#805ad5' },
+  str: { emoji: '💬', name: 'Word / Text', desc: 'Message in quotes (str)', shadow: '#9ae6b4', color: '#38a169' },
+  bool: { emoji: '🚦', name: 'Yes / No', desc: 'True or False (bool)', shadow: '#fbd38d', color: '#dd6b20' },
+  none: { emoji: '📭', name: 'Empty', desc: 'No value yet (None)', shadow: '#cbd5e0', color: '#718096' }
+};
+
+const TYPE_COLOR = { int: 'var(--blue)', float: 'var(--violet)', str: 'var(--green)', bool: 'var(--amber)', none: 'var(--grey)' };
+const TYPE_TINT = { int: 'rgba(91,141,239,0.18)', float: 'rgba(182,124,224,0.20)', str: 'rgba(79,157,99,0.18)', bool: 'rgba(217,162,75,0.22)', none: 'rgba(144,152,163,0.20)' };
+const TYPE_DESC = { int: 'whole number', float: 'decimal number', str: 'text', bool: 'True or False', none: 'no value yet' };
+
+// ============================================================
+// UI Wiring
+// ============================================================
+const els = {
+  lessons: document.getElementById('lessons'),
+  step: document.getElementById('lesson-step'),
+  title: document.getElementById('lesson-title'),
+  goal: document.getElementById('lesson-goal'),
+  code: document.getElementById('code'),
+  gutter: document.getElementById('gutter'),
+  currentLine: document.getElementById('current-line'),
+  lineCount: document.getElementById('line-count'),
+  runBtn: document.getElementById('run-btn'),
+  resetBtn: document.getElementById('reset-btn'),
+  peekBtn: document.getElementById('peek-btn'),
+  peekBadge: document.getElementById('peek-badge'),
+  editorPanel: document.getElementById('editor-panel'),
+  visualPanel: document.getElementById('visual-panel'),
+  kidsToggleBtn: document.getElementById('kids-toggle-btn'),
+  emptyStateText: document.getElementById('empty-state-text'),
+  legendBar: document.getElementById('legend-bar'),
+  boxes: document.getElementById('boxes'),
+  terminal: document.getElementById('terminal'),
+  runHint: document.getElementById('run-hint'),
+  progressBar: document.getElementById('progress-bar'),
+  levelBadge: document.getElementById('lesson-level'),
+  langSelect: document.getElementById('lang-select')
+};
+
+const LINE_HEIGHT = 22;
+const STEP_DELAY = 480;
+const STEP_GAP = 220;
+const PROGRESS_KEY = 'math-lab-progress';
+const USER_CODE_KEY = 'math-lab-user-code';
+const KIDS_MODE_KEY = 'math-lab-kids-mode';
+
+let state = { running: false, lessonIndex: 0 };
+let userCodeStore = {};
+let isPeeking = false;
+let prePeekDraft = '';
+let currentLanguage = 'en';
+let isKidsMode = localStorage.getItem(KIDS_MODE_KEY) !== 'false';
+
+try {
+  userCodeStore = JSON.parse(localStorage.getItem(USER_CODE_KEY) || '{}');
+} catch {
+  userCodeStore = {};
+}
+
+function saveUserCodes() {
+  try {
+    localStorage.setItem(USER_CODE_KEY, JSON.stringify(userCodeStore));
+  } catch {}
+}
+
+function loadProgress() {
+  try { return new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || '[]')); }
+  catch { return new Set(); }
+}
+function saveProgress(done) {
+  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify([...done])); } catch {}
+}
+let completed = loadProgress();
+
+function levelFor(i) {
+  if (i < 10) return { text: 'Beginner', cls: '' };
+  if (i < 20) return { text: 'Intermediate', cls: 'mid' };
+  return { text: 'Advanced', cls: 'adv' };
+}
+
+function updateProgressBar() {
+  const pct = Math.round((completed.size / LESSONS.length) * 100);
+  els.progressBar.style.width = pct + '%';
+}
+
+function buildLessonPills() {
+  els.lessons.innerHTML = '';
+  let activePill = null;
+  LESSONS.forEach((l, i) => {
+    const pill = document.createElement('button');
+    let cls = 'lesson-pill';
+    if (i === state.lessonIndex) cls += ' active';
+    if (completed.has(i)) cls += ' done';
+    pill.className = cls;
+    pill.textContent = String(i + 1);
+    const localized = l.i18n[currentLanguage] || l.i18n.en;
+    pill.title = localized.title;
+    pill.setAttribute('aria-label', localized.title);
+    pill.onclick = () => { if (!state.running && !isPeeking) loadLesson(i); };
+    if (i === state.lessonIndex) activePill = pill;
+    els.lessons.appendChild(pill);
+  });
+  if (activePill) activePill.scrollIntoView({ inline: 'center', block: 'nearest' });
+}
+
+function updateQuestionUI(i) {
+  const l = LESSONS[i];
+  const localized = l.i18n[currentLanguage] || l.i18n.en;
+  els.title.textContent = localized.title;
+  els.goal.innerHTML = localized.goal;
+  
+  const stepFormatter = STEP_LABELS[currentLanguage] || STEP_LABELS.en;
+  els.step.textContent = stepFormatter(i + 1, LESSONS.length);
+}
+
+function updateKidsModeUI() {
+  if (isKidsMode) {
+    els.kidsToggleBtn.classList.add('is-active');
+    els.kidsToggleBtn.textContent = '🧸 Kids Mode: ON';
+    els.visualPanel.classList.add('kids-active');
+    els.emptyStateText.textContent = '🚀 Run your code to watch the math blocks calculate live!';
+    els.legendBar.innerHTML = `
+      <div class="legend-item"><span>🔢</span> int (Whole Number)</div>
+      <div class="legend-item"><span>🎯</span> float (Decimal)</div>
+      <div class="legend-item"><span>💬</span> str (Text)</div>
+      <div class="legend-item"><span>🚦</span> bool (Yes/No)</div>
+      <div class="legend-item"><span>📭</span> None (Empty)</div>
+    `;
+  } else {
+    els.kidsToggleBtn.classList.remove('is-active');
+    els.kidsToggleBtn.textContent = '🧸 Kids Mode: OFF';
+    els.visualPanel.classList.remove('kids-active');
+    els.emptyStateText.textContent = 'Run your code to see the numbers calculate in real-time!';
+    els.legendBar.innerHTML = `
+      <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>int (Whole #)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--violet)"></span>float (Decimal)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>str (Text)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>bool (Yes/No)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--grey)"></span>None (Empty)</div>
+    `;
+  }
+}
+
+function loadLesson(i) {
+  state.lessonIndex = i;
+  const lvl = levelFor(i);
+  els.levelBadge.textContent = lvl.text;
+  els.levelBadge.className = 'level-badge ' + lvl.cls;
+
+  const savedUserCode = userCodeStore[i];
+  els.code.value = (savedUserCode !== undefined) ? savedUserCode : '# Write your math code here\n';
+  els.code.readOnly = false;
+  
+  updateQuestionUI(i);
+  buildLessonPills();
+  updateProgressBar();
+  syncGutter();
+  clearOutputs();
+}
+
+function syncGutter() {
+  const n = els.code.value.split('\n').length;
+  let s = '';
+  for (let i = 1; i <= n; i++) s += i + (i < n ? '\n' : '');
+  els.gutter.textContent = s;
+  els.gutter.scrollTop = els.code.scrollTop;
+  els.lineCount.textContent = n + (n === 1 ? ' line' : ' lines');
+}
+
+function clearOutputs() {
+  els.boxes.innerHTML = `<div class="empty-state"><div class="icon"></div><p id="empty-state-text">${isKidsMode ? '🚀 Run your code to watch the math blocks calculate live!' : 'Run your code to see the numbers calculate in real-time!'}</p></div>`;
+  els.terminal.innerHTML = '<div class="term-line is-muted">Waiting for you to press Run…</div>';
+  els.currentLine.style.display = 'none';
+  els.currentLine.classList.remove('err');
+}
+
+function setCurrentLine(idx, isErr) {
+  els.currentLine.style.display = 'block';
+  els.currentLine.style.transform = `translateY(${14 + idx * LINE_HEIGHT - els.code.scrollTop}px)`;
+  els.currentLine.classList.toggle('err', !!isErr);
+}
+
+function renderVars(env, order, created, updated, referenced) {
+  if (order.length === 0) {
+    clearOutputs();
+    return;
+  }
+  els.boxes.innerHTML = '';
+  order.forEach(name => {
+    const val = env[name];
+    const color = TYPE_COLOR[val.t] || 'var(--grey)';
+    const box = document.createElement('div');
+    
+    if (isKidsMode) {
+      const kidInfo = KID_TYPE_INFO[val.t] || KID_TYPE_INFO.none;
+      box.className = 'vbox kid-card';
+      box.style.setProperty('--tag-color', kidInfo.color);
+      box.style.setProperty('--kid-shadow', kidInfo.shadow);
+
+      box.setAttribute('data-name', `🧮 ${name}`);
+      box.title = `Variable "${name}" = ${pyDisplay(val)}`;
+      box.innerHTML = `
+        <div class="kid-inner">
+          <div class="kid-val-row">
+            <span class="kid-emoji">${kidInfo.emoji}</span>
+            <span class="kid-val">${escapeHtml(pyStr(val))}</span>
+          </div>
+          <div class="kid-desc">${kidInfo.desc}</div>
+        </div>
+      `;
+    } else {
+      box.className = 'vbox';
+      box.setAttribute('data-name', name);
+      box.style.setProperty('--tag-color', color);
+      box.title = `${name} = ${pyDisplay(val)} — ${TYPE_DESC[val.t] || pyTypeName(val)}`;
+      box.innerHTML = `<div class="val">${escapeHtml(pyDisplay(val))}</div><div class="type">${pyTypeName(val)}</div>`;
+    }
+
+    if (created.has(name)) box.classList.add('is-new');
+    else if (updated.has(name)) box.classList.add('is-updated');
+    else if (referenced && referenced.has(name)) {
+      box.classList.add('is-referenced');
+      box.style.setProperty('--tag-tint', TYPE_TINT[val.t] || TYPE_TINT.none);
+    }
+
+    els.boxes.appendChild(box);
+  });
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+}
+
+function writeTerminalLine(text, cls) {
+  const div = document.createElement('div');
+  div.className = 'term-line' + (cls ? ' ' + cls : '');
+  div.textContent = text;
+  els.terminal.appendChild(div);
+  els.terminal.scrollTop = els.terminal.scrollHeight;
+}
+
+function writeCursor() {
+  const div = document.createElement('div');
+  div.className = 'term-line cursor-line';
+  div.innerHTML = '<span class="blink">▍</span>';
+  els.terminal.appendChild(div);
+  els.terminal.scrollTop = els.terminal.scrollHeight;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function runProgram() {
+  if (state.running || isPeeking) return;
+  state.running = true;
+  els.runBtn.disabled = true;
+  els.runBtn.textContent = 'Running…';
+  els.resetBtn.disabled = true;
+  els.peekBtn.disabled = true;
+  els.code.readOnly = true;
+  els.runHint.textContent = 'Watch the line highlight move as each statement runs';
+
+  els.boxes.innerHTML = '';
+  els.terminal.innerHTML = '';
+
+  const lines = els.code.value.split('\n');
+  const env = Object.create(null);
+  const order = [];
+  let stopped = false;
+  let anyOutput = false;
+
+  for (let i = 0; i < lines.length && !stopped; i++) {
+    const stripped = stripComment(lines[i]).trim();
+    if (!stripped) continue;
+    setCurrentLine(i, false);
+    await sleep(STEP_DELAY);
+
+    const created = new Set(), updated = new Set(), referenced = new Set();
+    try {
+      const toks = tokenize(stripped);
+      executeStatement(toks, env, order, created, updated, referenced, (txt) => {
+        writeTerminalLine(txt);
+        anyOutput = true;
+      });
+    } catch (err) {
+      writeTerminalLine(`Line ${i + 1}: ${err.message}`, 'is-error');
+      setCurrentLine(i, true);
+      stopped = true;
+      break;
+    }
+    renderVars(env, order, created, updated, referenced);
+    await sleep(STEP_GAP);
+  }
+
+  if (!stopped) {
+    els.currentLine.style.display = 'none';
+    if (!anyOutput) writeTerminalLine('(no output — try adding a print())', 'is-muted');
+    writeCursor();
+    if (!completed.has(state.lessonIndex)) {
+      completed.add(state.lessonIndex);
+      saveProgress(completed);
+      buildLessonPills();
+      updateProgressBar();
+    }
+  }
+
+  if (order.length === 0 && !stopped) {
+    clearOutputs();
+  }
+
+  els.code.readOnly = false;
+  state.running = false;
+  els.runBtn.disabled = false;
+  els.runBtn.textContent = 'Run ▶';
+  els.resetBtn.disabled = false;
+  els.peekBtn.disabled = false;
+  els.runHint.textContent = 'Runs line by line so you can watch it happen';
+}
+
+// Hold to Peek Solution
+function startPeek(e) {
+  if (e) e.preventDefault();
+  if (isPeeking || state.running) return;
+  isPeeking = true;
+  prePeekDraft = els.code.value;
+  els.code.value = LESSONS[state.lessonIndex].code;
+  els.code.readOnly = true;
+  els.peekBtn.classList.add('is-holding');
+  els.editorPanel.classList.add('peeking');
+  els.peekBadge.style.display = 'inline-block';
+  syncGutter();
+}
+
+function stopPeek(e) {
+  if (e) e.preventDefault();
+  if (!isPeeking) return;
+  isPeeking = false;
+  els.code.value = prePeekDraft;
+  if (!state.running) els.code.readOnly = false;
+  els.peekBtn.classList.remove('is-holding');
+  els.editorPanel.classList.remove('peeking');
+  els.peekBadge.style.display = 'none';
+  syncGutter();
+}
+
+els.peekBtn.addEventListener('mousedown', startPeek);
+window.addEventListener('mouseup', stopPeek);
+els.peekBtn.addEventListener('mouseleave', stopPeek);
+els.peekBtn.addEventListener('touchstart', startPeek, { passive: false });
+window.addEventListener('touchend', stopPeek);
+window.addEventListener('touchcancel', stopPeek);
+
+els.runBtn.addEventListener('click', runProgram);
+els.resetBtn.addEventListener('click', () => {
+  if (!state.running && !isPeeking) {
+    delete userCodeStore[state.lessonIndex];
+    saveUserCodes();
+    loadLesson(state.lessonIndex);
+  }
+});
+
+els.kidsToggleBtn.addEventListener('click', () => {
+  isKidsMode = !isKidsMode;
+  localStorage.setItem(KIDS_MODE_KEY, isKidsMode);
+  updateKidsModeUI();
+  if (!state.running && els.code.value) {
+    runProgram();
+  }
+});
+
+els.code.addEventListener('input', () => {
+  if (!isPeeking) {
+    userCodeStore[state.lessonIndex] = els.code.value;
+    saveUserCodes();
+  }
+  syncGutter();
+});
+els.code.addEventListener('scroll', () => {
+  els.gutter.scrollTop = els.code.scrollTop;
+});
+els.code.addEventListener('keydown', (e) => {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const s = els.code.selectionStart, en = els.code.selectionEnd;
+    els.code.value = els.code.value.slice(0, s) + '    ' + els.code.value.slice(en);
+    els.code.selectionStart = els.code.selectionEnd = s + 4;
+    if (!isPeeking) {
+      userCodeStore[state.lessonIndex] = els.code.value;
+      saveUserCodes();
+    }
+    syncGutter();
+  }
+});
+
+els.langSelect.addEventListener('change', (e) => {
+  currentLanguage = e.target.value;
+  updateQuestionUI(state.lessonIndex);
+  buildLessonPills();
+});
+
+updateKidsModeUI();
+buildLessonPills();
+loadLesson(0);
+</script>
+</body>
+</html>
