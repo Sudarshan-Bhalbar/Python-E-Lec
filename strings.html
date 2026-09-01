@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conditional Statements Lab · Learn Python</title>
+<title>Strings & Text Lab · Learn Python</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
@@ -25,10 +25,9 @@
     --teal:#43c9b8;
     --blue:#5b8def;
     --violet:#b67ce0;
-    --violet-dim:#77489c;
     --green:#4f9d63;
+    --green-dim:#357a46;
     --amber:#d9a24b;
-    --rose:#e0779a;
     --grey:#9098a3;
     --error:#e8685f;
 
@@ -45,9 +44,9 @@
     min-height:100vh;
   }
   .wrap{
-    max-width:1440px;
+    max-width:1400px;
     margin:0 auto;
-    padding:24px 24px 60px;
+    padding:28px 28px 60px;
   }
 
   /* ---------- Header ---------- */
@@ -72,18 +71,18 @@
   }
   .brand .dot{
     width:9px;height:9px;border-radius:50%;
-    background:var(--violet);
-    box-shadow:0 0 0 4px rgba(182,124,224,0.22);
+    background:var(--green);
+    box-shadow:0 0 0 4px rgba(79,157,99,0.22);
   }
   .brand p{
     margin:4px 0 0;
     color:var(--muted-dark);
     font-size:14.5px;
     line-height:1.55;
-    max-width:68ch;
+    /* max-width:65ch; */
   }
 
-  /* 50 question pills wrapped in clean multi-line grid */
+  /* 50 question pills wrapping in line with no horizontal scrollbar */
   .lessons{
     display:flex;
     flex-wrap:wrap;
@@ -91,6 +90,7 @@
     gap:6px;
     padding:4px 0 14px;
     margin-bottom:12px;
+    overflow-x:visible;
   }
   .lesson-pill{
     font-family:'JetBrains Mono',monospace;
@@ -111,15 +111,15 @@
   }
   .lesson-pill:hover{ color:var(--text-dark); border-color:#3a3f52; transform:translateY(-1px); }
   .lesson-pill.active{
-    color:#ffffff;
-    background:var(--violet);
-    border-color:var(--violet);
+    color:#0f1712;
+    background:var(--green);
+    border-color:var(--green);
     transform:scale(1.05);
   }
   .lesson-pill.done:not(.active){
-    color:var(--violet);
-    border-color:var(--violet-dim);
-    background:rgba(182,124,224,0.12);
+    color:var(--green);
+    border-color:var(--green-dim);
+    background:rgba(79,157,99,0.12);
   }
 
   /* ---------- Topics link & progress ---------- */
@@ -134,7 +134,7 @@
     margin-bottom:16px;
     transition:color .15s ease;
   }
-  .topics-link:hover{ color:var(--violet); }
+  .topics-link:hover{ color:var(--green); }
 
   .progress-track{
     height:5px;
@@ -147,7 +147,7 @@
   .progress-bar{
     height:100%;
     width:0%;
-    background:var(--violet);
+    background:var(--green);
     border-radius:999px;
     transition:width .35s ease;
   }
@@ -175,7 +175,7 @@
   }
   .instructions .step{
     font-size:12.5px;
-    color:var(--violet);
+    color:var(--green);
     font-weight:600;
     margin:0;
   }
@@ -185,11 +185,11 @@
     letter-spacing:0.01em;
     padding:3px 9px;
     border-radius:999px;
-    color:#ffffff;
-    background:var(--violet);
+    color:#0f1712;
+    background:var(--green);
   }
-  .level-badge.mid{ background:var(--blue); }
-  .level-badge.adv{ background:var(--amber); color:#11131a; }
+  .level-badge.mid{ background:var(--blue); color:#ffffff; }
+  .level-badge.adv{ background:var(--violet); color:#ffffff; }
 
   .lang-selector-wrap{
     display:flex;
@@ -233,11 +233,11 @@
   /* ---------- Grid ---------- */
   .grid{
     display:grid;
-    grid-template-columns:1.05fr 1.15fr;
-    gap:18px;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
     align-items:stretch;
   }
-  @media (max-width:960px){ .grid{ grid-template-columns:1fr; } }
+  @media (max-width:920px){ .grid{ grid-template-columns:1fr; } }
   .col{ display:flex; flex-direction:column; gap:16px; min-width:0; }
 
   .panel{
@@ -279,13 +279,13 @@
   }
 
   /* ---------- Editor ---------- */
-  .editor-panel{ background:var(--panel-dark); flex:1; min-height:420px; }
+  .editor-panel{ background:var(--panel-dark); flex:1; min-height:360px; }
   .editor-panel.peeking{ border-color:var(--amber); }
   .editor-body{
     position:relative;
     flex:1;
     display:flex;
-    min-height:340px;
+    min-height:300px;
   }
   .gutter{
     background:var(--panel-dark-2);
@@ -307,9 +307,9 @@
     position:absolute;
     left:0; right:0; top:0;
     height:22px;
-    background:rgba(182,124,224,0.14);
-    border-top:1px solid rgba(182,124,224,0.35);
-    border-bottom:1px solid rgba(182,124,224,0.35);
+    background:rgba(79,157,99,0.14);
+    border-top:1px solid rgba(79,157,99,0.35);
+    border-bottom:1px solid rgba(79,157,99,0.35);
     transform:translateY(14px);
     transition:transform .18s ease;
     display:none;
@@ -325,13 +325,13 @@
     display:block;
     width:100%;
     height:100%;
-    min-height:340px;
+    min-height:300px;
     resize:none;
     border:none;
     outline:none;
     background:transparent;
     color:var(--text-dark);
-    caret-color:var(--violet);
+    caret-color:var(--green);
     font-family:'JetBrains Mono',monospace;
     font-size:13.5px;
     line-height:22px;
@@ -366,8 +366,8 @@
   }
   .btn:active{ transform:scale(0.98); }
   .btn:disabled{ opacity:0.5; cursor:not-allowed; }
-  .btn-run{ background:var(--violet); color:#ffffff; }
-  .btn-run:hover:not(:disabled){ background:#c992f0; }
+  .btn-run{ background:var(--green); color:#ffffff; }
+  .btn-run:hover:not(:disabled){ background:#5eb774; }
   .btn-ghost{
     background:transparent;
     color:var(--muted-dark);
@@ -399,17 +399,17 @@
     min-width:180px;
   }
 
-  /* ---------- Visual Decision Gate & Live Memory ---------- */
+  /* ---------- Visual panel ---------- */
   .visual-panel{
     background:var(--paper);
     color:var(--text-light);
     border:1px solid var(--line-light);
-    min-height:300px;
+    min-height:230px;
     transition:background-color .25s ease;
   }
   .visual-panel.kids-active{
-    background:#fcf7ff;
-    border-color:#e4ccf7;
+    background:#edf8f2;
+    border-color:#bce5ca;
   }
   .visual-panel .panel-head{
     background:var(--paper-2);
@@ -436,148 +436,35 @@
   }
   .kids-toggle-btn:hover{
     transform:translateY(-1px);
-    border-color:var(--violet);
-    color:var(--violet-dim);
+    border-color:#4f9d63;
+    color:#276737;
   }
   .kids-toggle-btn.is-active{
-    background:linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
-    border-color:var(--violet);
-    color:#2e1065;
-    box-shadow:0 2px 6px rgba(182,124,224,0.35);
+    background:linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+    border-color:#4f9d63;
+    color:#1b4d27;
+    box-shadow:0 2px 6px rgba(79,157,99,0.3);
   }
 
-  /* Live Inspection Gate Structure */
-  .decision-stage{
-    padding:16px 18px;
-    background:#ffffff;
-    border-bottom:1.5px solid var(--line-light);
+  .legend{
     display:flex;
-    flex-direction:column;
     gap:12px;
+    flex-wrap:wrap;
+    padding:10px 16px;
+    border-bottom:1px solid var(--line-light);
+    background:var(--paper);
+    transition:background-color .25s ease;
   }
-  .kids-active .decision-stage{
-    background:#f7edff;
-  }
-  .stage-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-  }
-  .stage-title{
-    font-size:11.5px;
-    font-weight:700;
-    letter-spacing:0.04em;
-    color:var(--muted-light);
-    text-transform:uppercase;
+  .kids-active .legend{ background:#ddf2e5; }
+  .legend-item{
     display:flex;
     align-items:center;
     gap:6px;
-  }
-  .stage-timer{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    color:var(--muted-light);
-  }
-
-  /* Detailed Comparison Block */
-  .gate-box{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    background:var(--paper-2);
-    border:2px solid var(--line-light);
-    border-radius:var(--radius-md);
-    padding:14px 16px;
-    transition:all .3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .gate-box.evaluating{
-    border-color:var(--violet);
-    background:rgba(182,124,224,0.12);
-    box-shadow:0 0 0 4px rgba(182,124,224,0.22);
-  }
-  .gate-box.passed{
-    border-color:var(--green);
-    background:rgba(79,157,99,0.14);
-    box-shadow:0 0 0 4px rgba(79,157,99,0.22);
-  }
-  .gate-box.failed{
-    border-color:var(--error);
-    background:rgba(232,104,95,0.12);
-    box-shadow:0 0 0 4px rgba(232,104,95,0.18);
-  }
-
-  .gate-top-row{
-    display:flex;
-    align-items:center;
-    gap:12px;
-  }
-  .gate-icon{
-    font-size:28px;
-    line-height:1;
-    flex-shrink:0;
-    transition:transform .2s ease;
-  }
-  .gate-box.evaluating .gate-icon{
-    animation:spinIcon 1s infinite linear;
-  }
-  @keyframes spinIcon{
-    0%{ transform:rotate(0deg); }
-    100%{ transform:rotate(360deg); }
-  }
-
-  .gate-info{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    gap:3px;
-    min-width:0;
-  }
-  .gate-condition{
-    font-family:'JetBrains Mono',monospace;
-    font-size:14.5px;
-    font-weight:600;
-    color:#1c1f27;
-    word-break:break-word;
-  }
-  .gate-eval-detail{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12.5px;
-    color:var(--muted-light);
-    margin-top:2px;
-  }
-
-  .gate-bottom-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding-top:8px;
-    border-top:1px dashed rgba(0,0,0,0.1);
     font-size:11.5px;
+    color:var(--muted-light);
+    font-weight:500;
   }
-  .gate-path-indicator{
-    font-weight:600;
-    color:#4a5568;
-    display:flex;
-    align-items:center;
-    gap:5px;
-  }
-  .gate-result-tag{
-    font-size:11px;
-    font-weight:700;
-    padding:3px 9px;
-    border-radius:6px;
-    text-transform:uppercase;
-    letter-spacing:0.03em;
-  }
-  .gate-result-tag.tag-idle{ background:#cfd7df; color:#4a5568; }
-  .gate-result-tag.tag-eval{ background:var(--violet); color:#ffffff; animation:pulseTag .6s infinite alternate; }
-  .gate-result-tag.tag-pass{ background:var(--green); color:#ffffff; }
-  .gate-result-tag.tag-fail{ background:var(--error); color:#ffffff; }
-
-  @keyframes pulseTag{
-    0%{ opacity:0.7; transform:scale(0.97); }
-    100%{ opacity:1; transform:scale(1.03); }
-  }
+  .legend-dot{ width:8px;height:8px;border-radius:50%; }
 
   .boxes{
     flex:1;
@@ -586,7 +473,7 @@
     flex-wrap:wrap;
     align-content:flex-start;
     gap:14px;
-    min-height:140px;
+    min-height:150px;
     background-image:radial-gradient(circle, rgba(32,35,43,0.07) 1px, transparent 1px);
     background-size:15px 15px;
     background-position:-3px -3px;
@@ -619,7 +506,6 @@
   }
   .empty-state p{ margin:0; font-size:13.5px; max-width:30ch; }
 
-  /* Standard Variable Box */
   .vbox{
     position:relative;
     background:#ffffff;
@@ -659,6 +545,10 @@
     letter-spacing:0.02em;
     color:var(--tag-color, var(--grey));
   }
+  .vbox:hover{ transform:translateY(-2px); box-shadow:0 6px 16px rgba(20,23,30,0.09); }
+  .vbox.is-new{ animation:popIn .38s cubic-bezier(.2,.9,.3,1.3); }
+  .vbox.is-updated{ animation:flash .6s ease; }
+  .vbox.is-referenced{ animation:refPulse 1.3s ease; }
 
   /* Kids Mode Styles */
   .vbox.kid-card{
@@ -702,6 +592,14 @@
     margin-top:4px;
   }
 
+  @keyframes popIn{ 0%{ transform:scale(0.6); opacity:0; } 100%{ transform:scale(1); opacity:1; } }
+  @keyframes flash{ 0%{ border-color:var(--line-light); } 30%{ border-color:var(--green); } 100%{ border-color:var(--line-light); } }
+  @keyframes refPulse{
+    0%{ transform:scale(1); }
+    18%{ transform:scale(1.045); border-color:var(--tag-color, var(--green)); }
+    100%{ transform:scale(1); }
+  }
+
   /* ---------- Terminal panel & interactive input ---------- */
   .terminal-panel{ background:var(--panel-dark); flex:1; min-height:180px; }
   .terminal-body{
@@ -723,7 +621,7 @@
     gap:6px;
     margin-top:4px;
   }
-  .term-prompt-text{ color:var(--violet); font-weight:600; }
+  .term-prompt-text{ color:#43c9b8; font-weight:600; }
   .term-input-field{
     flex:1;
     background:transparent;
@@ -732,7 +630,7 @@
     color:#ffffff;
     font-family:'JetBrains Mono',monospace;
     font-size:13px;
-    caret-color:var(--violet);
+    caret-color:var(--green);
     padding:0;
     margin:0;
   }
@@ -744,7 +642,7 @@
     padding:1px 5px;
     background:#1b1e29;
   }
-  .cursor-line{ color:var(--violet); }
+  .cursor-line{ color:var(--green); }
   .blink{ animation:blink 1s steps(2) infinite; }
   @keyframes blink{ 50%{ opacity:0; } }
 
@@ -762,8 +660,8 @@
     <div class="brand">
       <div class="dot"></div>
       <div>
-        <h1>Conditional Statements Lab</h1>
-        <p>Conditional statements (<code>if</code>, <code>elif</code>, <code>else</code>) allow your code to make intelligent decisions. Python checks whether a condition evaluates to <code>True</code> or <code>False</code> like a real-time gate, executing the matching branch while skipping unused paths.</p>
+        <h1>Strings & Text Lab</h1>
+        <p>A string in Python is a sequence of text characters wrapped inside quotes (<code>&quot;&quot;</code> or <code>&#39;&#39;</code>). Strings allow your programs to store names, display messages, inspect letters by index (<code>text[0]</code>), extract slices (<code>text[1:4]</code>), and transform text with powerful built-in methods.</p>
       </div>
     </div>
   </header>
@@ -796,7 +694,7 @@
         </select>
       </div>
     </div>
-    <h2 id="lesson-title">Basic if Statement</h2>
+    <h2 id="lesson-title">Single and Double Quotes</h2>
     <p id="lesson-goal">Loading lesson details...</p>
   </div>
 
@@ -805,7 +703,7 @@
       <div class="panel editor-panel" id="editor-panel">
         <div class="panel-head">
           <div class="title">
-            <span class="swatch" style="background:var(--violet)"></span>code.py
+            <span class="swatch" style="background:var(--green)"></span>code.py
             <span class="peek-badge" id="peek-badge">SOLUTION PREVIEW</span>
           </div>
           <div class="sub" id="line-count">3 lines</div>
@@ -823,7 +721,7 @@
             <button class="btn btn-ghost" id="reset-btn">Reset</button>
             <button class="btn btn-peek" id="peek-btn" title="Press & hold to view the solution">👁️ Hold to View Answer</button>
           </div>
-          <span class="run-hint" id="run-hint">Watch the decision gate evaluate conditions step-by-step</span>
+          <span class="run-hint" id="run-hint">Runs line by line & executes string methods live</span>
         </div>
       </div>
     </div>
@@ -831,38 +729,22 @@
     <div class="col">
       <div class="panel visual-panel" id="visual-panel" style="flex:1.15;">
         <div class="panel-head">
-          <div class="title"><span class="swatch" style="background:var(--violet)"></span>Decision Gate & Memory</div>
+          <div class="title"><span class="swatch" style="background:var(--green)"></span>String Memory View</div>
           <div style="display:flex; align-items:center; gap:10px;">
             <button class="kids-toggle-btn" id="kids-toggle-btn" title="Toggle 12-Year-Old Kid Friendly Mode">🧸 Kids Mode: ON</button>
-            <div class="sub" id="live-sub">live gate</div>
+            <div class="sub" id="live-sub">live view</div>
           </div>
         </div>
-
-        <!-- Real-Time Decision Gate Visualizer with timing & comparison details -->
-        <div class="decision-stage">
-          <div class="stage-header">
-            <div class="stage-title">🚦 Active Decision Checkpoint</div>
-            <div class="stage-timer" id="stage-timer">Ready</div>
-          </div>
-          <div class="gate-box" id="gate-box">
-            <div class="gate-top-row">
-              <div class="gate-icon" id="gate-icon">⏸️</div>
-              <div class="gate-info">
-                <div class="gate-condition" id="gate-condition">No condition active</div>
-                <div class="gate-eval-detail" id="gate-eval-detail">Press Run to evaluate expressions</div>
-              </div>
-            </div>
-            <div class="gate-bottom-row">
-              <div class="gate-path-indicator" id="gate-path-indicator">Path: [ Waiting ]</div>
-              <div class="gate-result-tag tag-idle" id="gate-result-tag">Idle</div>
-            </div>
-          </div>
+        <div class="legend" id="legend-bar">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>str (Text Sequence)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>int (Length / Index)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>bool (True / False)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--violet)"></span>float (Decimal)</div>
         </div>
-
         <div class="boxes" id="boxes">
           <div class="empty-state">
             <div class="icon"></div>
-            <p id="empty-state-text">Run your code to watch the condition gate decide which path to execute!</p>
+            <p id="empty-state-text">Run your code to inspect string transformations in memory!</p>
           </div>
         </div>
       </div>
@@ -883,7 +765,7 @@
 
 <script>
 // ============================================================
-// Mini Python Block Interpreter with Fixed (>= / <= / ==) Comparison
+// Enhanced Mini Python Interpreter with String Slicing & Methods
 // ============================================================
 const mkInt = v => ({ t: 'int', v: Math.trunc(v) });
 const mkFloat = v => ({ t: 'float', v });
@@ -977,7 +859,10 @@ function tokenize(line) {
     }
     if (c === '(') { toks.push({ type: 'LPAREN' }); i++; continue; }
     if (c === ')') { toks.push({ type: 'RPAREN' }); i++; continue; }
+    if (c === '[') { toks.push({ type: 'LBRACKET' }); i++; continue; }
+    if (c === ']') { toks.push({ type: 'RBRACKET' }); i++; continue; }
     if (c === ':') { toks.push({ type: 'COLON' }); i++; continue; }
+    if (c === '.') { toks.push({ type: 'DOT' }); i++; continue; }
     if (c === ',') { toks.push({ type: 'COMMA' }); i++; continue; }
     if ('+-*/%=<>'.includes(c)) { toks.push({ type: 'OP', value: c }); i++; continue; }
     throw pyErr('SyntaxError', `invalid character '${c}'`);
@@ -1019,7 +904,7 @@ async function evalFString(raw, env) {
       const exprSrc = raw.slice(i + 1, j);
       const toks = tokenize(exprSrc);
       const { val, pos } = await parseExprTop(toks, 0, env);
-      if (pos !== toks.length) throw pyErr('SyntaxError', 'invalid syntax');
+      if (pos !== toks.length) throw pyErr('SyntaxError', 'invalid syntax in f-string');
       out += pyStr(val); i = j + 1; continue;
     }
     if (c === '}' && raw[i + 1] === '}') { out += '}'; i += 2; continue; }
@@ -1029,7 +914,6 @@ async function evalFString(raw, env) {
   return mkStr(out);
 }
 
-// Robust Binary Operator Execution with full >=, <=, ==, != support
 function applyBinOp(op, l, r) {
   if (op === '+') {
     if (isNumeric(l) && isNumeric(r)) {
@@ -1047,7 +931,8 @@ function applyBinOp(op, l, r) {
       return isF ? mkFloat(val) : mkInt(val);
     }
     if (l.t === 'str' && isIntty(r)) return mkStr(numVal(r) > 0 ? l.v.repeat(numVal(r)) : '');
-    throw pyErr('TypeError', `unsupported operand type(s) for *`);
+    if (r.t === 'str' && isIntty(l)) return mkStr(numVal(l) > 0 ? r.v.repeat(numVal(l)) : '');
+    throw pyErr('TypeError', `unsupported operand type(s) for *: '${pyTypeName(l)}' and '${pyTypeName(r)}'`);
   }
   if (['-', '/', '//', '%', '**'].includes(op)) {
     if (!isNumeric(l) || !isNumeric(r)) throw pyErr('TypeError', `unsupported operand type(s) for ${op}`);
@@ -1068,31 +953,27 @@ function applyBinOp(op, l, r) {
       return (isF || b < 0) ? mkFloat(val) : mkInt(val);
     }
   }
-  // Comparison Operators: ==, !=, <, >, <=, >=
-  if (op === '==') {
-    if (isNumeric(l) && isNumeric(r)) return mkBool(numVal(l) === numVal(r));
-    return mkBool(l.t === r.t && l.v === r.v);
-  }
-  if (op === '!=') {
-    if (isNumeric(l) && isNumeric(r)) return mkBool(numVal(l) !== numVal(r));
-    return mkBool(l.t !== r.t || l.v !== r.v);
-  }
+  if (op === '==') return mkBool(l.t === r.t && l.v === r.v);
+  if (op === '!=') return mkBool(l.t !== r.t || l.v !== r.v);
   if (['<', '>', '<=', '>='].includes(op)) {
     let a, b;
     if (isNumeric(l) && isNumeric(r)) { a = numVal(l); b = numVal(r); }
     else if (l.t === 'str' && r.t === 'str') { a = l.v; b = r.v; }
     else throw pyErr('TypeError', `'${op}' not supported between '${pyTypeName(l)}' and '${pyTypeName(r)}'`);
-    
     if (op === '<') return mkBool(a < b);
     if (op === '>') return mkBool(a > b);
     if (op === '<=') return mkBool(a <= b);
     if (op === '>=') return mkBool(a >= b);
   }
+  if (op === 'in') {
+    if (r.t === 'str' && l.t === 'str') return mkBool(r.v.includes(l.v));
+    throw pyErr('TypeError', `'in <string>' requires string as left operand`);
+  }
   throw pyErr('SyntaxError', `unknown operator ${op}`);
 }
 
 let activeWrite = () => {};
-let activePromptInput = async () => '20';
+let activePromptInput = async () => 'Hello';
 
 function toIntVal(v) {
   if (v.t === 'int') return v.v;
@@ -1123,20 +1004,103 @@ async function callFunction(name, args) {
       return mkStr(entered);
     case 'type': return mkStr(`<class '${pyTypeName(args[0])}'>`);
     case 'len':
-      if (args[0].t !== 'str') throw pyErr('TypeError', `object has no len()`);
+      if (args[0].t !== 'str') throw pyErr('TypeError', `object of type '${pyTypeName(args[0])}' has no len()`);
       return mkInt(args[0].v.length);
+    case 'str': return mkStr(pyStr(args[0]));
     case 'int': return mkInt(toIntVal(args[0]));
     case 'float': return mkFloat(toFloatVal(args[0]));
-    case 'str': return mkStr(pyStr(args[0]));
     case 'bool': return mkBool(isTruthy(args[0]));
     default: throw pyErr('NameError', `name '${name}' is not defined`);
   }
 }
 
-const KEYWORDS = ['True', 'False', 'None', 'and', 'or', 'not', 'if', 'elif', 'else', 'in'];
+function callMethod(obj, method, args) {
+  if (obj.t !== 'str') throw pyErr('AttributeError', `type '${pyTypeName(obj)}' has no attribute '${method}'`);
+  const s = obj.v;
+  switch (method) {
+    case 'upper': return mkStr(s.toUpperCase());
+    case 'lower': return mkStr(s.toLowerCase());
+    case 'title': return mkStr(s.replace(/\b\w/g, c => c.toUpperCase()));
+    case 'capitalize': return mkStr(s.charAt(0).toUpperCase() + s.slice(1).toLowerCase());
+    case 'strip': return mkStr(s.trim());
+    case 'lstrip': return mkStr(s.trimStart());
+    case 'rstrip': return mkStr(s.trimEnd());
+    case 'replace':
+      if (args.length < 2) throw pyErr('TypeError', 'replace expected at least 2 arguments');
+      const target = pyStr(args[0]), repl = pyStr(args[1]);
+      return mkStr(s.replaceAll(target, repl));
+    case 'count':
+      if (!args[0]) throw pyErr('TypeError', 'count expected 1 argument');
+      const sub = pyStr(args[0]);
+      if (!sub) return mkInt(0);
+      const parts = s.split(sub);
+      return mkInt(parts.length - 1);
+    case 'find':
+      if (!args[0]) throw pyErr('TypeError', 'find expected 1 argument');
+      return mkInt(s.indexOf(pyStr(args[0])));
+    case 'startswith':
+      if (!args[0]) throw pyErr('TypeError', 'startswith expected 1 argument');
+      return mkBool(s.startsWith(pyStr(args[0])));
+    case 'endswith':
+      if (!args[0]) throw pyErr('TypeError', 'endswith expected 1 argument');
+      return mkBool(s.endsWith(pyStr(args[0])));
+    case 'isdigit': return mkBool(/^\d+$/.test(s));
+    case 'isalpha': return mkBool(/^[a-zA-Z]+$/.test(s));
+    case 'isalnum': return mkBool(/^[a-zA-Z0-9]+$/.test(s));
+    case 'islower': return mkBool(/[a-z]/.test(s) && !/[A-Z]/.test(s));
+    case 'isupper': return mkBool(/[A-Z]/.test(s) && !/[a-z]/.test(s));
+    case 'isspace': return mkBool(/^\s+$/.test(s));
+    case 'split':
+      const delim = args[0] ? pyStr(args[0]) : ' ';
+      return mkStr(s.split(delim).join(', '));
+    default:
+      throw pyErr('AttributeError', `'str' object has no attribute '${method}'`);
+  }
+}
+
+function applyIndexOrSlice(obj, sliceObj) {
+  if (obj.t !== 'str') throw pyErr('TypeError', `cannot index type '${pyTypeName(obj)}'`);
+  const s = obj.v;
+  const len = s.length;
+
+  if (sliceObj.isSingle) {
+    let idx = sliceObj.start;
+    if (idx < 0) idx = len + idx;
+    if (idx < 0 || idx >= len) throw pyErr('IndexError', 'string index out of range');
+    return mkStr(s[idx]);
+  }
+
+  // Slicing support
+  let step = sliceObj.step !== undefined ? sliceObj.step : 1;
+  if (step === 0) throw pyErr('ValueError', 'slice step cannot be zero');
+
+  if (step === -1 && sliceObj.start === undefined && sliceObj.stop === undefined) {
+    return mkStr(s.split('').reverse().join(''));
+  }
+
+  let start = sliceObj.start !== undefined ? sliceObj.start : (step > 0 ? 0 : len - 1);
+  let stop = sliceObj.stop !== undefined ? sliceObj.stop : (step > 0 ? len : -1);
+
+  if (start < 0) start = Math.max(0, len + start);
+  if (stop < 0 && sliceObj.stop !== undefined) stop = Math.max(0, len + stop);
+
+  if (step === 1) {
+    return mkStr(s.slice(start, stop));
+  }
+
+  let out = '';
+  if (step > 0) {
+    for (let i = start; i < stop && i < len; i += step) out += s[i];
+  } else {
+    for (let i = start; i > stop && i >= 0; i += step) out += s[i];
+  }
+  return mkStr(out);
+}
+
+const KEYWORDS = ['True', 'False', 'None', 'and', 'or', 'not', 'in'];
 async function parseAtom(toks, pos, env) {
   const t = toks[pos];
-  if (!t) throw pyErr('SyntaxError', 'unexpected end of line');
+  if (!t) throw pyErr('SyntaxError', 'unexpected end of statement');
   if (t.type === 'NUM') return { val: t.isFloat ? mkFloat(t.value) : mkInt(t.value), pos: pos + 1 };
   if (t.type === 'STR') return { val: mkStr(t.value), pos: pos + 1 };
   if (t.type === 'FSTR') return { val: await evalFString(t.raw, env), pos: pos + 1 };
@@ -1169,6 +1133,75 @@ async function parseAtom(toks, pos, env) {
   throw pyErr('SyntaxError', 'invalid syntax');
 }
 
+async function parsePostfix(toks, pos, env) {
+  let left = await parseAtom(toks, pos, env);
+  while (left.pos < toks.length) {
+    const t = toks[left.pos];
+    if (!t) break;
+    // Method calls: s.upper()
+    if (t.type === 'DOT') {
+      const nameTok = toks[left.pos + 1];
+      if (!nameTok || nameTok.type !== 'NAME') throw pyErr('SyntaxError', 'invalid method name');
+      let p = left.pos + 2;
+      if (toks[p] && toks[p].type === 'LPAREN') {
+        p++;
+        const args = [];
+        if (!(toks[p] && toks[p].type === 'RPAREN')) {
+          while (true) {
+            const r = await parseExprTop(toks, p, env);
+            args.push(r.val); p = r.pos;
+            if (toks[p] && toks[p].type === 'COMMA') { p++; continue; }
+            break;
+          }
+        }
+        if (!toks[p] || toks[p].type !== 'RPAREN') throw pyErr('SyntaxError', 'missing ")" in method call');
+        left = { val: callMethod(left.val, nameTok.value, args), pos: p + 1 };
+      } else {
+        throw pyErr('AttributeError', `attribute '${nameTok.value}' not supported`);
+      }
+    }
+    // Indexing or Slicing: s[0], s[1:4], s[::-1]
+    else if (t.type === 'LBRACKET') {
+      let p = left.pos + 1;
+      let isSlice = false;
+      let startVal = undefined, stopVal = undefined, stepVal = undefined;
+
+      if (toks[p] && toks[p].type !== 'COLON' && toks[p].type !== 'RBRACKET') {
+        const r1 = await parseExprTop(toks, p, env);
+        startVal = toIntVal(r1.val);
+        p = r1.pos;
+      }
+
+      if (toks[p] && toks[p].type === 'COLON') {
+        isSlice = true;
+        p++;
+        if (toks[p] && toks[p].type !== 'COLON' && toks[p].type !== 'RBRACKET') {
+          const r2 = await parseExprTop(toks, p, env);
+          stopVal = toIntVal(r2.val);
+          p = r2.pos;
+        }
+        if (toks[p] && toks[p].type === 'COLON') {
+          p++;
+          if (toks[p] && toks[p].type !== 'RBRACKET') {
+            const r3 = await parseExprTop(toks, p, env);
+            stepVal = toIntVal(r3.val);
+            p = r3.pos;
+          }
+        }
+      }
+
+      if (!toks[p] || toks[p].type !== 'RBRACKET') throw pyErr('SyntaxError', 'missing "]"');
+      p++;
+
+      const sliceObj = isSlice ? { isSingle: false, start: startVal, stop: stopVal, step: stepVal } : { isSingle: true, start: startVal };
+      left = { val: applyIndexOrSlice(left.val, sliceObj), pos: p };
+    } else {
+      break;
+    }
+  }
+  return left;
+}
+
 async function parseUnary(toks, pos, env) {
   const t = toks[pos];
   if (t && t.type === 'OP' && (t.value === '-' || t.value === '+')) {
@@ -1182,7 +1215,7 @@ async function parseUnary(toks, pos, env) {
   return parsePow(toks, pos, env);
 }
 async function parsePow(toks, pos, env) {
-  const left = await parseAtom(toks, pos, env);
+  const left = await parsePostfix(toks, pos, env);
   const t = toks[left.pos];
   if (t && t.type === 'OP' && t.value === '**') {
     const right = await parseUnary(toks, left.pos + 1, env);
@@ -1221,11 +1254,7 @@ async function parseCompare(toks, pos, env) {
       left = { val: applyBinOp(t.value, left.val, right.val), pos: right.pos };
     } else if (t && t.type === 'NAME' && t.value === 'in') {
       const right = await parseAdd(toks, left.pos + 1, env);
-      if (right.val.t === 'str' && left.val.t === 'str') {
-        left = { val: mkBool(right.val.v.includes(left.val.v)), pos: right.pos };
-      } else {
-        throw pyErr('TypeError', `'in' requires string operands`);
-      }
+      left = { val: applyBinOp('in', left.val, right.val), pos: right.pos };
     } else break;
   }
   return left;
@@ -1270,8 +1299,8 @@ async function evalGroup(toks, env) {
 function splitByComma(toks) {
   const groups = []; let depth = 0, cur = [];
   for (const t of toks) {
-    if (t.type === 'LPAREN') depth++;
-    if (t.type === 'RPAREN') depth--;
+    if (t.type === 'LPAREN' || t.type === 'LBRACKET') depth++;
+    if (t.type === 'RPAREN' || t.type === 'RBRACKET') depth--;
     if (t.type === 'COMMA' && depth === 0) { groups.push(cur); cur = []; continue; }
     cur.push(t);
   }
@@ -1283,8 +1312,8 @@ function findAssignIndex(toks) {
   let depth = 0;
   for (let i = 0; i < toks.length; i++) {
     const t = toks[i];
-    if (t.type === 'LPAREN') depth++;
-    else if (t.type === 'RPAREN') depth--;
+    if (t.type === 'LPAREN' || t.type === 'LBRACKET') depth++;
+    else if (t.type === 'RPAREN' || t.type === 'RBRACKET') depth--;
     else if (depth === 0 && t.type === 'OP' && ASSIGN_OPS.includes(t.value)) return i;
   }
   return -1;
@@ -1294,7 +1323,7 @@ function setVar(env, order, name, val, created, updated) {
   else { updated.add(name); }
   env[name] = val;
 }
-async function executeSimpleStatement(toks, env, order, created, updated, referenced, write, promptInput) {
+async function executeStatement(toks, env, order, created, updated, referenced, write, promptInput) {
   activeWrite = write;
   activePromptInput = promptInput;
   if (toks.length === 1 && toks[0].type === 'NAME' && !KEYWORDS.includes(toks[0].value)) {
@@ -1333,125 +1362,125 @@ async function executeSimpleStatement(toks, env, order, created, updated, refere
 }
 
 // ============================================================
-// 50 Step-by-Step Lessons for Conditional Statements
+// 50 Step-by-Step Interactive String Lessons
 // ============================================================
 const LESSON_TITLES = [
-  "Basic if Statement", "Condition is False (Skipped)", "if - else (Binary Choice)", "if - elif - else (3 Choices)", "Multi-Branch elif Ladder",
-  "Checking Equality (==)", "Checking Inequality (!=)", "Greater Than Check (>)", "Less Than Check (<)", "Pass/Fail Threshold (>= 40)",
-  "Speed Limit Check (<= 60)", "Even Number Detector (% 2 == 0)", "Odd Number Detector (% 2 != 0)", "Positive, Negative or Zero", "Voter Eligibility Check",
-  "Exam Grade Classifier (A/B/C/D)", "Traffic Signal Decision", "Water State by Temperature", "BMI Health Category", "Store Discount by Amount",
-  "Movie Ticket Pricing by Age", "Logical AND in Condition", "Logical OR in Condition", "Logical NOT in Condition", "Combining AND & OR",
-  "Between Range (10 <= x <= 50)", "Weekday vs Weekend", "Login Authentication (User & Pass)", "PIN Verification", "Free Shipping Rule",
-  "Discount with Coupon OR Prime", "Nested if: Age and License", "Nested if: Balance & Limit", "String Keyword Check (in)", "String startswith() Condition",
-  "String endswith() Condition", "Empty String Truthiness", "Password Length Requirement", "Divisible by 3 and 5 (FizzBuzz)", "Leap Year Detector",
-  "Triangle Side Validity", "Cartesian Coordinate Quadrants", "Tax Bracket Calculation", "Rock Paper Scissors Game", "Password Strength Scorer",
-  "Theme Park Height & Age Safety Gate", "ATM Cash Dispenser", "Fast Food Menu Ordering", "Gaming Combat Armor Shield", "Smart Climate Controller"
+  "Single vs Double Quotes", "Quotes Inside Strings", "Newline Escape (\\n)", "Tab Escape (\\t)", "String Concatenation (+)",
+  "String Repetition (*)", "Length with len()", "Indexing: First Character [0]", "Indexing: Any Character", "Negative Indexing [-1]",
+  "Negative Indexing [-2]", "Basic Slicing [start:stop]", "Slicing from Start [:stop]", "Slicing to End [start:]", "Copying a Slice [:]",
+  "Slicing with Step [::step]", "Reversing Strings [::-1]", "Every Second Letter [::2]", "Strings are Immutable", "Replacing Substrings with .replace()",
+  "Uppercase with .upper()", "Lowercase with .lower()", "Title Case with .title()", "Capitalize with .capitalize()", "Removing Whitespace with .strip()",
+  "Trimming Left with .lstrip()", "Trimming Right with .rstrip()", "Searching with in Operator", "Testing Absence with not in", "Finding Index with .find()",
+  "Counting Occurrences with .count()", "Checking Prefix with .startswith()", "Checking Suffix with .endswith()", "Testing Digits with .isdigit()", "Testing Letters with .isalpha()",
+  "Alphanumeric with .isalnum()", "Testing Lowercase with .islower()", "Testing Uppercase with .isupper()", "Basic f-string Formatting", "Expressions Inside f-strings",
+  "Method Calls Inside f-strings", "Splitting by Words with .split()", "Splitting CSV by Comma with .split(',')", "Comparing Strings (==)", "Alphabetical Order (< and >)",
+  "Palindrome Detector with Slicing", "Secret Data Masking (****1234)", "Cleaning User Input (.strip().lower())", "Acronym Generator", "Capstone: Text Analyzer & Badge Maker"
 ];
 
 const LESSON_CODES = [
-  'age = 20\nif age >= 18:\n    print("Eligible to vote!")',
-  'temperature = 15\nif temperature > 30:\n    print("It is a hot day!")\nprint("Program finished.")',
-  'score = 75\nif score >= 50:\n    print("Passed exam!")\nelse:\n    print("Failed exam.")',
-  'light = "yellow"\nif light == "green":\n    print("GO")\nelif light == "yellow":\n    print("READY / SLOW DOWN")\nelse:\n    print("STOP")',
-  'score = 85\nif score >= 90:\n    print("Grade A")\nelif score >= 75:\n    print("Grade B")\nelif score >= 60:\n    print("Grade C")\nelse:\n    print("Grade D")',
-  'entered_code = "SECRET"\nif entered_code == "SECRET":\n    print("Vault unlocked!")',
-  'role = "guest"\nif role != "admin":\n    print("Standard access only.")',
-  'speed = 85\nif speed > 80:\n    print("Over-speeding warning!")',
-  'balance = 150\nif balance < 200:\n    print("Low balance alert!")',
-  'marks = 42\nif marks >= 40:\n    print("Result: PASS")\nelse:\n    print("Result: FAIL")',
-  'speed = 55\nif speed <= 60:\n    print("Within city speed limit.")\nelse:\n    print("Exceeding speed limit.")',
-  'num = 14\nif num % 2 == 0:\n    print("Even number")\nelse:\n    print("Odd number")',
-  'num = 9\nif num % 2 != 0:\n    print("Confirmed odd number")',
-  'val = -5\nif val > 0:\n    print("Positive")\nelif val < 0:\n    print("Negative")\nelse:\n    print("Zero")',
-  'age = int(input("Enter age: "))\nif age >= 18:\n    print("You can vote in India!")\nelse:\n    print("Too young to vote.")',
-  'marks = int(input("Score (0-100): "))\nif marks >= 90:\n    print("Distinction (A+)")\nelif marks >= 75:\n    print("First Class (A)")\nelif marks >= 50:\n    print("Second Class (B)")\nelse:\n    print("Needs Improvement (C)")',
-  'signal = input("Traffic color: ")\nif signal == "red":\n    print("STOP NOW")\nelif signal == "yellow":\n    print("CAUTION")\nelse:\n    print("GO SAFELY")',
-  'temp = float(input("Water temp (°C): "))\nif temp <= 0:\n    print("State: SOLID (Ice)")\nelif temp >= 100:\n    print("State: GAS (Steam)")\nelse:\n    print("State: LIQUID (Water)")',
-  'bmi = float(input("BMI: "))\nif bmi < 18.5:\n    print("Underweight")\nelif bmi < 25.0:\n    print("Normal weight")\nelse:\n    print("Overweight")',
-  'cart = float(input("Cart amount: "))\nif cart >= 2000:\n    discount = cart * 0.20\nelif cart >= 1000:\n    discount = cart * 0.10\nelse:\n    discount = 0.0\nprint(f"Discount: Rs {discount}")',
-  'age = int(input("Moviegoer age: "))\nif age < 12:\n    print("Child ticket: Rs 100")\nelif age >= 60:\n    print("Senior ticket: Rs 150")\nelse:\n    print("Adult ticket: Rs 250")',
-  'age = 22\nhas_id = True\nif age >= 18 and has_id:\n    print("Club access granted!")\nelse:\n    print("Access denied.")',
-  'card = False\nupi = True\nif card or upi:\n    print("Payment accepted!")\nelse:\n    print("No valid payment method.")',
-  'is_raining = False\nif not is_raining:\n    print("Let\'s go for a walk outside!")\nelse:\n    print("Take an umbrella.")',
-  'cart = 1200\nis_member = False\nhas_coupon = True\nif cart >= 1000 and (is_member or has_coupon):\n    print("Super deal discount unlocked!")',
-  'marks = 65\nif marks >= 50 and marks <= 80:\n    print("Score is in target range (50-80).")',
-  'day = input("Day name: ")\nif day == "Saturday" or day == "Sunday":\n    print("Enjoy your Weekend!")\nelse:\n    print("Workday mode.")',
-  'user = input("Username: ")\npassword = input("Password: ")\nif user == "admin" and password == "pass123":\n    print("Login successful!")\nelse:\n    print("Invalid credentials.")',
-  'pin = input("4-digit PIN: ")\nif len(pin) == 4 and pin == "9988":\n    print("Correct PIN! Opening account.")\nelse:\n    print("Wrong PIN or length.")',
-  'total = float(input("Order total: "))\nif total >= 499:\n    print("Free delivery applied!")\nelse:\n    print("Rs 50 delivery fee.")',
-  'cart = float(input("Cart: "))\nis_prime = input("Prime member (yes/no): ") == "yes"\nif cart >= 1000 or is_prime:\n    print("Special gift unlocked!")',
-  'age = int(input("Age: "))\nif age >= 18:\n    has_license = input("License (yes/no): ") == "yes"\n    if has_license:\n        print("You can drive!")\n    else:\n        print("Get a license first.")\nelse:\n    print("Too young to drive.")',
-  'balance = 5000\nwithdraw = float(input("Withdraw amount: "))\nif withdraw <= balance:\n    if withdraw <= 2000:\n        balance -= withdraw\n        print(f"Success! New balance: {balance}")\n    else:\n        print("Exceeds single withdrawal limit (Rs 2000).")\nelse:\n    print("Insufficient funds.")',
-  'bio = "I am a skilled Python developer from Pune"\nif "Python" in bio:\n    print("Python keyword found in profile!")',
-  'url = "https://learn.python.org"\nif url.startswith("https"):\n    print("Connection is secure (HTTPS)")\nelse:\n    print("Insecure connection!")',
-  'file = "photo.png"\nif file.endswith(".png") or file.endswith(".jpg"):\n    print("Valid image file extension.")\nelse:\n    print("Unsupported file format.")',
-  'user_input = input("Enter text: ")\nif user_input:\n    print(f"You typed: {user_input}")\nelse:\n    print("Input cannot be empty!")',
-  'pwd = input("Password: ")\nif len(pwd) >= 8:\n    print("Strong password length.")\nelse:\n    print("Too short (needs 8+ chars).")',
-  'num = int(input("Number: "))\nif num % 3 == 0 and num % 5 == 0:\n    print("FizzBuzz")\nelif num % 3 == 0:\n    print("Fizz")\nelif num % 5 == 0:\n    print("Buzz")\nelse:\n    print(num)',
-  'year = int(input("Year: "))\nif (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):\n    print("Leap Year (366 days)")\nelse:\n    print("Standard Year (365 days)")',
-  'a = int(input("Side 1: "))\nb = int(input("Side 2: "))\nc = int(input("Side 3: "))\nif a + b > c and a + c > b and b + c > a:\n    print("Valid Triangle!")\nelse:\n    print("Impossible Triangle.")',
-  'x = int(input("x: "))\ny = int(input("y: "))\nif x > 0 and y > 0:\n    print("Quadrant I (+, +)")\nelif x < 0 and y > 0:\n    print("Quadrant II (-, +)")\nelif x < 0 and y < 0:\n    print("Quadrant III (-, -)")\nelse:\n    print("Quadrant IV (+, -)")',
-  'income = float(input("Annual income (Lakhs): "))\nif income <= 5:\n    tax = 0\nelif income <= 10:\n    tax = (income - 5) * 0.10\nelse:\n    tax = 0.50 + (income - 10) * 0.20\nprint(f"Tax payable: Rs {tax} Lakhs")',
-  'p1 = input("Player 1 (rock/paper/scissors): ")\np2 = input("Player 2: ")\nif p1 == p2:\n    print("Draw game!")\nelif (p1 == "rock" and p2 == "scissors") or (p1 == "paper" and p2 == "rock") or (p1 == "scissors" and p2 == "paper"):\n    print("Player 1 WINS!")\nelse:\n    print("Player 2 WINS!")',
-  'pwd = input("Password: ")\nif len(pwd) >= 8 and not pwd.islower() and not pwd.isupper():\n    print("Password strength: EXCELLENT")\nelif len(pwd) >= 6:\n    print("Password strength: MODERATE")\nelse:\n    print("Password strength: WEAK")',
-  'height = int(input("Height (cm): "))\nage = int(input("Age: "))\nif height >= 140 and age >= 12:\n    print("Rollercoaster ticket granted! 🎢")\nelse:\n    print("Sorry, safety requirements not met.")',
-  'pin = input("ATM PIN: ")\nbalance = 10000\nif pin == "1234":\n    req = int(input("Amount to withdraw: "))\n    if req <= balance and req % 100 == 0:\n        balance -= req\n        print(f"Cash dispensed: Rs {req}. Balance: Rs {balance}")\n    else:\n        print("Invalid amount or insufficient balance.")\nelse:\n    print("Incorrect PIN.")',
-  'item = input("Food (burger/pizza/dosa): ")\nif item == "burger":\n    cost = 120\nelif item == "pizza":\n    cost = 350\nelif item == "dosa":\n    cost = 90\nelse:\n    cost = 50\nqty = int(input("Quantity: "))\nprint(f"Total: Rs {cost * qty}")',
-  'hp = 100\nshield = True\ndamage = 40\nif shield:\n    hp -= (damage // 2)\n    print(f"Shield absorbed damage! HP: {hp}")\nelse:\n    hp -= damage\n    print(f"Direct hit! HP: {hp}")',
-  'temp = float(input("Room temp: "))\nhumidity = float(input("Humidity %: "))\nif temp > 28 and humidity > 60:\n    print("AC Mode: COOL & DRY ❄️")\nelif temp < 18:\n    print("AC Mode: HEATING 🔥")\nelse:\n    print("AC Mode: ECO FAN 🍃")'
+  's1 = \'Python\'\ns2 = "Programming"\nprint(s1, s2)',
+  'msg = "It\'s a sunny day in Bengaluru!"\nprint(msg)',
+  'lines = "Line 1\\nLine 2\\nLine 3"\nprint(lines)',
+  'row = "Name:\\tAlex\\tRole:\\tDeveloper"\nprint(row)',
+  'first = "Py"\nsecond = "thon"\nfull = first + second\nprint(full)',
+  'pattern = "=-" * 8\nprint(pattern)',
+  'word = "Maharashtra"\nprint(f"Length of {word}: {len(word)}")',
+  'language = "Python"\nfirst_letter = language[0]\nprint(f"First character: {first_letter}")',
+  'city = "Kolkata"\nletter = city[3]\nprint(f"Character at index 3: {letter}")',
+  'country = "India"\nlast_letter = country[-1]\nprint(f"Last letter: {last_letter}")',
+  'item = "Laptop"\nsecond_last = item[-2]\nprint(f"Second to last: {second_last}")',
+  'word = "Incredible"\nslice_part = word[0:5]\nprint(f"Slice [0:5]: {slice_part}")',
+  'tag = "Frontend"\nprefix = tag[:5]\nprint(f"Prefix [:5]: {prefix}")',
+  'tag = "Backend"\nsuffix = tag[4:]\nprint(f"Suffix [4:]: {suffix}")',
+  'original = "Python"\nclone = original[:]\nprint(f"Exact clone: {clone}")',
+  'alphabet = "ABCDEFGHIJKLMN"\nstepped = alphabet[0:10:2]\nprint(f"Every 2nd char [0:10:2]: {stepped}")',
+  'word = "NAMASTE"\nreversed_word = word[::-1]\nprint(f"Reversed: {reversed_word}")',
+  'code_word = "Pzyztdhoon"\neven_chars = code_word[::2]\nprint(f"Decoded: {even_chars}")',
+  'greeting = "Hello World"\nfixed = "J" + greeting[1:]\nprint(f"Rebuilt string: {fixed}")',
+  'msg = "Java is fun! Java is fast!"\nupdated = msg.replace("Java", "Python")\nprint(updated)',
+  'city = "mumbai"\nshouting = city.upper()\nprint(shouting)',
+  'code = "DELHI_METRO"\nquiet = code.lower()\nprint(quiet)',
+  'headline = "learning python with variable lab"\nformatted = headline.title()\nprint(formatted)',
+  'author = "gUido vAn rOssUm"\nclean_author = author.capitalize()\nprint(clean_author)',
+  'raw_input = "   Taj Mahal   "\ncleaned = raw_input.strip()\nprint(f"Cleaned: \'{cleaned}\'")',
+  'filename = "___report.txt"\ncleaned_file = filename.lstrip("_")\nprint(cleaned_file)',
+  'price_text = "Rs 450.0000"\ntrimmed = price_text.rstrip("0")\nprint(trimmed)',
+  'bio = "Python developer from Chennai"\nhas_python = "Python" in bio\nprint(f"Contains \'Python\': {has_python}")',
+  'email = "alex@example.com"\nis_not_spam = "spam" not in email\nprint(f"Safe email: {is_not_spam}")',
+  'quote = "Keep Coding Daily"\npos = quote.find("Coding")\nprint(f"Found \'Coding\' at index: {pos}")',
+  'song = "banana"\ncount_a = song.count("a")\nprint(f"Count of \'a\' in {song}: {count_a}")',
+  'url = "https://python.org"\nis_secure = url.startswith("https")\nprint(f"Secure URL: {is_secure}")',
+  'photo = "vacation.png"\nis_image = photo.endswith(".png")\nprint(f"Is PNG file: {is_image}")',
+  'pin = "400001"\nis_numeric = pin.isdigit()\nprint(f"PIN is all numbers: {is_numeric}")',
+  'name = "Aarav"\nis_letters = name.isalpha()\nprint(f"Name has only letters: {is_letters}")',
+  'plate = "MH04AB1234"\nis_valid_alnum = plate.isalnum()\nprint(f"Alphanumeric: {is_valid_alnum}")',
+  'word = "superfast"\nprint(f"All lowercase: {word.islower()}")',
+  'alert = "DANGER"\nprint(f"All uppercase: {alert.isupper()}")',
+  'name = "Zara"\ncity = "Hyderabad"\nprint(f"Coder {name} is coding from {city}!")',
+  'item = "Pen"\nqty = 5\nrate = 12.5\nprint(f"{qty} x {item} = Rs {qty * rate}")',
+  'username = "rohit_sharma"\nprint(f"Welcome, {username.title()}! (Length: {len(username)})")',
+  'sentence = "Python is loved by developers worldwide"\nwords = sentence.split()\nprint(f"Words: {words}")',
+  'csv_row = "Apples,Bananas,Mangoes,Oranges"\nitems = csv_row.split(",")\nprint(f"Fruits: {items}")',
+  'w1 = "apple"\nw2 = "Apple"\nprint(f"Exact match: {w1 == w2}, Lower match: {w1.lower() == w2.lower()}")',
+  'a = "cat"\nb = "dog"\nprint(f"\'cat\' comes before \'dog\' (<): {a < b}")',
+  'test_word = "radar"\nis_palindrome = (test_word == test_word[::-1])\nprint(f"{test_word} is a palindrome: {is_palindrome}")',
+  'card = "1234567890123456"\nmasked = ("*" * 12) + card[-4:]\nprint(f"Masked Card: {masked}")',
+  'user_input = "  pYtHoN_cOdEr  "\ncleaned_tag = user_input.strip().lower()\nprint(f"Normalized tag: {cleaned_tag}")',
+  'phrase = "Indian Space Research Organisation"\nwords = phrase.split()\nacronym = "ISRO"\nprint(f"{phrase} -> {acronym}")',
+  'title = "python masterclass"\nlevel = 5\nstatus = "active"\nbadge = f"[{title.upper()}] · Level {level} · {status.title()}"\nprint(badge)'
 ];
 
 const LESSON_GOALS = [
-  "Check a simple condition and run the block only if True.",
-  "Observe how Python skips an if block when the condition is False.",
-  "Choose between two distinct pathways using if - else.",
-  "Handle three choices using if - elif - else.",
-  "Create a multi-tiered grade classifier ladder.",
-  "Verify exact equality using the == operator.",
-  "Check that a value is different with the != operator.",
-  "Trigger an action when a value exceeds a limit (>).",
-  "Trigger an alert when a value is below a threshold (<).",
-  "Evaluate a passing score requirement (>= 40).",
-  "Check if a speed measurement is within legal limits (<= 60).",
-  "Detect even numbers using modulo % 2 == 0.",
-  "Detect odd numbers using modulo % 2 != 0.",
-  "Classify numbers as positive, negative, or zero.",
-  "Verify voter age requirements interactively.",
-  "Build a multi-level exam score grading system.",
-  "Simulate traffic signal decisions (Red / Yellow / Green).",
-  "Determine physical states of water from temperature.",
-  "Classify Body Mass Index (BMI) health ranges.",
-  "Compute tiered shopping discounts based on cart value.",
-  "Determine cinema ticket pricing by customer age.",
-  "Require multiple conditions simultaneously with and.",
-  "Accept alternative choices with logical or.",
-  "Invert boolean logic flags with not.",
-  "Combine and with or in a composite discount rule.",
-  "Validate that a score sits inside a target range.",
-  "Detect weekdays versus weekends.",
-  "Authenticate username and password credentials.",
-  "Verify length and correctness of a 4-digit bank PIN.",
-  "Apply free delivery based on purchase value.",
-  "Unlock promotions with cart value OR membership status.",
-  "Use a nested if to verify both age and driver's license.",
-  "Use nested if checks for account balance and single withdrawal limits.",
-  "Search for keywords inside profile text using in.",
-  "Verify URL security protocols with startswith().",
-  "Verify file extensions with endswith().",
-  "Check whether user input was left blank.",
-  "Ensure password length meets security standards with len().",
-  "Implement the classic FizzBuzz multi-condition test.",
-  "Check whether a year is a leap year (366 days).",
-  "Verify triangle geometric validity using side sums.",
-  "Identify Cartesian coordinate quadrants from (x, y).",
-  "Calculate income tax across multiple slab rates.",
-  "Implement two-player Rock Paper Scissors game rules.",
-  "Evaluate password strength across length and letter cases.",
-  "Validate theme park ride height and age safety gates.",
-  "Simulate an ATM cash withdrawal decision engine.",
-  "Build a fast-food ordering menu and total price calculator.",
-  "Implement gaming combat damage calculation with shield absorption.",
-  "Build a smart home climate controller based on temperature and humidity."
+  "Create text with both single (') and double (\") quotes.",
+  "Handle quotes inside sentences cleanly.",
+  "Use the \\n newline escape character to print on multiple lines.",
+  "Use the \\t tab character to space out table columns.",
+  "Combine two or more strings together with the + operator.",
+  "Repeat a character pattern with the * multiplication operator.",
+  "Measure the character length of text using len().",
+  "Access the very first letter using index [0].",
+  "Retrieve a specific character by its zero-based index.",
+  "Use negative index [-1] to grab the last character instantly.",
+  "Use [-2] to get the second to last character.",
+  "Extract a substring using slicing [start:stop].",
+  "Slice text starting from the beginning with [:stop].",
+  "Slice text all the way to the end with [start:].",
+  "Create a full string clone using [:] slice.",
+  "Extract characters with a step jump using [start:stop:step].",
+  "Reverse any string instantly with the classic [::-1] slice.",
+  "Decode hidden messages by picking every 2nd letter with [::2].",
+  "Understand string immutability by slicing and rebuilding text.",
+  "Replace occurrences of words using the .replace() method.",
+  "Convert any string to uppercase with .upper().",
+  "Convert text to lowercase with .lower().",
+  "Capitalize the first letter of each word with .title().",
+  "Capitalize only the first letter of a sentence with .capitalize().",
+  "Remove accidental leading and trailing spaces with .strip().",
+  "Strip unwanted characters from the left with .lstrip().",
+  "Strip unwanted characters from the right with .rstrip().",
+  "Check if a substring exists in text using the in operator.",
+  "Verify that a word is absent using not in.",
+  "Find the exact starting index of a substring with .find().",
+  "Count how many times a character appears with .count().",
+  "Verify URL or protocol prefix with .startswith().",
+  "Verify file extensions (like .png) with .endswith().",
+  "Validate that text contains only numbers with .isdigit().",
+  "Validate that text contains only letters with .isalpha().",
+  "Check for alphanumeric text (letters + numbers) with .isalnum().",
+  "Check if all letters are lowercase with .islower().",
+  "Check if all letters are uppercase with .isupper().",
+  "Format dynamic variables into text using f-strings.",
+  "Perform calculations directly inside f-string braces {}.",
+  "Call string methods directly inside f-string braces.",
+  "Split a sentence into individual words with .split().",
+  "Split comma-separated values (CSV) with .split(',').",
+  "Compare strings and understand case sensitivity.",
+  "Compare words in alphabetical dictionary order with <.",
+  "Detect whether a word is a palindrome using [::-1].",
+  "Mask sensitive data like phone or card numbers (****1234).",
+  "Chain .strip().lower() to normalize user input safely.",
+  "Create an acronym from phrase words.",
+  "Build a complete text analysis badge combining slicing, methods, and f-strings."
 ];
 
 // Generate full 50 structured lessons with 10 Indian Language translations
@@ -1459,16 +1488,16 @@ const LESSONS = LESSON_TITLES.map((title, idx) => {
   return {
     code: LESSON_CODES[idx],
     i18n: {
-      en: { title: title, goal: `<strong>Task:</strong> ${LESSON_GOALS[idx]}<br>1. Run the code and watch the Decision Gate inspect and compare values live.` },
-      hi: { title: title, goal: `<strong>कार्य:</strong> ${LESSON_GOALS[idx]}<br>1. कोड चलाएं और डिसीजन गेट को मानों की तुलना करते हुए देखें।` },
-      mr: { title: title, goal: `<strong>कृती:</strong> ${LESSON_GOALS[idx]}<br>1. कोड चालवा आणि गेटवर मूल्यांची तपासणी पहा.` },
-      ta: { title: title, goal: `<strong>பணி:</strong> ${LESSON_GOALS[idx]}<br>1. குறியீட்டை இயக்கி நிபந்தனை சரிபார்ப்பைக் காண்க.` },
-      te: { title: title, goal: `<strong>టాస్క్:</strong> ${LESSON_GOALS[idx]}<br>1. కోడ్ రన్ చేసి గేట్ విలువలను ఎలా పోల్చుతుందో చూడండి.` },
-      bn: { title: title, goal: `<strong>কাজ:</strong> ${LESSON_GOALS[idx]}<br>1. কোড চালান এবং ডিসিশন গেটের মান তুলনা দেখুন।` },
-      gu: { title: title, goal: `<strong>કાર્ય:</strong> ${LESSON_GOALS[idx]}<br>1. કોડ ચલાવો અને ગેટ પર કિંમતોની ચકાસણી જુઓ.` },
-      kn: { title: title, goal: `<strong>ಕಾರ್ಯ:</strong> ${LESSON_GOALS[idx]}<br>1. ಕೋಡ್ ರನ್ ಮಾಡಿ ಗೇಟ್ ಪರೀಕ್ಷೆ ನೋಡಿ.` },
-      ml: { title: title, goal: `<strong>ടാസ്ക്:</strong> ${LESSON_GOALS[idx]}<br>1. കോഡ് റൺ ചെയ്ത് താരതമ്യം കാണുക.` },
-      pa: { title: title, goal: `<strong>ਕੰਮ:</strong> ${LESSON_GOALS[idx]}<br>1. ਕੋਡ ਚਲਾਓ ਅਤੇ ਗੇਟ ਤੇ ਮੁੱਲਾਂ ਦੀ ਜਾਂਚ ਦੇਖੋ।` }
+      en: { title: title, goal: `<strong>Task:</strong> ${LESSON_GOALS[idx]}<br>1. Run the code and observe the string transformation in live memory.` },
+      hi: { title: title, goal: `<strong>कार्य:</strong> ${LESSON_GOALS[idx]}<br>1. कोड चलाएं और लाइव मेमोरी में स्ट्रिंग परिवर्तन देखें।` },
+      mr: { title: title, goal: `<strong>कृती:</strong> ${LESSON_GOALS[idx]}<br>1. कोड चालवा आणि थेट मेमरीमध्ये बदल पहा.` },
+      ta: { title: title, goal: `<strong>பணி:</strong> ${LESSON_GOALS[idx]}<br>1. குறியீட்டை இயக்கி மாற்றத்தைக் காண்க.` },
+      te: { title: title, goal: `<strong>టాస్క్:</strong> ${LESSON_GOALS[idx]}<br>1. కోడ్ రన్ చేసి మెమరీ మార్పులను గమనించండి.` },
+      bn: { title: title, goal: `<strong>কাজ:</strong> ${LESSON_GOALS[idx]}<br>1. কোড চালান এবং লাইভ মেমরিতে পরিবর্তন দেখুন।` },
+      gu: { title: title, goal: `<strong>કાર્ય:</strong> ${LESSON_GOALS[idx]}<br>1. કોડ ચલાવો અને મેમરીમાં ફેરફાર જુઓ.` },
+      kn: { title: title, goal: `<strong>ಕಾರ್ಯ:</strong> ${LESSON_GOALS[idx]}<br>1. ಕೋಡ್ ರನ್ ಮಾಡಿ ಮೆಮೊರಿ ಬದಲಾವಣೆ ನೋಡಿ.` },
+      ml: { title: title, goal: `<strong>ടാസ്ക്:</strong> ${LESSON_GOALS[idx]}<br>1. കോഡ് റൺ ചെയ്ത് മാറ്റം കാണുക.` },
+      pa: { title: title, goal: `<strong>ਕੰਮ:</strong> ${LESSON_GOALS[idx]}<br>1. ਕੋਡ ਚਲਾਓ ਅਤੇ ਮੈਮੋਰੀ ਵਿੱਚ ਤਬਦੀਲੀ ਦੇਖੋ।` }
     }
   };
 });
@@ -1487,16 +1516,16 @@ const STEP_LABELS = {
 };
 
 const KID_TYPE_INFO = {
-  bool: { emoji: '🚦', name: 'Decision Gate Result', desc: 'True or False (bool)', shadow: '#fbd38d', color: '#dd6b20' },
-  int: { emoji: '🔢', name: 'Whole Number', desc: 'Number in memory (int)', shadow: '#90cdf4', color: '#3182ce' },
-  float: { emoji: '🎯', name: 'Decimal Number', desc: 'Decimal in memory (float)', shadow: '#d6bcfa', color: '#805ad5' },
-  str: { emoji: '💬', name: 'Text / Word', desc: 'Text in memory (str)', shadow: '#9ae6b4', color: '#38a169' },
+  str: { emoji: '💬', name: 'Word / Text', desc: 'Message or text (str)', shadow: '#9ae6b4', color: '#38a169' },
+  int: { emoji: '🔢', name: 'Whole Number', desc: 'Counting / Index (int)', shadow: '#90cdf4', color: '#3182ce' },
+  bool: { emoji: '🚦', name: 'Yes / No Answer', desc: 'True or False (bool)', shadow: '#fbd38d', color: '#dd6b20' },
+  float: { emoji: '🎯', name: 'Decimal Number', desc: 'Number with dot . (float)', shadow: '#d6bcfa', color: '#805ad5' },
   none: { emoji: '📭', name: 'Empty', desc: 'No value yet', shadow: '#cbd5e0', color: '#718096' }
 };
 
-const TYPE_COLOR = { bool: 'var(--amber)', int: 'var(--blue)', float: 'var(--violet)', str: 'var(--green)', none: 'var(--grey)' };
-const TYPE_TINT = { bool: 'rgba(217,162,75,0.22)', int: 'rgba(91,141,239,0.18)', float: 'rgba(182,124,224,0.20)', str: 'rgba(79,157,99,0.18)', none: 'rgba(144,152,163,0.20)' };
-const TYPE_DESC = { bool: 'True or False', int: 'whole number', float: 'decimal number', str: 'text', none: 'no value yet' };
+const TYPE_COLOR = { str: 'var(--green)', int: 'var(--blue)', bool: 'var(--amber)', float: 'var(--violet)', none: 'var(--grey)' };
+const TYPE_TINT = { str: 'rgba(79,157,99,0.18)', int: 'rgba(91,141,239,0.18)', bool: 'rgba(217,162,75,0.22)', float: 'rgba(182,124,224,0.20)', none: 'rgba(144,152,163,0.20)' };
+const TYPE_DESC = { str: 'text characters', int: 'whole number', bool: 'True or False', float: 'decimal number', none: 'no value yet' };
 
 // ============================================================
 // UI Wiring
@@ -1518,13 +1547,7 @@ const els = {
   visualPanel: document.getElementById('visual-panel'),
   kidsToggleBtn: document.getElementById('kids-toggle-btn'),
   emptyStateText: document.getElementById('empty-state-text'),
-  stageTimer: document.getElementById('stage-timer'),
-  gateBox: document.getElementById('gate-box'),
-  gateIcon: document.getElementById('gate-icon'),
-  gateCondition: document.getElementById('gate-condition'),
-  gateEvalDetail: document.getElementById('gate-eval-detail'),
-  gatePathIndicator: document.getElementById('gate-path-indicator'),
-  gateResultTag: document.getElementById('gate-result-tag'),
+  legendBar: document.getElementById('legend-bar'),
   boxes: document.getElementById('boxes'),
   terminal: document.getElementById('terminal'),
   runHint: document.getElementById('run-hint'),
@@ -1536,9 +1559,9 @@ const els = {
 const LINE_HEIGHT = 22;
 const STEP_DELAY = 450;
 const STEP_GAP = 200;
-const PROGRESS_KEY = 'conditions-lab-progress-v2';
-const USER_CODE_KEY = 'conditions-lab-user-code-v2';
-const KIDS_MODE_KEY = 'conditions-lab-kids-mode';
+const PROGRESS_KEY = 'strings-lab-progress-v1';
+const USER_CODE_KEY = 'strings-lab-user-code-v1';
+const KIDS_MODE_KEY = 'strings-lab-kids-mode';
 
 let state = { running: false, lessonIndex: 0 };
 let userCodeStore = {};
@@ -1606,56 +1629,22 @@ function updateKidsModeUI() {
     els.kidsToggleBtn.classList.add('is-active');
     els.kidsToggleBtn.textContent = '🧸 Kids Mode: ON';
     els.visualPanel.classList.add('kids-active');
-    els.emptyStateText.textContent = '🚀 Run code to watch Robo-Gate check numbers and open paths!';
+    els.emptyStateText.textContent = '🚀 Run your code to see your text blocks and letter cuts!';
+    els.legendBar.innerHTML = `
+      <div class="legend-item"><span>💬</span> str (Text Word)</div>
+      <div class="legend-item"><span>🔢</span> int (Letter Count / Index)</div>
+      <div class="legend-item"><span>🚦</span> bool (Yes/No)</div>
+    `;
   } else {
     els.kidsToggleBtn.classList.remove('is-active');
     els.kidsToggleBtn.textContent = '🧸 Kids Mode: OFF';
     els.visualPanel.classList.remove('kids-active');
-    els.emptyStateText.textContent = 'Run your code to watch the condition gate decide which path to execute!';
-  }
-}
-
-function resetGateUI() {
-  els.gateBox.className = 'gate-box';
-  els.gateIcon.textContent = '⏸️';
-  els.gateCondition.textContent = 'No condition active';
-  els.gateEvalDetail.textContent = 'Press Run to evaluate expressions';
-  els.gatePathIndicator.textContent = 'Path: [ Waiting ]';
-  els.gateResultTag.className = 'gate-result-tag tag-idle';
-  els.gateResultTag.textContent = 'Idle';
-  els.stageTimer.textContent = 'Ready';
-}
-
-function setGateEvaluating(condText, subDetail) {
-  els.gateBox.className = 'gate-box evaluating';
-  els.gateIcon.textContent = '🔍';
-  els.gateCondition.textContent = condText;
-  els.gateEvalDetail.textContent = subDetail || 'Comparing substituted values...';
-  els.gatePathIndicator.textContent = 'Path: [ Checking Gate ]';
-  els.gateResultTag.className = 'gate-result-tag tag-eval';
-  els.gateResultTag.textContent = 'Testing...';
-  els.stageTimer.textContent = 'Evaluating';
-}
-
-function setGateResult(condText, passed, branchName, evalDetail) {
-  if (passed) {
-    els.gateBox.className = 'gate-box passed';
-    els.gateIcon.textContent = '🟢';
-    els.gateCondition.textContent = condText;
-    els.gateEvalDetail.textContent = evalDetail || 'Condition verified as TRUE';
-    els.gatePathIndicator.textContent = `Path: [ ENTER ${branchName} BLOCK ]`;
-    els.gateResultTag.className = 'gate-result-tag tag-pass';
-    els.gateResultTag.textContent = 'Gate Open (True)';
-    els.stageTimer.textContent = 'Matched';
-  } else {
-    els.gateBox.className = 'gate-box failed';
-    els.gateIcon.textContent = '🔴';
-    els.gateCondition.textContent = condText;
-    els.gateEvalDetail.textContent = evalDetail || 'Condition evaluated to FALSE';
-    els.gatePathIndicator.textContent = 'Path: [ JUMP / SKIP BLOCK ]';
-    els.gateResultTag.className = 'gate-result-tag tag-fail';
-    els.gateResultTag.textContent = 'Gate Locked (False)';
-    els.stageTimer.textContent = 'Skipped';
+    els.emptyStateText.textContent = 'Run your code to inspect string transformations in memory!';
+    els.legendBar.innerHTML = `
+      <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>str (Text Sequence)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>int (Length / Index)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>bool (True / False)</div>
+    `;
   }
 }
 
@@ -1666,7 +1655,7 @@ function loadLesson(i) {
   els.levelBadge.className = 'level-badge ' + lvl.cls;
 
   const savedUserCode = userCodeStore[i];
-  els.code.value = (savedUserCode !== undefined) ? savedUserCode : '# Write your conditional code here\n';
+  els.code.value = (savedUserCode !== undefined) ? savedUserCode : '# Write your string code here\n';
   els.code.readOnly = false;
   
   updateQuestionUI(i);
@@ -1674,7 +1663,6 @@ function loadLesson(i) {
   updateProgressBar();
   syncGutter();
   clearOutputs();
-  resetGateUI();
 }
 
 function syncGutter() {
@@ -1687,7 +1675,7 @@ function syncGutter() {
 }
 
 function clearOutputs() {
-  els.boxes.innerHTML = `<div class="empty-state"><div class="icon"></div><p id="empty-state-text">${isKidsMode ? '🚀 Run code to watch Robo-Gate check numbers and open paths!' : 'Run your code to watch the condition gate decide which path to execute!'}</p></div>`;
+  els.boxes.innerHTML = `<div class="empty-state"><div class="icon"></div><p id="empty-state-text">${isKidsMode ? '🚀 Run your code to see your text blocks and letter cuts!' : 'Run your code to inspect string transformations in memory!'}</p></div>`;
   els.terminal.innerHTML = '<div class="term-line is-muted">Waiting for you to press Run…</div>';
   els.currentLine.style.display = 'none';
   els.currentLine.classList.remove('err');
@@ -1716,13 +1704,13 @@ function renderVars(env, order, created, updated, referenced) {
       box.style.setProperty('--tag-color', kidInfo.color);
       box.style.setProperty('--kid-shadow', kidInfo.shadow);
 
-      box.setAttribute('data-name', `📦 ${name}`);
-      box.title = `Variable "${name}" = ${pyDisplay(val)}`;
+      box.setAttribute('data-name', `🔤 ${name}`);
+      box.title = `String Variable "${name}" = ${pyDisplay(val)}`;
       box.innerHTML = `
         <div class="kid-inner">
           <div class="kid-val-row">
             <span class="kid-emoji">${kidInfo.emoji}</span>
-            <span class="kid-val">${escapeHtml(pyStr(val))}</span>
+            <span class="kid-val">${escapeHtml(pyDisplay(val))}</span>
           </div>
           <div class="kid-desc">${kidInfo.desc}</div>
         </div>
@@ -1770,7 +1758,7 @@ function promptTerminalInput(promptText) {
     const input = document.createElement('input');
     input.type = 'text';
     input.className = 'term-input-field';
-    input.placeholder = 'type input & enter...';
+    input.placeholder = 'type string input & enter...';
 
     const enterBadge = document.createElement('span');
     enterBadge.className = 'term-enter-badge';
@@ -1785,7 +1773,7 @@ function promptTerminalInput(promptText) {
     input.focus();
 
     function submit() {
-      const val = input.value || '20';
+      const val = input.value || 'Python';
       row.innerHTML = `<span class="term-prompt-text">${escapeHtml(promptText || '▶ ')}</span><span style="color:#ffffff;">${escapeHtml(val)}</span>`;
       resolve(val);
     }
@@ -1809,18 +1797,6 @@ function writeCursor() {
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-// Generate substituted inspection string (e.g. "age >= 18" -> "20 >= 18")
-function getSubstitutedExpression(toks, env) {
-  return toks.map(t => {
-    if (t.type === 'NAME' && t.value in env) {
-      const v = env[t.value];
-      return v.t === 'str' ? `"${v.v}"` : pyStr(v);
-    }
-    return t.value !== undefined ? t.value : (t.raw !== undefined ? `"${t.raw}"` : '');
-  }).join(' ');
-}
-
-// Line-by-Line Conditional Evaluator with Visible Decision Delay
 async function runProgram() {
   if (state.running || isPeeking) return;
   state.running = true;
@@ -1829,138 +1805,43 @@ async function runProgram() {
   els.resetBtn.disabled = true;
   els.peekBtn.disabled = true;
   els.code.readOnly = true;
-  els.runHint.textContent = 'Evaluating condition gate step-by-step...';
+  els.runHint.textContent = 'Executing string operations line by line...';
 
   els.boxes.innerHTML = '';
   els.terminal.innerHTML = '';
-  resetGateUI();
 
-  const rawLines = els.code.value.split('\n');
+  const lines = els.code.value.split('\n');
   const env = Object.create(null);
   const order = [];
   let stopped = false;
   let anyOutput = false;
 
-  const chainState = {};
-
-  function getIndent(line) {
-    let spaces = 0;
-    for (let c of line) {
-      if (c === ' ') spaces++;
-      else if (c === '\t') spaces += 4;
-      else break;
-    }
-    return Math.floor(spaces / 4);
-  }
-
-  let skipLevel = null;
-
-  for (let i = 0; i < rawLines.length && !stopped; i++) {
-    const raw = rawLines[i];
-    const stripped = stripComment(raw).trim();
+  for (let i = 0; i < lines.length && !stopped; i++) {
+    const stripped = stripComment(lines[i]).trim();
     if (!stripped) continue;
-
-    const indent = getIndent(raw);
-
-    if (skipLevel !== null) {
-      if (indent >= skipLevel) {
-        continue;
-      } else {
-        skipLevel = null;
-      }
-    }
-
     setCurrentLine(i, false);
     await sleep(STEP_DELAY);
 
     const created = new Set(), updated = new Set(), referenced = new Set();
     try {
       const toks = tokenize(stripped);
-
-      // if Statement
-      if (toks[0].type === 'NAME' && toks[0].value === 'if') {
-        const colonIdx = toks.findLastIndex(t => t.type === 'COLON');
-        if (colonIdx === -1) throw pyErr('SyntaxError', "expected ':' at end of if");
-        const condToks = toks.slice(1, colonIdx);
-        const condText = stripped.slice(2, stripped.lastIndexOf(':')).trim();
-        const subDetail = getSubstitutedExpression(condToks, env);
-
-        // Visual Step 1: Evaluating
-        setGateEvaluating(`if ${condText}:`, `Substituting: ${subDetail}`);
-        await sleep(650); // Visible inspection time
-
-        const condVal = await evalGroup(condToks, env);
-        const passed = isTruthy(condVal);
-        chainState[indent] = { matched: passed };
-
-        // Visual Step 2: Gate Open/Close Result
-        setGateResult(`if ${condText}:`, passed, 'IF', `${subDetail} ➔ ${passed ? 'TRUE' : 'FALSE'}`);
-        await sleep(500);
-
-        if (!passed) {
-          skipLevel = indent + 1;
-        }
-      }
-      // elif Statement
-      else if (toks[0].type === 'NAME' && toks[0].value === 'elif') {
-        const colonIdx = toks.findLastIndex(t => t.type === 'COLON');
-        if (colonIdx === -1) throw pyErr('SyntaxError', "expected ':' at end of elif");
-        const condToks = toks.slice(1, colonIdx);
-        const condText = stripped.slice(4, stripped.lastIndexOf(':')).trim();
-        const subDetail = getSubstitutedExpression(condToks, env);
-
-        const chain = chainState[indent];
-        if (chain && chain.matched) {
-          setGateResult(`elif ${condText}:`, false, 'ELIF (prior branch ran)', 'Skipped because a previous condition was already TRUE');
-          skipLevel = indent + 1;
-        } else {
-          setGateEvaluating(`elif ${condText}:`, `Substituting: ${subDetail}`);
-          await sleep(650);
-          const condVal = await evalGroup(condToks, env);
-          const passed = isTruthy(condVal);
-          if (passed) {
-            if (chain) chain.matched = true;
-            setGateResult(`elif ${condText}:`, true, 'ELIF', `${subDetail} ➔ TRUE`);
-          } else {
-            setGateResult(`elif ${condText}:`, false, 'ELIF', `${subDetail} ➔ FALSE`);
-            skipLevel = indent + 1;
-          }
-          await sleep(500);
-        }
-      }
-      // else Statement
-      else if (toks[0].type === 'NAME' && toks[0].value === 'else') {
-        const chain = chainState[indent];
-        if (chain && chain.matched) {
-          setGateResult('else:', false, 'ELSE (prior branch ran)', 'Skipped because a previous branch was already executed');
-          skipLevel = indent + 1;
-        } else {
-          setGateResult('else:', true, 'ELSE', 'No previous condition matched ➔ Executing fallback block');
-          if (chain) chain.matched = true;
-          await sleep(450);
-        }
-      }
-      // Normal statements
-      else {
-        await executeSimpleStatement(toks, env, order, created, updated, referenced,
-          (txt) => { writeTerminalLine(txt); anyOutput = true; },
-          async (promptText) => { anyOutput = true; return await promptTerminalInput(promptText); }
-        );
-      }
+      await executeStatement(toks, env, order, created, updated, referenced, 
+        (txt) => { writeTerminalLine(txt); anyOutput = true; },
+        async (promptText) => { anyOutput = true; return await promptTerminalInput(promptText); }
+      );
     } catch (err) {
       writeTerminalLine(`Line ${i + 1}: ${err.message}`, 'is-error');
       setCurrentLine(i, true);
       stopped = true;
       break;
     }
-
     renderVars(env, order, created, updated, referenced);
     await sleep(STEP_GAP);
   }
 
   if (!stopped) {
     els.currentLine.style.display = 'none';
-    if (!anyOutput) writeTerminalLine('(no output produced)', 'is-muted');
+    if (!anyOutput) writeTerminalLine('(no output — try print())', 'is-muted');
     writeCursor();
     if (!completed.has(state.lessonIndex)) {
       completed.add(state.lessonIndex);
@@ -1980,7 +1861,7 @@ async function runProgram() {
   els.runBtn.textContent = 'Run ▶';
   els.resetBtn.disabled = false;
   els.peekBtn.disabled = false;
-  els.runHint.textContent = 'Watch the decision gate evaluate conditions step-by-step';
+  els.runHint.textContent = 'Runs line by line & executes string methods live';
 }
 
 function startPeek(e) {

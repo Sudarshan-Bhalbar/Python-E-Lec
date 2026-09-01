@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Input Lab · Learn Python</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14161f;
+    --panel-dark:#1b1e29;
+    --panel-dark-2:#20232f;
+    --line-dark:#2c3040;
+    --text-dark:#e7e9ee;
+    --muted-dark:#8991a6;
+
+    --paper:#e7ebee;
+    --paper-2:#dde3e7;
+    --line-light:#c7cfd5;
+    --text-light:#20232b;
+    --muted-light:#5b6270;
+
+    --teal:#43c9b8;
+    --blue:#5b8def;
+    --violet:#b67ce0;
+    --green:#4f9d63;
+    --green-dim:#357a46;
+    --amber:#d9a24b;
+    --grey:#9098a3;
+    --error:#e8685f;
+
+    --radius-lg:20px;
+    --radius-md:12px;
+    --radius-sm:8px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--text-dark);
+    font-family:'Inter',system-ui,sans-serif;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:1400px;
+    margin:0 auto;
+    padding:28px 28px 60px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex;
+    align-items:flex-end;
+    gap:24px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+  }
+  .brand h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:28px;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .brand .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 0 4px rgba(79,157,99,0.22);
+  }
+  .brand p{
+    margin:4px 0 0;
+    color:var(--muted-dark);
+    font-size:14.5px;
+    line-height:1.55;
+    /* max-width:65ch; */
+  }
+
+  .lessons{
+    display:flex;
+    flex-wrap:nowrap;
+    align-items:center;
+    gap:6px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 2px 12px;
+    margin-bottom:12px;
+    scrollbar-width:thin;
+    scrollbar-color:var(--green-dim) transparent;
+  }
+  .lessons::-webkit-scrollbar{ height:5px; }
+  .lessons::-webkit-scrollbar-track{
+    background:var(--line-dark);
+    border-radius:999px;
+    margin:0 2px;
+  }
+  .lessons::-webkit-scrollbar-thumb{
+    background:var(--green-dim);
+    border-radius:999px;
+  }
+  .lessons::-webkit-scrollbar-thumb:hover{ background:var(--green); }
+  .lesson-pill{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--muted-dark);
+    background:var(--panel-dark);
+    border:1px solid var(--line-dark);
+    width:30px;
+    height:30px;
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    cursor:pointer;
+    transition:border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .lesson-pill:hover{ color:var(--text-dark); border-color:#3a3f52; }
+  .lesson-pill.active{
+    color:#0f1712;
+    background:var(--green);
+    border-color:var(--green);
+  }
+  .lesson-pill.done:not(.active){
+    color:var(--green);
+    border-color:var(--green-dim);
+    background:rgba(79,157,99,0.12);
+  }
+
+  /* ---------- Topics link & progress ---------- */
+  .topics-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    font-weight:500;
+    color:var(--muted-dark);
+    text-decoration:none;
+    margin-bottom:16px;
+    transition:color .15s ease;
+  }
+  .topics-link:hover{ color:var(--green); }
+
+  .progress-track{
+    height:5px;
+    border-radius:999px;
+    background:var(--panel-dark);
+    border:1px solid var(--line-dark);
+    overflow:hidden;
+    margin-bottom:16px;
+  }
+  .progress-bar{
+    height:100%;
+    width:0%;
+    background:var(--green);
+    border-radius:999px;
+    transition:width .35s ease;
+  }
+
+  /* ---------- Instructions ---------- */
+  .instructions{
+    background:var(--panel-dark);
+    border:1px solid var(--line-dark);
+    border-radius:var(--radius-lg);
+    padding:18px 20px;
+    margin-bottom:16px;
+  }
+  .instructions-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+  }
+  .instructions-meta{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .instructions .step{
+    font-size:12.5px;
+    color:var(--green);
+    font-weight:600;
+    margin:0;
+  }
+  .level-badge{
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.01em;
+    padding:3px 9px;
+    border-radius:999px;
+    color:#0f1712;
+    background:var(--green);
+  }
+  .level-badge.mid{ background:var(--amber); }
+  .level-badge.adv{ background:var(--violet); color:#1a1424; }
+
+  .lang-selector-wrap{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:var(--panel-dark-2);
+    border:1px solid var(--line-dark);
+    border-radius:var(--radius-sm);
+    padding:4px 8px;
+  }
+  .lang-icon{ font-size:13px; line-height:1; }
+  .lang-select{
+    background:transparent;
+    color:var(--text-dark);
+    border:none;
+    outline:none;
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:12px;
+    font-weight:500;
+    cursor:pointer;
+  }
+  .lang-select option{
+    background:var(--panel-dark-2);
+    color:var(--text-dark);
+  }
+
+  .instructions h2{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:19px;
+    margin:0 0 6px;
+  }
+  .instructions p{
+    margin:0;
+    color:#c3c8d4;
+    font-size:14.5px;
+    line-height:1.55;
+    max-width:70ch;
+  }
+
+  /* ---------- Grid ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    align-items:stretch;
+  }
+  @media (max-width:920px){ .grid{ grid-template-columns:1fr; } }
+  .col{ display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+  .panel{
+    border-radius:var(--radius-lg);
+    border:1px solid var(--line-dark);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .panel-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 16px;
+    border-bottom:1px solid var(--line-dark);
+    background:var(--panel-dark-2);
+  }
+  .panel-head .title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.01em;
+    color:var(--text-dark);
+  }
+  .panel-head .title .swatch{ width:8px;height:8px;border-radius:2px; }
+  .panel-head .sub{ font-size:12px; color:var(--muted-dark); }
+
+  .peek-badge{
+    display:none;
+    font-size:11px;
+    font-weight:700;
+    background:var(--amber);
+    color:#11131a;
+    padding:2px 7px;
+    border-radius:4px;
+    letter-spacing:0.03em;
+  }
+
+  /* ---------- Editor ---------- */
+  .editor-panel{ background:var(--panel-dark); flex:1; min-height:360px; }
+  .editor-panel.peeking{ border-color:var(--amber); }
+  .editor-body{
+    position:relative;
+    flex:1;
+    display:flex;
+    min-height:300px;
+  }
+  .gutter{
+    background:var(--panel-dark-2);
+    color:#4a5064;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13.5px;
+    line-height:22px;
+    padding:14px 10px 14px 0;
+    text-align:right;
+    width:44px;
+    flex-shrink:0;
+    overflow:hidden;
+    user-select:none;
+    white-space:pre;
+    border-right:1px solid var(--line-dark);
+  }
+  .code-col{ position:relative; flex:1; min-width:0; }
+  .current-line{
+    position:absolute;
+    left:0; right:0; top:0;
+    height:22px;
+    background:rgba(79,157,99,0.14);
+    border-top:1px solid rgba(79,157,99,0.35);
+    border-bottom:1px solid rgba(79,157,99,0.35);
+    transform:translateY(14px);
+    transition:transform .18s ease;
+    display:none;
+    pointer-events:none;
+  }
+  .current-line.err{
+    background:rgba(232,104,95,0.12);
+    border-color:rgba(232,104,95,0.5);
+  }
+  textarea.code-input{
+    position:relative;
+    z-index:1;
+    display:block;
+    width:100%;
+    height:100%;
+    min-height:300px;
+    resize:none;
+    border:none;
+    outline:none;
+    background:transparent;
+    color:var(--text-dark);
+    caret-color:var(--green);
+    font-family:'JetBrains Mono',monospace;
+    font-size:13.5px;
+    line-height:22px;
+    padding:14px 16px;
+    white-space:pre;
+    overflow:auto;
+    tab-size:4;
+  }
+  .editor-controls{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px 16px;
+    border-top:1px solid var(--line-dark);
+    background:var(--panel-dark-2);
+    flex-wrap:wrap;
+  }
+  .btn-group{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  button{ font-family:'Inter',sans-serif; cursor:pointer; }
+  .btn{
+    border-radius:10px;
+    padding:9px 16px;
+    font-size:13.5px;
+    font-weight:600;
+    border:1px solid transparent;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    transition:opacity .15s ease, transform .05s ease;
+    user-select:none;
+  }
+  .btn:active{ transform:scale(0.98); }
+  .btn:disabled{ opacity:0.5; cursor:not-allowed; }
+  .btn-run{ background:var(--green); color:#ffffff; }
+  .btn-run:hover:not(:disabled){ background:#5eb774; }
+  .btn-ghost{
+    background:transparent;
+    color:var(--muted-dark);
+    border-color:var(--line-dark);
+  }
+  .btn-ghost:hover:not(:disabled){ color:var(--text-dark); border-color:#454b60; }
+  
+  .btn-peek{
+    background:rgba(217, 162, 75, 0.12);
+    color:var(--amber);
+    border-color:rgba(217, 162, 75, 0.35);
+  }
+  .btn-peek:hover:not(:disabled){
+    background:rgba(217, 162, 75, 0.22);
+    color:#f4c478;
+  }
+  .btn-peek.is-holding{
+    background:var(--amber);
+    color:#12141c;
+    border-color:var(--amber);
+    transform:scale(0.96);
+  }
+
+  .run-hint{
+    font-size:12px;
+    color:var(--muted-dark);
+    text-align:right;
+    flex:1;
+    min-width:180px;
+  }
+
+  /* ---------- Visual panel ---------- */
+  .visual-panel{
+    background:var(--paper);
+    color:var(--text-light);
+    border:1px solid var(--line-light);
+    min-height:230px;
+    transition:background-color .25s ease;
+  }
+  .visual-panel.kids-active{
+    background:#edf8f2;
+    border-color:#bce5ca;
+  }
+  .visual-panel .panel-head{
+    background:var(--paper-2);
+    border-bottom:1px solid var(--line-light);
+  }
+  .visual-panel .panel-head .title{ color:var(--text-light); }
+  .visual-panel .panel-head .sub{ color:var(--muted-light); }
+
+  .kids-toggle-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'Fredoka','Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    padding:4px 10px;
+    border-radius:20px;
+    border:1.5px solid #bdc7d0;
+    background:#ffffff;
+    color:#4a5568;
+    cursor:pointer;
+    transition:all .2s ease;
+    box-shadow:0 1px 2px rgba(0,0,0,0.05);
+  }
+  .kids-toggle-btn:hover{
+    transform:translateY(-1px);
+    border-color:#4f9d63;
+    color:#276737;
+  }
+  .kids-toggle-btn.is-active{
+    background:linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+    border-color:#4f9d63;
+    color:#1b4d27;
+    box-shadow:0 2px 6px rgba(79,157,99,0.3);
+  }
+
+  .legend{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    padding:10px 16px;
+    border-bottom:1px solid var(--line-light);
+    background:var(--paper);
+    transition:background-color .25s ease;
+  }
+  .kids-active .legend{ background:#ddf2e5; }
+  .legend-item{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:11.5px;
+    color:var(--muted-light);
+    font-weight:500;
+  }
+  .legend-dot{ width:8px;height:8px;border-radius:50%; }
+
+  .boxes{
+    flex:1;
+    padding:16px;
+    display:flex;
+    flex-wrap:wrap;
+    align-content:flex-start;
+    gap:14px;
+    min-height:150px;
+    background-image:radial-gradient(circle, rgba(32,35,43,0.07) 1px, transparent 1px);
+    background-size:15px 15px;
+    background-position:-3px -3px;
+  }
+  .empty-state{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:var(--muted-light);
+    padding:30px 10px;
+    gap:8px;
+  }
+  .empty-state .icon{
+    width:38px;height:30px;
+    border:2px dashed #b7bfc6;
+    border-radius:8px;
+    position:relative;
+  }
+  .empty-state .icon::after{
+    content:'';
+    position:absolute;
+    left:8px; top:-6px;
+    width:14px;height:6px;
+    border:2px dashed #b7bfc6;
+    border-bottom:none;
+    border-radius:4px 4px 0 0;
+  }
+  .empty-state p{ margin:0; font-size:13.5px; max-width:30ch; }
+
+  .vbox{
+    position:relative;
+    background:#ffffff;
+    border:1.5px solid var(--line-light);
+    border-radius:var(--radius-sm);
+    padding:12px 14px 11px;
+    min-width:118px;
+    box-shadow:0 1px 0 rgba(20,23,30,0.03);
+    transition:transform .15s ease, box-shadow .15s ease; 
+    cursor:default;
+  }
+  .vbox::before{
+    content:attr(data-name);
+    position:absolute;
+    top:-10px;
+    left:10px;
+    background:var(--tag-color, var(--grey));
+    color:#ffffff;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    font-weight:600;
+    padding:2px 7px;
+    border-radius:5px;
+  }
+  .vbox .val{
+    font-family:'JetBrains Mono',monospace;
+    font-size:14.5px;
+    font-weight:500;
+    margin-top:6px;
+    word-break:break-word;
+    color:#1c1f27;
+  }
+  .vbox .type{
+    margin-top:5px;
+    font-size:10.5px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    color:var(--tag-color, var(--grey));
+  }
+  .vbox:hover{ transform:translateY(-2px); box-shadow:0 6px 16px rgba(20,23,30,0.09); }
+  .vbox.is-new{ animation:popIn .38s cubic-bezier(.2,.9,.3,1.3); }
+  .vbox.is-updated{ animation:flash .6s ease; }
+  .vbox.is-referenced{ animation:refPulse 1.3s ease; }
+
+  /* Kids Mode Styles */
+  .vbox.kid-card{
+    background:#ffffff;
+    border:2.5px solid var(--tag-color, #4a5568);
+    border-radius:16px;
+    padding:16px 16px 14px;
+    min-width:150px;
+    box-shadow:0 6px 0 var(--kid-shadow, #cbd5e0), 0 8px 15px rgba(0,0,0,0.06);
+  }
+  .vbox.kid-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 9px 0 var(--kid-shadow, #cbd5e0), 0 12px 20px rgba(0,0,0,0.09);
+  }
+  .vbox.kid-card::before{
+    font-family:'Fredoka','Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:12px;
+    top:-12px;
+    left:12px;
+    color:#ffffff;
+  }
+  .kid-inner{ display:flex; flex-direction:column; gap:4px; margin-top:6px; }
+  .kid-val-row{ display:flex; align-items:center; gap:8px; }
+  .kid-emoji{ font-size:22px; line-height:1; }
+  .kid-val{
+    font-family:'Fredoka','JetBrains Mono',monospace;
+    font-size:17px;
+    font-weight:700;
+    color:#1a202c;
+  }
+  .kid-desc{
+    font-size:11.5px;
+    font-weight:600;
+    color:#4a5568;
+    background:rgba(0,0,0,0.04);
+    padding:3px 6px;
+    border-radius:6px;
+    margin-top:4px;
+  }
+
+  @keyframes popIn{ 0%{ transform:scale(0.6); opacity:0; } 100%{ transform:scale(1); opacity:1; } }
+  @keyframes flash{ 0%{ border-color:var(--line-light); } 30%{ border-color:var(--green); } 100%{ border-color:var(--line-light); } }
+  @keyframes refPulse{
+    0%{ transform:scale(1); }
+    18%{ transform:scale(1.045); border-color:var(--tag-color, var(--green)); }
+    100%{ transform:scale(1); }
+  }
+
+  /* ---------- Terminal panel & interactive input ---------- */
+  .terminal-panel{ background:var(--panel-dark); flex:1; min-height:180px; }
+  .terminal-body{
+    flex:1;
+    background:#101219;
+    padding:14px 16px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    line-height:1.65;
+    overflow-y:auto;
+    min-height:150px;
+  }
+  .term-line{ white-space:pre-wrap; word-break:break-word; color:#d7dae2; }
+  .term-line.is-error{ color:var(--error); }
+  .term-line.is-muted{ color:#565c70; }
+  .term-input-row{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-top:4px;
+  }
+  .term-prompt-text{ color:#43c9b8; font-weight:600; }
+  .term-input-field{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:#ffffff;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    caret-color:var(--green);
+    padding:0;
+    margin:0;
+  }
+  .term-enter-badge{
+    font-size:10px;
+    color:#8991a6;
+    border:1px solid #2c3040;
+    border-radius:4px;
+    padding:1px 5px;
+    background:#1b1e29;
+  }
+  .cursor-line{ color:var(--green); }
+  .blink{ animation:blink 1s steps(2) infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  ::-webkit-scrollbar{ width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb{ background:#33384a; border-radius:6px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="topics-link" href="index.html">&larr; All topics</a>
+
+  <header>
+    <div class="brand">
+      <div class="dot"></div>
+      <div>
+        <h1>User Input Lab</h1>
+        <p>The <code>input()</code> function lets your Python programs talk to the user. It pauses execution, displays an optional prompt message, waits for the user to type on their keyboard and press Enter, and delivers whatever was typed as text (<code>str</code>).</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="lessons" id="lessons"></div>
+
+  <div class="progress-track">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <div class="instructions" id="instructions-container">
+    <div class="instructions-top">
+      <div class="instructions-meta">
+        <p class="step" id="lesson-step">Lesson 1 of 30</p>
+        <span class="level-badge" id="lesson-level">Beginner</span>
+      </div>
+      <div class="lang-selector-wrap" title="Translate instructions to Indian languages">
+        <span class="lang-icon">🌐</span>
+        <select id="lang-select" class="lang-select" aria-label="Select Indian language">
+          <option value="en" selected>English (India)</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="mr">मराठी (Marathi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="gu">ગુજરાતી (Gujarati)</option>
+          <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          <option value="ml">മലയാളം (Malayalam)</option>
+          <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+        </select>
+      </div>
+    </div>
+    <h2 id="lesson-title">Asking for a Name</h2>
+    <p id="lesson-goal">Loading lesson details...</p>
+  </div>
+
+  <div class="grid">
+    <div class="col">
+      <div class="panel editor-panel" id="editor-panel">
+        <div class="panel-head">
+          <div class="title">
+            <span class="swatch" style="background:var(--green)"></span>code.py
+            <span class="peek-badge" id="peek-badge">SOLUTION PREVIEW</span>
+          </div>
+          <div class="sub" id="line-count">2 lines</div>
+        </div>
+        <div class="editor-body">
+          <div class="gutter" id="gutter">1</div>
+          <div class="code-col">
+            <div class="current-line" id="current-line"></div>
+            <textarea class="code-input" id="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+          </div>
+        </div>
+        <div class="editor-controls">
+          <div class="btn-group">
+            <button class="btn btn-run" id="run-btn">Run ▶</button>
+            <button class="btn btn-ghost" id="reset-btn">Reset</button>
+            <button class="btn btn-peek" id="peek-btn" title="Press & hold to view the solution">👁️ Hold to View Answer</button>
+          </div>
+          <span class="run-hint" id="run-hint">Runs line by line & prompts for typing in Terminal</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="panel visual-panel" id="visual-panel" style="flex:1.15;">
+        <div class="panel-head">
+          <div class="title"><span class="swatch" style="background:var(--green)"></span>Input Variables</div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <button class="kids-toggle-btn" id="kids-toggle-btn" title="Toggle 12-Year-Old Kid Friendly Mode">🧸 Kids Mode: ON</button>
+            <div class="sub" id="live-sub">live view</div>
+          </div>
+        </div>
+        <div class="legend" id="legend-bar">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>str (Text Input)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>int (Whole #)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--violet)"></span>float (Decimal)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>bool (Yes/No)</div>
+        </div>
+        <div class="boxes" id="boxes">
+          <div class="empty-state">
+            <div class="icon"></div>
+            <p id="empty-state-text">Run your code and type into the terminal to populate variable boxes!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel terminal-panel">
+        <div class="panel-head">
+          <div class="title"><span class="swatch" style="background:#565c70"></span>Interactive Terminal</div>
+          <div class="sub">type & press enter</div>
+        </div>
+        <div class="terminal-body" id="terminal">
+          <div class="term-line is-muted">Waiting for you to press Run…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// Async Python Interpreter with Interactive input()
+// ============================================================
+const mkInt = v => ({ t: 'int', v: Math.trunc(v) });
+const mkFloat = v => ({ t: 'float', v });
+const mkStr = v => ({ t: 'str', v });
+const mkBool = v => ({ t: 'bool', v: !!v });
+const mkNone = () => ({ t: 'none', v: null });
+
+function pyErr(type, message) {
+  const e = new Error(`${type}: ${message}`);
+  e.isPyErr = true; e.pyType = type; e.pyMessage = message;
+  return e;
+}
+
+const TYPE_NAMES = { int: 'int', float: 'float', str: 'str', bool: 'bool', none: 'NoneType' };
+const pyTypeName = v => TYPE_NAMES[v.t];
+
+function fmtFloat(v) {
+  if (!isFinite(v)) return v > 0 ? 'inf' : (v < 0 ? '-inf' : 'nan');
+  let s = parseFloat(v.toPrecision(12)).toString();
+  if (!s.includes('.') && !s.includes('e')) s += '.0';
+  return s;
+}
+function pyStr(val) {
+  switch (val.t) {
+    case 'int': return String(val.v);
+    case 'float': return fmtFloat(val.v);
+    case 'str': return val.v;
+    case 'bool': return val.v ? 'True' : 'False';
+    case 'none': return 'None';
+  }
+}
+function pyDisplay(val) { return val.t === 'str' ? `"${val.v}"` : pyStr(val); }
+
+function isNumeric(v) { return v.t === 'int' || v.t === 'float' || v.t === 'bool'; }
+function isIntty(v) { return v.t === 'int' || v.t === 'bool'; }
+function numVal(v) { return v.t === 'bool' ? (v.v ? 1 : 0) : v.v; }
+function isTruthy(v) {
+  switch (v.t) {
+    case 'int': case 'float': return v.v !== 0;
+    case 'str': return v.v.length > 0;
+    case 'bool': return v.v;
+    case 'none': return false;
+  }
+}
+
+function scanRawString(line, start, quote) {
+  let i = start;
+  while (i < line.length) {
+    if (line[i] === '\\') { i += 2; continue; }
+    if (line[i] === quote) return { content: line.slice(start, i), end: i + 1 };
+    i++;
+  }
+  throw pyErr('SyntaxError', 'unterminated string literal');
+}
+function processEscapes(s) {
+  return s.replace(/\\(.)/g, (m, ch) => ({ n: '\n', t: '\t', "'": "'", '"': '"', '\\': '\\' }[ch] ?? ch));
+}
+
+function tokenize(line) {
+  const toks = []; let i = 0; const n = line.length;
+  while (i < n) {
+    const c = line[i];
+    if (c === ' ' || c === '\t') { i++; continue; }
+    if (/[0-9]/.test(c) || (c === '.' && /[0-9]/.test(line[i + 1] || ''))) {
+      let j = i, isFloat = false;
+      while (j < n && /[0-9]/.test(line[j])) j++;
+      if (line[j] === '.') { isFloat = true; j++; while (j < n && /[0-9]/.test(line[j])) j++; }
+      const text = line.slice(i, j);
+      toks.push({ type: 'NUM', value: isFloat ? parseFloat(text) : parseInt(text, 10), isFloat });
+      i = j; continue;
+    }
+    if ((c === 'f' || c === 'F') && (line[i + 1] === '"' || line[i + 1] === "'")) {
+      const q = line[i + 1];
+      const { content, end } = scanRawString(line, i + 2, q);
+      toks.push({ type: 'FSTR', raw: content }); i = end; continue;
+    }
+    if (c === '"' || c === "'") {
+      const { content, end } = scanRawString(line, i + 1, c);
+      toks.push({ type: 'STR', value: processEscapes(content) }); i = end; continue;
+    }
+    if (/[A-Za-z_]/.test(c)) {
+      let j = i + 1;
+      while (j < n && /[A-Za-z0-9_]/.test(line[j])) j++;
+      toks.push({ type: 'NAME', value: line.slice(i, j) }); i = j; continue;
+    }
+    const three = line.slice(i, i + 3);
+    if (['//=', '**='].includes(three)) { toks.push({ type: 'OP', value: three }); i += 3; continue; }
+    const two = line.slice(i, i + 2);
+    if (['**', '//', '==', '!=', '<=', '>=', '+=', '-=', '*=', '/=', '%='].includes(two)) {
+      toks.push({ type: 'OP', value: two }); i += 2; continue;
+    }
+    if (c === '(') { toks.push({ type: 'LPAREN' }); i++; continue; }
+    if (c === ')') { toks.push({ type: 'RPAREN' }); i++; continue; }
+    if (c === ',') { toks.push({ type: 'COMMA' }); i++; continue; }
+    if ('+-*/%=<>'.includes(c)) { toks.push({ type: 'OP', value: c }); i++; continue; }
+    throw pyErr('SyntaxError', `invalid character '${c}'`);
+  }
+  return toks;
+}
+
+function stripComment(line) {
+  let i = 0, out = '';
+  while (i < line.length) {
+    const c = line[i];
+    if (c === '"' || c === "'") {
+      const start = i; i++;
+      while (i < line.length) {
+        if (line[i] === '\\') { i += 2; continue; }
+        if (line[i] === c) { i++; break; }
+        i++;
+      }
+      out += line.slice(start, i); continue;
+    }
+    if (c === '#') break;
+    out += c; i++;
+  }
+  return out;
+}
+
+async function evalFString(raw, env) {
+  let out = '', i = 0;
+  while (i < raw.length) {
+    const c = raw[i];
+    if (c === '{') {
+      if (raw[i + 1] === '{') { out += '{'; i += 2; continue; }
+      let depth = 1, j = i + 1;
+      while (j < raw.length && depth > 0) {
+        if (raw[j] === '{') depth++; else if (raw[j] === '}') depth--;
+        if (depth > 0) j++;
+      }
+      if (depth !== 0) throw pyErr('SyntaxError', "f-string: expecting '}'");
+      const exprSrc = raw.slice(i + 1, j);
+      const toks = tokenize(exprSrc);
+      const { val, pos } = await parseExprTop(toks, 0, env);
+      if (pos !== toks.length) throw pyErr('SyntaxError', 'invalid syntax');
+      out += pyStr(val); i = j + 1; continue;
+    }
+    if (c === '}' && raw[i + 1] === '}') { out += '}'; i += 2; continue; }
+    if (c === '\\') { out += processEscapes(raw.slice(i, i + 2)); i += 2; continue; }
+    out += c; i++;
+  }
+  return mkStr(out);
+}
+
+function applyBinOp(op, l, r) {
+  if (op === '+') {
+    if (isNumeric(l) && isNumeric(r)) {
+      const isF = l.t === 'float' || r.t === 'float';
+      const val = numVal(l) + numVal(r);
+      return isF ? mkFloat(val) : mkInt(val);
+    }
+    if (l.t === 'str' && r.t === 'str') return mkStr(l.v + r.v);
+    throw pyErr('TypeError', `can only concatenate str to str, not "${pyTypeName(r)}"`);
+  }
+  if (op === '*') {
+    if (isNumeric(l) && isNumeric(r)) {
+      const isF = l.t === 'float' || r.t === 'float';
+      const val = numVal(l) * numVal(r);
+      return isF ? mkFloat(val) : mkInt(val);
+    }
+    if (l.t === 'str' && isIntty(r)) return mkStr(numVal(r) > 0 ? l.v.repeat(numVal(r)) : '');
+    throw pyErr('TypeError', `unsupported operand type(s) for *: '${pyTypeName(l)}' and '${pyTypeName(r)}'`);
+  }
+  if (['-', '/', '//', '%', '**'].includes(op)) {
+    if (!isNumeric(l) || !isNumeric(r)) throw pyErr('TypeError', `unsupported operand type(s) for ${op}`);
+    const isF = l.t === 'float' || r.t === 'float';
+    const a = numVal(l), b = numVal(r);
+    if (op === '-') { const val = a - b; return isF ? mkFloat(val) : mkInt(val); }
+    if (op === '/') { if (b === 0) throw pyErr('ZeroDivisionError', 'division by zero'); return mkFloat(a / b); }
+    if (op === '//') {
+      if (b === 0) throw pyErr('ZeroDivisionError', 'division by zero');
+      const val = Math.floor(a / b); return isF ? mkFloat(val) : mkInt(val);
+    }
+    if (op === '%') {
+      if (b === 0) throw pyErr('ZeroDivisionError', 'modulo by zero');
+      const val = ((a % b) + b) % b; return isF ? mkFloat(val) : mkInt(val);
+    }
+    if (op === '**') {
+      const val = Math.pow(a, b);
+      return (isF || b < 0) ? mkFloat(val) : mkInt(val);
+    }
+  }
+  if (op === '==') return mkBool(l.t === r.t && l.v === r.v);
+  if (op === '!=') return mkBool(l.t !== r.t || l.v !== r.v);
+  if (['<', '>', '<=', '>='].includes(op)) {
+    let a, b;
+    if (isNumeric(l) && isNumeric(r)) { a = numVal(l); b = numVal(r); }
+    else if (l.t === 'str' && r.t === 'str') { a = l.v; b = r.v; }
+    else throw pyErr('TypeError', `'${op}' not supported between '${pyTypeName(l)}' and '${pyTypeName(r)}'`);
+    if (op === '<') return mkBool(a < b);
+    if (op === '>') return mkBool(a > b);
+    if (op === '<=') return mkBool(a <= b);
+    if (op === '>=') return mkBool(a >= b);
+  }
+  throw pyErr('SyntaxError', `unknown operator ${op}`);
+}
+
+let activeWrite = () => {};
+let activePromptInput = async () => 'User';
+
+function toIntVal(v) {
+  if (v.t === 'int') return v.v;
+  if (v.t === 'float') return Math.trunc(v.v);
+  if (v.t === 'str') {
+    const s = v.v.trim();
+    if (!/^[+-]?\d+$/.test(s)) throw pyErr('ValueError', `invalid literal for int(): '${v.v}'`);
+    return parseInt(s, 10);
+  }
+  throw pyErr('TypeError', `int() argument must be string or number`);
+}
+function toFloatVal(v) {
+  if (v.t === 'int' || v.t === 'float') return v.v;
+  if (v.t === 'str') {
+    const s = v.v.trim();
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(s)) throw pyErr('ValueError', `could not convert string to float: '${v.v}'`);
+    return parseFloat(s);
+  }
+  throw pyErr('TypeError', `float() argument must be string or number`);
+}
+
+async function callFunction(name, args) {
+  switch (name) {
+    case 'print': activeWrite(args.map(pyStr).join(' ')); return mkNone();
+    case 'input':
+      const promptText = args[0] ? pyStr(args[0]) : '';
+      const entered = await activePromptInput(promptText);
+      return mkStr(entered);
+    case 'type': return mkStr(`<class '${pyTypeName(args[0])}'>`);
+    case 'len':
+      if (args[0].t !== 'str') throw pyErr('TypeError', `object has no len()`);
+      return mkInt(args[0].v.length);
+    case 'int': return mkInt(toIntVal(args[0]));
+    case 'float': return mkFloat(toFloatVal(args[0]));
+    case 'str': return mkStr(pyStr(args[0]));
+    default: throw pyErr('NameError', `name '${name}' is not defined`);
+  }
+}
+
+const KEYWORDS = ['True', 'False', 'None', 'and', 'or', 'not'];
+async function parseAtom(toks, pos, env) {
+  const t = toks[pos];
+  if (!t) throw pyErr('SyntaxError', 'unexpected end of line');
+  if (t.type === 'NUM') return { val: t.isFloat ? mkFloat(t.value) : mkInt(t.value), pos: pos + 1 };
+  if (t.type === 'STR') return { val: mkStr(t.value), pos: pos + 1 };
+  if (t.type === 'FSTR') return { val: await evalFString(t.raw, env), pos: pos + 1 };
+  if (t.type === 'LPAREN') {
+    const inner = await parseExprTop(toks, pos + 1, env);
+    if (!toks[inner.pos] || toks[inner.pos].type !== 'RPAREN') throw pyErr('SyntaxError', 'missing ")"');
+    return { val: inner.val, pos: inner.pos + 1 };
+  }
+  if (t.type === 'NAME') {
+    if (t.value === 'True') return { val: mkBool(true), pos: pos + 1 };
+    if (t.value === 'False') return { val: mkBool(false), pos: pos + 1 };
+    if (t.value === 'None') return { val: mkNone(), pos: pos + 1 };
+    if (toks[pos + 1] && toks[pos + 1].type === 'LPAREN') {
+      let p = pos + 2; const args = [];
+      if (!(toks[p] && toks[p].type === 'RPAREN')) {
+        while (true) {
+          const r = await parseExprTop(toks, p, env);
+          args.push(r.val); p = r.pos;
+          if (toks[p] && toks[p].type === 'COMMA') { p++; continue; }
+          break;
+        }
+      }
+      if (!toks[p] || toks[p].type !== 'RPAREN') throw pyErr('SyntaxError', 'missing ")"');
+      const res = await callFunction(t.value, args);
+      return { val: res, pos: p + 1 };
+    }
+    if (!(t.value in env)) throw pyErr('NameError', `name '${t.value}' is not defined`);
+    return { val: env[t.value], pos: pos + 1 };
+  }
+  throw pyErr('SyntaxError', 'invalid syntax');
+}
+async function parseUnary(toks, pos, env) {
+  const t = toks[pos];
+  if (t && t.type === 'OP' && (t.value === '-' || t.value === '+')) {
+    const r = await parseUnary(toks, pos + 1, env);
+    if (t.value === '-') {
+      const val = r.val.t === 'float' ? mkFloat(-r.val.v) : mkInt(-numVal(r.val));
+      return { val, pos: r.pos };
+    }
+    return { val: r.val, pos: r.pos };
+  }
+  return parsePow(toks, pos, env);
+}
+async function parsePow(toks, pos, env) {
+  const left = await parseAtom(toks, pos, env);
+  const t = toks[left.pos];
+  if (t && t.type === 'OP' && t.value === '**') {
+    const right = await parseUnary(toks, left.pos + 1, env);
+    return { val: applyBinOp('**', left.val, right.val), pos: right.pos };
+  }
+  return left;
+}
+async function parseMul(toks, pos, env) {
+  let left = await parsePow(toks, pos, env);
+  while (true) {
+    const t = toks[left.pos];
+    if (t && t.type === 'OP' && ['*', '/', '//', '%'].includes(t.value)) {
+      const right = await parseUnary(toks, left.pos + 1, env);
+      left = { val: applyBinOp(t.value, left.val, right.val), pos: right.pos };
+    } else break;
+  }
+  return left;
+}
+async function parseAdd(toks, pos, env) {
+  let left = await parseMul(toks, pos, env);
+  while (true) {
+    const t = toks[left.pos];
+    if (t && t.type === 'OP' && (t.value === '+' || t.value === '-')) {
+      const right = await parseMul(toks, left.pos + 1, env);
+      left = { val: applyBinOp(t.value, left.val, right.val), pos: right.pos };
+    } else break;
+  }
+  return left;
+}
+async function parseCompare(toks, pos, env) {
+  let left = await parseAdd(toks, pos, env);
+  while (true) {
+    const t = toks[left.pos];
+    if (t && t.type === 'OP' && ['==', '!=', '<', '>', '<=', '>='].includes(t.value)) {
+      const right = await parseAdd(toks, left.pos + 1, env);
+      left = { val: applyBinOp(t.value, left.val, right.val), pos: right.pos };
+    } else break;
+  }
+  return left;
+}
+async function parseExprTop(toks, pos, env) { return parseCompare(toks, pos, env); }
+async function evalGroup(toks, env) {
+  if (toks.length === 0) throw pyErr('SyntaxError', 'invalid syntax');
+  const { val, pos } = await parseExprTop(toks, 0, env);
+  if (pos !== toks.length) throw pyErr('SyntaxError', 'invalid syntax');
+  return val;
+}
+function splitByComma(toks) {
+  const groups = []; let depth = 0, cur = [];
+  for (const t of toks) {
+    if (t.type === 'LPAREN') depth++;
+    if (t.type === 'RPAREN') depth--;
+    if (t.type === 'COMMA' && depth === 0) { groups.push(cur); cur = []; continue; }
+    cur.push(t);
+  }
+  groups.push(cur);
+  return groups;
+}
+const ASSIGN_OPS = ['=', '+=', '-=', '*=', '/=', '//=', '%=', '**='];
+function findAssignIndex(toks) {
+  let depth = 0;
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (t.type === 'LPAREN') depth++;
+    else if (t.type === 'RPAREN') depth--;
+    else if (depth === 0 && t.type === 'OP' && ASSIGN_OPS.includes(t.value)) return i;
+  }
+  return -1;
+}
+function setVar(env, order, name, val, created, updated) {
+  if (!(name in env)) { order.push(name); created.add(name); }
+  else { updated.add(name); }
+  env[name] = val;
+}
+async function executeStatement(toks, env, order, created, updated, referenced, write, promptInput) {
+  activeWrite = write;
+  activePromptInput = promptInput;
+  if (toks.length === 1 && toks[0].type === 'NAME' && !KEYWORDS.includes(toks[0].value)) {
+    const name = toks[0].value;
+    if (!(name in env)) throw pyErr('NameError', `name '${name}' is not defined`);
+    referenced.add(name);
+    return;
+  }
+  const idx = findAssignIndex(toks);
+  if (idx === -1) { await evalGroup(toks, env); return; }
+  const opTok = toks[idx];
+  const lhsToks = toks.slice(0, idx);
+  const rhsToks = toks.slice(idx + 1);
+  const lhsGroups = splitByComma(lhsToks);
+  const targets = lhsGroups.map(g => {
+    if (g.length !== 1 || g[0].type !== 'NAME' || KEYWORDS.includes(g[0].value)) throw pyErr('SyntaxError', 'cannot assign to expression');
+    return g[0].value;
+  });
+  if (opTok.value !== '=') {
+    if (targets.length !== 1) throw pyErr('SyntaxError', 'invalid syntax');
+    const name = targets[0];
+    if (!(name in env)) throw pyErr('NameError', `name '${name}' is not defined`);
+    const rhsVal = await evalGroup(rhsToks, env);
+    const base = opTok.value.slice(0, -1);
+    const newVal = applyBinOp(base, env[name], rhsVal);
+    setVar(env, order, name, newVal, created, updated);
+    return;
+  }
+  const rhsGroups = splitByComma(rhsToks);
+  if (targets.length === 1 && rhsGroups.length === 1) {
+    const evaluated = await evalGroup(rhsGroups[0], env);
+    setVar(env, order, targets[0], evaluated, created, updated);
+    return;
+  }
+  throw pyErr('SyntaxError', 'invalid assignment');
+}
+
+// ============================================================
+// 30 Lessons for User Input & Interaction (Indian Languages)
+// ============================================================
+const LESSONS = [
+  {
+    code: 'name = input("Enter your name: ")\nprint(f"Hello, {name}!")',
+    i18n: {
+      en: { title: 'Asking for a Name', goal: '<strong>Task:</strong> Get text from the user.<br>1. Run code & type your name when prompted in the Terminal.<br>2. Watch the variable store whatever you typed.' },
+      hi: { title: 'नाम पूछना (input())', goal: '<strong>कार्य:</strong> उपयोगकर्ता से नाम प्राप्त करें।<br>1. रन दबाएं और टर्मिनल में अपना नाम टाइप करें।<br>2. वेरिएबल में अपना नाम देखें।' },
+      mr: { title: 'नाव विचारणे (input())', goal: '<strong>कृती:</strong> युझरकडून नाव इनपुट घ्या.<br>1. रन दाबा आणि टर्मिनलमध्ये नाव टाईप करा.<br>2. व्हेरिएबलमध्ये नाव साठवले जाईल.' },
+      ta: { title: 'பெயரைக் கேட்டல் (input())', goal: '<strong>பணி:</strong> பயனரிடமிருந்து பெயரைப் பெறவும்.<br>1. இயக்கவும் மற்றும் டெர்மினலில் தட்டச்சு செய்யவும்.' },
+      te: { title: 'పేరు అడగడం (input())', goal: '<strong>టాస్క్:</strong> యూజర్ నుండి పేరు తీసుకోండి.<br>1. రన్ నొక్కి మీ పేరు టైప్ చేయండి.' },
+      bn: { title: 'নাম জানতে চাওয়া (input())', goal: '<strong>কাজ:</strong> ইউজারের নাম ইনপুট নিন।<br>1. রান করুন এবং টার্মিনালে নাম লিখুন।' },
+      gu: { title: 'નામ પૂછવું (input())', goal: '<strong>કાર્ય:</strong> વપરાશકર્તા પાસેથી નામ મેળવો.<br>1. રન દબાવો અને ટર્મિનલમાં નામ લખો.' },
+      kn: { title: 'ಹೆಸರನ್ನು ಕೇಳುವುದು (input())', goal: '<strong>ಕಾರ್ಯ:</strong> ಬಳಕೆದಾರರಿಂದ ಹೆಸರು ಪಡೆಯಿರಿ.<br>1. ರನ್ ಮಾಡಿ ಟರ್ಮಿನಲ್‌ನಲ್ಲಿ ಹೆಸರು ಬರೆಯಿರಿ.' },
+      ml: { title: 'പേര് ചോദിക്കുക (input())', goal: '<strong>ടാസ്ക്:</strong> പേര് ഇൻപുട്ട് സ്വീകരിക്കുക.<br>1. റൺ ചെയ്ത് പേര് ടൈപ്പ് ചെയ്യുക.' },
+      pa: { title: 'ਨਾਮ ਪੁੱਛਣਾ (input())', goal: '<strong>ਕੰਮ:</strong> ਯੂਜ਼ਰ ਤੋਂ ਨਾਮ ਲਓ।<br>1. ਰਨ ਦਬਾਓ ਅਤੇ ਟਰਮੀਨਲ ਵਿੱਚ ਨਾਮ ਲਿਖੋ।' }
+    }
+  },
+  {
+    code: 'city = input("Where do you live? ")\nprint("Welcome to", city)',
+    i18n: {
+      en: { title: 'Prompting Questions', goal: '<strong>Task:</strong> Ask the user for their city.<br>1. Type a city name in the terminal (e.g. Mumbai, Delhi).<br>2. Print a welcome message with it.' },
+      hi: { title: 'शहर पूछना', goal: '<strong>कार्य:</strong> अपने शहर का नाम दर्ज करें और स्वागत संदेश देखें।' },
+      mr: { title: 'शहराचे नाव विचारणे', goal: '<strong>कृती:</strong> शहराचे नाव इनपुट द्या आणि स्वागत संदेश पहा.' },
+      ta: { title: 'நகரத்தைக் கேட்டல்', goal: '<strong>பணி:</strong> நகரத்தின் பெயரை உள்ளிட்டு வரவேற்பு செய்தியைக் காண்க.' },
+      te: { title: 'నగరం అడగడం', goal: '<strong>టాస్క్:</strong> నగరం పేరు టైప్ చేసి స్వాగతం ప్రింట్ చేయండి.' },
+      bn: { title: 'শহরের নাম ইনপুট', goal: '<strong>কাজ:</strong> শহরের নাম টাইপ করুন ও বার্তা দেখুন।' },
+      gu: { title: 'શહેરનું નામ પૂછવું', goal: '<strong>કાર્ય:</strong> શહેરનું નામ દાખલ કરો.' },
+      kn: { title: 'ನಗರವನ್ನು ಕೇಳಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ನಗರದ ಹೆಸರು ನಮೂದಿಸಿ.' },
+      ml: { title: 'നഗരം ചോദിക്കുക', goal: '<strong>ടാസ്ക്:</strong> നഗരത്തിന്റെ പേര് നൽകുക.' },
+      pa: { title: 'ਸ਼ਹਿਰ ਦਾ ਨਾਮ ਪੁੱਛਣਾ', goal: '<strong>ਕੰਮ:</strong> ਸ਼ਹਿਰ ਦਾ ਨਾਮ ਦਾਖਲ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'raw_age = input("Enter your age: ")\nprint(raw_age)\nprint(type(raw_age))',
+    i18n: {
+      en: { title: 'input() Always Gives Text (str)', goal: '<strong>Task:</strong> Notice the data type.<br>1. Even if you type <code>12</code>, <code>input()</code> stores it as text <code>"12"</code>.<br>2. Inspect with <code>type(raw_age)</code>.' },
+      hi: { title: 'input() हमेशा टेक्स्ट (str) देता है', goal: '<strong>कार्य:</strong> ध्यान दें कि संख्या टाइप करने पर भी वह <code>str</code> बनती है।' },
+      mr: { title: 'input() नेहमी str देतो', goal: '<strong>कृती:</strong> संख्या दिली तरी प्रकार <code>str</code> असतो हे पहा.' },
+      ta: { title: 'input() எப்போதும் உரை தரும்', goal: '<strong>பணி:</strong> எண்களும் <code>str</code> ஆகவே சேமிக்கப்படும்.' },
+      te: { title: 'input() ఎల్లప్పుడూ str ఇస్తుంది', goal: '<strong>టాస్క్:</strong> సంఖ్యలను కూడా టెక్స్ట్‌గా నిల్వ చేస్తుంది.' },
+      bn: { title: 'input() সর্বদা str দেয়', goal: '<strong>কাজ:</strong> সংখ্যা লিখলেও তা <code>str</code> হিসেবে জমা হয়।' },
+      gu: { title: 'input() હંમેશા str આપે છે', goal: '<strong>કાર્ય:</strong> સંખ્યા પણ ટેક્સ્ટ તરીકે સંગ્રહાય છે.' },
+      kn: { title: 'input() ಯಾವಾಗಲೂ str ನೀಡುತ್ತದೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಸಂಖ್ಯೆಯೂ ಸಹ ಪಠ್ಯವಾಗಿ ಸಂಗ್ರಹವಾಗುತ್ತದೆ.' },
+      ml: { title: 'input() എപ്പോഴും str തരുന്നു', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യ നൽകിയാലും <code>str</code> ആകുന്നു.' },
+      pa: { title: 'input() ਹਮੇਸ਼ਾ str ਦਿੰਦਾ ਹੈ', goal: '<strong>ਕੰਮ:</strong> ਨੰਬਰ ਵੀ ਟੈਕਸਟ ਬਣ ਜਾਂਦਾ ਹੈ।' }
+    }
+  },
+  {
+    code: 'age_text = input("Age: ")\nage = int(age_text)\nnext_age = age + 1\nprint(f"Next year you will be {next_age}")',
+    i18n: {
+      en: { title: 'Converting Input to int()', goal: '<strong>Task:</strong> Convert text to number for math.<br>1. Wrap input with <code>int()</code>.<br>2. Add 1 to calculate next year’s age.' },
+      hi: { title: 'इनपुट को int() में बदलना', goal: '<strong>कार्य:</strong> गणित करने के लिए इनपुट को <code>int()</code> में बदलें।' },
+      mr: { title: 'इनपुटचे int मध्ये रूपांतर', goal: '<strong>कृती:</strong> गणित करण्यासाठी <code>int()</code> वापरा.' },
+      ta: { title: 'உள்ளீட்டை int ஆக மாற்றுதல்', goal: '<strong>பணி:</strong> கூட்டல் செய்ய <code>int()</code> பயன்படுத்தவும்.' },
+      te: { title: 'ఇన్‌పుట్‌ను int గా మార్చడం', goal: '<strong>టాస్క్:</strong> గణితం కోసం <code>int()</code> వాడండి.' },
+      bn: { title: 'ইনপুটকে int() এ রূপান্তর', goal: '<strong>কাজ:</strong> হিসাব করার জন্য <code>int()</code> এ রূপান্তর করুন।' },
+      gu: { title: 'ઇનપુટને int() માં ફેરવવું', goal: '<strong>કાર્ય:</strong> ગણતરી માટે <code>int()</code> વાપરો.' },
+      kn: { title: 'ಇನ್‌ಪುಟ್‌ ಅನ್ನು int() ಮಾಡುವುದು', goal: '<strong>ಕಾರ್ಯ:</strong> ಲೆಕ್ಕಾಚಾರಕ್ಕಾಗಿ <code>int()</code> ಬಳಸಿ.' },
+      ml: { title: 'ഇൻപുട്ടിനെ int() ആക്കുക', goal: '<strong>ടാസ്ക്:</strong> കണക്കുകൂട്ടാൻ <code>int()</code> നൽകുക.' },
+      pa: { title: 'ਇਨਪੁੱਟ ਨੂੰ int() ਬਣਾਉਣਾ', goal: '<strong>ਕੰਮ:</strong> ਗਣਿਤ ਲਈ <code>int()</code> ਵਰਤੋ।' }
+    }
+  },
+  {
+    code: 'score = int(input("Enter game score: "))\nprint(f"Doubled score: {score * 2}")',
+    i18n: {
+      en: { title: 'One-Step int(input())', goal: '<strong>Task:</strong> Combine input and int conversion in 1 line.<br>1. <code>int(input(...))</code> captures and converts instantly.' },
+      hi: { title: 'एक साथ int(input()) का उपयोग', goal: '<strong>कार्य:</strong> एक ही लाइन में इनपुट लेकर संख्या बनाएं।' },
+      mr: { title: 'एकाच ओळीत int(input())', goal: '<strong>कृती:</strong> एकाच वेळी इनपुट घेऊन पूर्णांक बनवा.' },
+      ta: { title: 'ஒரே வரியில் int(input())', goal: '<strong>பணி:</strong> ஒரே வரியில் உள்ளீட்டை எண்ணாக மாற்றவும்.' },
+      te: { title: 'ఒకే స్టెప్‌లో int(input())', goal: '<strong>టాస్క్:</strong> ఒకే లైన్‌లో ఇన్‌పుట్ సంఖ్యగా మార్చండి.' },
+      bn: { title: 'এক লাইনে int(input())', goal: '<strong>কাজ:</strong> এক লাইনেই ইনপুট সংখ্যায় রূপান্তর করুন।' },
+      gu: { title: 'એક જ સ્ટેપમાં int(input())', goal: '<strong>કાર્ય:</strong> એક જ લાઈનમાં ઇનપુટ નંબર બનાવો.' },
+      kn: { title: 'ಒಂದೇ ಹಂತದಲ್ಲಿ int(input())', goal: '<strong>ಕಾರ್ಯ:</strong> ಒಂದೇ ಸಾಲಿನಲ್ಲಿ ಇನ್‌ಪುಟ್ ಪರಿವರ್ತಿಸಿ.' },
+      ml: { title: 'ഒരൊറ്റ സ്റ്റെപ്പിൽ int(input())', goal: '<strong>ടാസ്ക്:</strong> ഒറ്റ വരിയിൽ സംഖ്യയാക്കുക.' },
+      pa: { title: 'ਇੱਕੋ ਸਟੈਪ ਵਿੱਚ int(input())', goal: '<strong>ਕੰਮ:</strong> ਇੱਕੋ ਲਾਈਨ ਵਿੱਚ ਇਨਪੁੱਟ ਨੰਬਰ ਬਣਾਓ।' }
+    }
+  },
+  {
+    code: 'price = float(input("Item price: "))\ntax = price * 0.18\ntotal = price + tax\nprint(f"Total with 18% GST: {total}")',
+    i18n: {
+      en: { title: 'Decimal Inputs with float(input())', goal: '<strong>Task:</strong> Read decimal numbers.<br>1. Type a price like <code>99.50</code>.<br>2. Compute 18% GST tax.' },
+      hi: { title: 'दशमलव इनपुट float(input())', goal: '<strong>कार्य:</strong> 99.50 जैसी दशमलव संख्या दर्ज करें और 18% जीएसटी जोड़ें।' },
+      mr: { title: 'दशांश इनपुट float(input())', goal: '<strong>कृती:</strong> दशांश संख्या इनपुट घेऊन GST काढा.' },
+      ta: { title: 'தசம உள்ளீடு float(input())', goal: '<strong>பணி:</strong> தசம எண்ணை உள்ளிட்டு ஜிஎஸ்டி கணக்கிடவும்.' },
+      te: { title: 'దశాంశ ఇన్‌పుట్ float(input())', goal: '<strong>టాస్క్:</strong> దశాంశ సంఖ్యతో జీఎస్టీ లెక్కించండి.' },
+      bn: { title: 'দশমিক ইনপুট float(input())', goal: '<strong>কাজ:</strong> দশমিক সংখ্যা ইনপুট নিয়ে ট্যাক্স হিসাব করুন।' },
+      gu: { title: 'દશાંશ ઇનપુટ float(input())', goal: '<strong>કાર્ય:</strong> દશાંશ કિંમત દાખલ કરી GST ગણો.' },
+      kn: { title: 'ದಶಮಾಂಶ ಇನ್‌ಪುಟ್ float(input())', goal: '<strong>ಕಾರ್ಯ:</strong> ದಶಮಾಂಶ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ ಜಿಎಸ್‌ಟಿ ಲೆಕ್ಕ ಹಾಕಿ.' },
+      ml: { title: 'ദശാംശ ഇൻപുട്ട് float(input())', goal: '<strong>ടാസ്ക്:</strong> ദശാംശ സംഖ്യ നൽകി ടാക്സ് കാണുക.' },
+      pa: { title: 'ਦਸ਼ਮਲਵ ਇਨਪੁੱਟ float(input())', goal: '<strong>ਕੰਮ:</strong> ਦਸ਼ਮਲਵ ਨੰਬਰ ਦਾਖਲ ਕਰਕੇ ਟੈਕਸ ਕੱਢੋ।' }
+    }
+  },
+  {
+    code: 'num1 = int(input("First number: "))\nnum2 = int(input("Second number: "))\nprint(f"{num1} + {num2} = {num1 + num2}")',
+    i18n: {
+      en: { title: 'Two-Number Calculator', goal: '<strong>Task:</strong> Ask for two numbers and add them.<br>1. Input first number.<br>2. Input second number.<br>3. Print their sum.' },
+      hi: { title: 'दो संख्याओं का कैलकुलेटर', goal: '<strong>कार्य:</strong> दो संख्याएं दर्ज करें और उनका योग निकालें।' },
+      mr: { title: 'दोन संख्यांचे कॅल्क्युलेटर', goal: '<strong>कृती:</strong> दोन संख्यांची बेरीज करा.' },
+      ta: { title: 'இரண்டு எண் கால்குலேட்டர்', goal: '<strong>பணி:</strong> இரண்டு எண்களை உள்ளிட்டு கூட்டவும்.' },
+      te: { title: 'రెండు సంఖ్యల కాలిక్యులేటర్', goal: '<strong>టాస్క్:</strong> రెండు సంఖ్యలను కూడండి.' },
+      bn: { title: 'দুই সংখ্যার ক্যালকুলেটর', goal: '<strong>কাজ:</strong> দুটি সংখ্যা ইনপুট নিয়ে যোগফল বের করুন।' },
+      gu: { title: 'બે સંખ્યાઓનું કેલ્ક્યુલેટર', goal: '<strong>કાર્ય:</strong> બે સંખ્યાઓનો સરવાળો કરો.' },
+      kn: { title: 'ಎರಡು ಸಂಖ್ಯೆಗಳ ಕ್ಯಾಲ್ಕುಲೇಟರ್', goal: '<strong>ಕಾರ್ಯ:</strong> ಎರಡು ಸಂಖ್ಯೆಗಳನ್ನು ಕೂಡಿಸಿ.' },
+      ml: { title: 'രണ്ട് സംഖ്യാ കാൽക്കുലേറ്റർ', goal: '<strong>ടാസ്ക്:</strong> രണ്ട് സംഖ്യകൾ കൂട്ടുക.' },
+      pa: { title: 'ਦੋ ਨੰਬਰਾਂ ਦਾ ਕੈਲਕੁਲੇਟਰ', goal: '<strong>ਕੰਮ:</strong> ਦੋ ਸੰਖਿਆਵਾਂ ਦਾ ਜੋੜ ਕੱਢੋ।' }
+    }
+  },
+  {
+    code: 'a = input("a: ")\nb = input("b: ")\nprint("Glued as text:", a + b)\nprint("Added as math:", int(a) + int(b))',
+    i18n: {
+      en: { title: 'Text Gluing vs Math Adding', goal: '<strong>Task:</strong> Compare <code>"5" + "5" = "55"</code> vs <code>5 + 5 = 10</code>.<br>1. Observe how raw input glues text without converting.' },
+      hi: { title: 'टेक्स्ट जोड़ना बनाम गणितीय योग', goal: '<strong>कार्य:</strong> <code>"5" + "5" = "55"</code> और <code>5 + 5 = 10</code> का अंतर समझें।' },
+      mr: { title: 'मजकूर जोडणे विरूद्ध बेरीज', goal: '<strong>कृती:</strong> मजकूर जोडणे आणि बेरीज यातील फरक पहा.' },
+      ta: { title: 'உரை இணைத்தல் vs கூட்டல்', goal: '<strong>பணி:</strong> உரை இணைத்தல் மற்றும் கணிதக் கூட்டலின் வேறுபாட்டை அறியவும்.' },
+      te: { title: 'టెక్స్ట్ కలపడం vs కూడిక', goal: '<strong>టాస్క్:</strong> టెక్స్ట్ జోడింపు మరియు గణిత కూడిక తేడా చూడండి.' },
+      bn: { title: 'টেক্সট জোড়া বনাম যোগফল', goal: '<strong>কাজ:</strong> "5"+"5"="55" ও 5+5=10 এর পার্থক্য বুঝুন।' },
+      gu: { title: 'ટેક્સ્ટ જોડવું વિરુદ્ધ સરવાળો', goal: '<strong>કાર્ય:</strong> ટેક્સ્ટ અને ગણિતનો તફાવત સમજો.' },
+      kn: { title: 'ಪಠ್ಯ ಜೋಡಣೆ vs ಸಂಕಲನ', goal: '<strong>ಕಾರ್ಯ:</strong> ಪಠ್ಯ ಜೋಡಣೆ ಮತ್ತು ಗಣಿತ ಸಂಕಲನದ ವ್ಯತ್ಯಾಸ ತಿಳಿಯಿರಿ.' },
+      ml: { title: 'ടെക്സ്റ്റ് ചേർക്കൽ vs സങ്കലനം', goal: '<strong>ടാസ്ക്:</strong> വ്യത്യാസം മനസിലാക്കുക.' },
+      pa: { title: 'ਟੈਕਸਟ ਜੋੜਨਾ ਬਨਾਮ ਗਣਿਤ', goal: '<strong>ਕੰਮ:</strong> ਟੈਕਸਟ ਅਤੇ ਗਣਿਤ ਦਾ ਅੰਤਰ ਸਮਝੋ।' }
+    }
+  },
+  {
+    code: 'age = int(input("How old are you? "))\nbirth_year = 2026 - age\nprint(f"You were born around {birth_year}")',
+    i18n: {
+      en: { title: 'Birth Year Guesser', goal: '<strong>Task:</strong> Calculate birth year from age.<br>1. Input your age.<br>2. Subtract from current year (2026).' },
+      hi: { title: 'जन्म वर्ष की गणना', goal: '<strong>कार्य:</strong> अपनी आयु दर्ज करें और जन्म वर्ष जानें।' },
+      mr: { title: 'जन्म वर्ष शोधक', goal: '<strong>कृती:</strong> वय टाकून जन्म वर्ष काढा.' },
+      ta: { title: 'பிறந்த ஆண்டு கண்டறிதல்', goal: '<strong>பணி:</strong> வயதை உள்ளிட்டு பிறந்த ஆண்டை அறியவும்.' },
+      te: { title: 'పుట్టిన సంవత్సరం లెక్కించడం', goal: '<strong>టాస్క్:</strong> వయస్సు ఇచ్చి పుట్టిన సంవత్సరం తెలుసుకోండి.' },
+      bn: { title: 'জন্ম সাল নির্ণয়', goal: '<strong>কাজ:</strong> বয়স ইনপুট দিয়ে জন্ম সাল বের করুন।' },
+      gu: { title: 'જન્મ વર્ષ શોધવું', goal: '<strong>કાર્ય:</strong> ઉંમર દાખલ કરી જન્મ વર્ષ ગણો.' },
+      kn: { title: 'ಹುಟ್ಟಿದ ವರ್ಷ ತಿಳಿಯಿರಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ವಯಸ್ಸು ನಮೂದಿಸಿ ಹುಟ್ಟಿದ ವರ್ಷ ಲೆಕ್ಕ ಹಾಕಿ.' },
+      ml: { title: 'ജനിച്ച വർഷം കണ്ടെത്തുക', goal: '<strong>ടാസ്ക്:</strong> പ്രായം നൽകി ജനിച്ച വർഷം അറിയുക.' },
+      pa: { title: 'ਜਨਮ ਸਾਲ ਲੱਭਣਾ', goal: '<strong>ਕੰਮ:</strong> ਉਮਰ ਦਾਖਲ ਕਰਕੇ ਜਨਮ ਸਾਲ ਕੱਢੋ।' }
+    }
+  },
+  {
+    code: 'symbol = input("Pick a symbol (*, #, @): ")\ncount = int(input("How many times? "))\nprint(symbol * count)',
+    i18n: {
+      en: { title: 'Repeated Pattern Creator', goal: '<strong>Task:</strong> Combine text input with numeric count.<br>1. Type a symbol like <code>★</code>.<br>2. Multiply by count.' },
+      hi: { title: 'पैटर्न जनरेटर', goal: '<strong>कार्य:</strong> एक प्रतीक चुनें और उसे गुणा करके दोहराएं।' },
+      mr: { title: 'पॅटर्न निर्मिती', goal: '<strong>कृती:</strong> चिन्ह आणि संख्या इनपुट देऊन पॅटर्न बनवा.' },
+      ta: { title: 'வடிவமைப்பை உருவாக்குதல்', goal: '<strong>பணி:</strong> குறியீட்டை உள்ளிட்டு பெருக்கி அச்சிடவும்.' },
+      te: { title: 'ప్యాటర్న్ తయారీ', goal: '<strong>టాస్క్:</strong> చిహ్నం ఇచ్చి పునరావృతం చేయండి.' },
+      bn: { title: 'প্যাটার্ন তৈরি', goal: '<strong>কাজ:</strong> প্রতীক ও সংখ্যা দিয়ে প্যাটার্ন বানান।' },
+      gu: { title: 'પેટર્ન જનરેટર', goal: '<strong>કાર્ય:</strong> પ્રતીક પસંદ કરી ગુણાકાર કરો.' },
+      kn: { title: 'ವಿನ್ಯಾಸ ರಚಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ಚಿಹ್ನೆ ನಮೂದಿಸಿ ವಿನ್ಯಾಸ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'പാറ്റേൺ നിർമ്മാണം', goal: '<strong>ടാസ്ക്:</strong> ചിഹ്നം നൽകി പാറ്റേൺ ഉണ്ടാക്കുക.' },
+      pa: { title: 'ਪੈਟਰਨ ਬਣਾਉਣਾ', goal: '<strong>ਕੰਮ:</strong> ਚਿੰਨ੍ਹ ਚੁਣ ਕੇ ਪੈਟਰਨ ਬਣਾਓ।' }
+    }
+  },
+  {
+    code: 'password = input("Create a password: ")\nlength = len(password)\nprint(f"Your password has {length} characters")',
+    i18n: {
+      en: { title: 'Measuring Input Length with len()', goal: '<strong>Task:</strong> Count characters typed.<br>1. Type a secret password.<br>2. Measure its length with <code>len()</code>.' },
+      hi: { title: 'इनपुट की लंबाई मापना (len())', goal: '<strong>कार्य:</strong> पासवर्ड के अक्षरों की संख्या गिनें।' },
+      mr: { title: 'इनपुटची लांबी मोजणे', goal: '<strong>कृती:</strong> पासवर्डची लांबी <code>len()</code> ने मोजा.' },
+      ta: { title: 'நீளத்தை அளவிடுதல் (len())', goal: '<strong>பணி:</strong> கடவுச்சொல்லின் நீளத்தை அளவிடவும்.' },
+      te: { title: 'పొడవును కొలవడం (len())', goal: '<strong>టాస్క్:</strong> పాస్‌వర్డ్ అక్షరాలను లెక్కించండి.' },
+      bn: { title: 'ইনপুটের দৈর্ঘ্য মাপা', goal: '<strong>কাজ:</strong> পাসওয়ার্ডের অক্ষর গণনা করুন।' },
+      gu: { title: 'ઇનપુટની લંબાઈ માપવી', goal: '<strong>કાર્ય:</strong> પાસવર્ડની લંબાઈ ગણો.' },
+      kn: { title: 'ಉದ್ದವನ್ನು ಅಳೆಯಿರಿ (len())', goal: '<strong>ಕಾರ್ಯ:</strong> ಪಾಸ್‌ವರ್ಡ್ ಅಕ್ಷರಗಳನ್ನು ಎಣಿಸಿ.' },
+      ml: { title: 'നീളം അളക്കുക (len())', goal: '<strong>ടാസ്ക്:</strong> അക്ഷരങ്ങളുടെ എണ്ണം കണ്ടെത്തുക.' },
+      pa: { title: 'ਲੰਬਾਈ ਮਾਪਣਾ (len())', goal: '<strong>ਕੰਮ:</strong> ਪਾਸਵਰਡ ਦੇ ਅੱਖਰ ਗਿਣੋ।' }
+    }
+  },
+  {
+    code: 'choice = input("Do you want to play? (yes/no): ")\nwill_play = (choice == "yes")\nprint(f"Ready to start: {will_play}")',
+    i18n: {
+      en: { title: 'Yes/No Decision Flag', goal: '<strong>Task:</strong> Test text equality.<br>1. Type <code>yes</code>.<br>2. <code>will_play</code> becomes True.' },
+      hi: { title: 'हाँ/ना निर्णय जांच', goal: '<strong>कार्य:</strong> <code>yes</code> दर्ज करें और बूलियन मान True देखें।' },
+      mr: { title: 'होय/नाही निर्णय चाचणी', goal: '<strong>कृती:</strong> <code>yes</code> टाईप करून निर्णय तपासा.' },
+      ta: { title: 'ஆம்/இல்லை தேர்வு', goal: '<strong>பணி:</strong> <code>yes</code> என உள்ளிட்டு முடிவை அறியவும்.' },
+      te: { title: 'అవును/కాదు ఎంపిక', goal: '<strong>టాస్క్:</strong> <code>yes</code> ఇచ్చి నిర్ణయం చూడండి.' },
+      bn: { title: 'হ্যাঁ/না সিদ্ধান্ত', goal: '<strong>কাজ:</strong> <code>yes</code> লিখে ট্রু মান দেখুন।' },
+      gu: { title: 'હા/ના નિર્ણય', goal: '<strong>કાર્ય:</strong> <code>yes</code> લખી બુલિયન ચકાસો.' },
+      kn: { title: 'ಹೌದು/ಇಲ್ಲ ನಿರ್ಧಾರ', goal: '<strong>ಕಾರ್ಯ:</strong> <code>yes</code> ನಮೂದಿಸಿ ಫಲಿತಾಂಶ ನೋಡಿ.' },
+      ml: { title: 'തീരുമാനം പരിശോധിക്കുക', goal: '<strong>ടാസ്ക്:</strong> <code>yes</code> നൽകി ശരിയാണോ എന്ന് നോക്കുക.' },
+      pa: { title: 'ਹਾਂ/ਨਾਂਹ ਫੈਸਲਾ', goal: '<strong>ਕੰਮ:</strong> <code>yes</code> ਲਿਖ ਕੇ ਨਤੀਜਾ ਦੇਖੋ।' }
+    }
+  },
+  {
+    code: 'item = input("Snack item: ")\nprice = float(input("Price each: "))\nqty = int(input("Quantity: "))\ntotal = price * qty\nprint(f"{qty} x {item} = Rs {total}")',
+    i18n: {
+      en: { title: 'Snack Bar Bill', goal: '<strong>Task:</strong> Read text, float, and int together.<br>1. Type snack name, price, and quantity.<br>2. Compute line total.' },
+      hi: { title: 'स्नैक बार बिल', goal: '<strong>कार्य:</strong> स्नैक का नाम, कीमत और संख्या दर्ज कर कुल बिल निकालें।' },
+      mr: { title: 'खाद्यपदार्थ बिल', goal: '<strong>कृती:</strong> नाव, दर आणि नग देऊन एकूण बिल काढा.' },
+      ta: { title: 'சிற்றுண்டி பில்', goal: '<strong>பணி:</strong> பெயர், விலை மற்றும் எண்ணிக்கையை உள்ளிட்டு மொத்தத்தை அறியவும்.' },
+      te: { title: 'స్నాక్ బిల్లు', goal: '<strong>టాస్క్:</strong> పేరు, ధర, పరిమాణం ఇచ్చి మొత్తం బిల్లు లెక్కించండి.' },
+      bn: { title: 'খাবারের বিল', goal: '<strong>কাজ:</strong> খাবারের নাম, দাম ও পরিমাণ দিয়ে মোট বিল বানান।' },
+      gu: { title: 'નાસ્તાનું બિલ', goal: '<strong>કાર્ય:</strong> વસ્તુનું નામ, ભાવ અને જથ્થો દાખલ કરી બિલ બનાવો.' },
+      kn: { title: 'ತಿಂಡಿ ಬಿಲ್', goal: '<strong>ಕಾರ್ಯ:</strong> ಹೆಸರು, ಬೆಲೆ ಮತ್ತು ಪ್ರಮಾಣ ನಮೂದಿಸಿ ಬಿಲ್ ಮಾಡಿ.' },
+      ml: { title: 'സ്നാക്ക് ബിൽ', goal: '<strong>ടാസ്ക്:</strong> പേരും വിലയും അളവും നൽകി ബിൽ കാണുക.' },
+      pa: { title: 'ਸਨੈਕ ਬਿੱਲ', goal: '<strong>ਕੰਮ:</strong> ਨਾਮ, ਮੁੱਲ ਅਤੇ ਮਾਤਰਾ ਦੇ ਕੇ ਕੁੱਲ ਬਿੱਲ ਕੱਢੋ।' }
+    }
+  },
+  {
+    code: 'side = float(input("Square side length (cm): "))\narea = side ** 2\nprint(f"Area of square = {area} sq cm")',
+    i18n: {
+      en: { title: 'Square Area Calculator', goal: '<strong>Task:</strong> Calculate <code>side ** 2</code> from user input.<br>1. Enter side length (e.g. <code>7</code>).<br>2. Output 49.0.' },
+      hi: { title: 'वर्ग का क्षेत्रफल', goal: '<strong>कार्य:</strong> भुजा की लंबाई दर्ज कर क्षेत्रफल निकालें।' },
+      mr: { title: 'चौरसाचे क्षेत्रफळ', goal: '<strong>कृती:</strong> बाजूची लांबी देऊन क्षेत्रफळ काढा.' },
+      ta: { title: 'சதுர பரப்பளவு', goal: '<strong>பணி:</strong> பக்கத்தின் நீளத்தை உள்ளிட்டு பரப்பளவைக் கணக்கிடவும்.' },
+      te: { title: 'చతురస్ర వైశాల్యం', goal: '<strong>టాస్క్:</strong> భుజం పొడవు ఇచ్చి వైశాల్యం కనుగొనండి.' },
+      bn: { title: 'বর্গক্ষেত্রের ক্ষেত্রফল', goal: '<strong>কাজ:</strong> বাহুর দৈর্ঘ্য ইনপুট নিয়ে ক্ষেত্রফল বের করুন।' },
+      gu: { title: 'ચોરસનું ક્ષેત્રફળ', goal: '<strong>કાર્ય:</strong> બાજુની લંબાઈ દાખલ કરી ક્ષેત્રફળ ગણો.' },
+      kn: { title: 'ಚೌಕದ ವಿಸ್ತೀರ್ಣ', goal: '<strong>ಕಾರ್ಯ:</strong> ಬಾಹುವಿನ ಉದ್ದ ನಮೂದಿಸಿ ವಿಸ್ತೀರ್ಣ ಲೆಕ್ಕ ಹಾಕಿ.' },
+      ml: { title: 'സമചതുര വിസ്തീർണ്ണം', goal: '<strong>ടാസ്ക്:</strong> വശത്തിന്റെ നീളം നൽകി വിസ്തീർണ്ണം കാണുക.' },
+      pa: { title: 'ਵਰਗ ਦਾ ਖੇਤਰਫਲ', goal: '<strong>ਕੰਮ:</strong> ਭੁਜਾ ਦੀ ਲੰਬਾਈ ਦੇ ਕੇ ਖੇਤਰਫਲ ਕੱਢੋ।' }
+    }
+  },
+  {
+    code: 'celsius = float(input("Enter temperature in Celsius: "))\nfahrenheit = (celsius * 9 / 5) + 32\nprint(f"{celsius}°C is {fahrenheit}°F")',
+    i18n: {
+      en: { title: 'Temperature Converter (°C to °F)', goal: '<strong>Task:</strong> Convert weather units.<br>1. Enter Celsius (e.g. <code>35</code>).<br>2. Output 95.0°F.' },
+      hi: { title: 'तापमान परिवर्तक (°C से °F)', goal: '<strong>कार्य:</strong> सेल्सियस तापमान को फारेनहाइट में बदलें।' },
+      mr: { title: 'तापमान रूपांतरण (°C ते °F)', goal: '<strong>कृती:</strong> सेल्सिअसचे फॅरेनहाइटमध्ये रूपांतर करा.' },
+      ta: { title: 'வெப்பநிலை மாற்றி', goal: '<strong>பணி:</strong> செல்சியஸை ஃபாரன்ஹீட்டாக மாற்றவும்.' },
+      te: { title: 'ఉష్ణోగ్రత మార్పిడి', goal: '<strong>టాస్క్:</strong> సెల్సియస్‌ను ఫారెన్‌హీట్‌గా మార్చండి.' },
+      bn: { title: 'তাপমাত্রা রূপান্তর', goal: '<strong>কাজ:</strong> সেলসিয়াসকে ফারেনহাইটে রূপান্তর করুন।' },
+      gu: { title: 'તાપમાન રૂપાંતરણ', goal: '<strong>કાર્ય:</strong> સેલ્સિયસને ફેરનહીટમાં ફેરવો.' },
+      kn: { title: 'ತಾಪಮಾನ ಪರಿವರ್ತಕ', goal: '<strong>ಕಾರ್ಯ:</strong> ಸೆಲ್ಸಿಯಸ್ ಅನ್ನು ಫ್ಯಾರನ್‌ಹೀಟ್‌ಗೆ ಪರಿವರ್ತಿಸಿ.' },
+      ml: { title: 'താപനില പരിവർത്തനം', goal: '<strong>ടാസ്ക്:</strong> സെൽഷ്യസിനെ ഫാരൻഹീറ്റാക്കുക.' },
+      pa: { title: 'ਤਾਪਮਾਨ ਪਰਿਵਰਤਕ', goal: '<strong>ਕੰਮ:</strong> ਸੈਲਸੀਅਸ ਨੂੰ ਫਾਰਨਹੀਟ ਵਿੱਚ ਬਦਲੋ।' }
+    }
+  },
+  {
+    code: 'total_bill = float(input("Total restaurant bill: "))\npeople = int(input("Number of friends: "))\nshare = total_bill / people\nprint(f"Each person pays: Rs {share}")',
+    i18n: {
+      en: { title: 'Bill Splitter', goal: '<strong>Task:</strong> Divide bill equally.<br>1. Input bill amount and friend count.<br>2. Output each share.' },
+      hi: { title: 'बिल बांटने का प्रोग्राम', goal: '<strong>कार्य:</strong> कुल बिल और दोस्तों की संख्या दर्ज कर प्रति व्यक्ति खर्च निकालें।' },
+      mr: { title: 'बिल वाटप', goal: '<strong>कृती:</strong> एकूण बिल मित्रांमध्ये समान वाटा.' },
+      ta: { title: 'பில் பகிர்வு', goal: '<strong>பணி:</strong> பில் தொகையைப் பிரித்து அச்சிடவும்.' },
+      te: { title: 'బిల్లు పంపకం', goal: '<strong>టాస్క్:</strong> బిల్లును సమానంగా పంచండి.' },
+      bn: { title: 'বিল ভাগাভাগি', goal: '<strong>কাজ:</strong> সবার মাঝে বিল ভাগ করে দিন।' },
+      gu: { title: 'બિલ વિભાજન', goal: '<strong>કાર્ય:</strong> બિલની સરખી વહેંચણી કરો.' },
+      kn: { title: 'ಬಿಲ್ ಹಂಚಿಕೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಒಟ್ಟು ಬಿಲ್ಲನ್ನು ಸಮನಾಗಿ ಹಂಚಿ.' },
+      ml: { title: 'ബിൽ പങ്കിടൽ', goal: '<strong>ടാസ്ക്:</strong> ബിൽ തുല്യമായി വീതിക്കുക.' },
+      pa: { title: 'ਬਿੱਲ ਵੰਡਣਾ', goal: '<strong>ਕੰਮ:</strong> ਬਿੱਲ ਨੂੰ ਬਰਾਬਰ ਵੰਡੋ।' }
+    }
+  },
+  {
+    code: 'price = float(input("Original price: "))\ndiscount_pct = float(input("Discount (%): "))\nsavings = price * (discount_pct / 100)\nfinal_price = price - savings\nprint(f"Final price: Rs {final_price}")',
+    i18n: {
+      en: { title: 'Discount Calculator', goal: '<strong>Task:</strong> Compute sale price.<br>1. Input original price and discount percentage.<br>2. Output final payable price.' },
+      hi: { title: 'छूट कैलकुलेटर', goal: '<strong>कार्य:</strong> वास्तविक कीमत और छूट प्रतिशत दर्ज कर अंतिम मूल्य निकालें।' },
+      mr: { title: 'सवलत कॅल्क्युलेटर', goal: '<strong>कृती:</strong> सवलत वजा करून अंतिम किंमत काढा.' },
+      ta: { title: 'தள்ளுபடி கால்குலேட்டர்', goal: '<strong>பணி:</strong> தள்ளுபடி கழித்து இறுதி விலையைக் கணக்கிடவும்.' },
+      te: { title: 'డిస్కౌంట్ కాలిక్యులేటర్', goal: '<strong>టాస్క్:</strong> డిస్కౌంట్ తీసివేసి తుది ధర లెక్కించండి.' },
+      bn: { title: 'ছাড়ের হিসাব', goal: '<strong>কাজ:</strong> ছাড় বাদ দিয়ে চূড়ান্ত দাম বের করুন।' },
+      gu: { title: 'ડિસ્કાઉન્ટ કેલ્ક્યુલેટર', goal: '<strong>કાર્ય:</strong> વળતર બાદ કરી અંતિમ ભાવ શોધો.' },
+      kn: { title: 'ರಿಯಾಯಿತಿ ಕ್ಯಾಲ್ಕುಲೇಟರ್', goal: '<strong>ಕಾರ್ಯ:</strong> ರಿಯಾಯಿತಿ ಕಳೆದು ಅಂತಿಮ ಬೆಲೆ ಲೆಕ್ಕ ಹಾಕಿ.' },
+      ml: { title: 'ഡിസ്കൗണ്ട് കാൽക്കുലേറ്റർ', goal: '<strong>ടാസ്ക്:</strong> ഇളവ് കഴിഞ്ഞ് വില കണ്ടെത്തുക.' },
+      pa: { title: 'ਛੋਟ ਕੈਲਕੁਲੇਟਰ', goal: '<strong>ਕੰਮ:</strong> ਛੋਟ ਘਟਾ ਕੇ ਅੰਤਿਮ ਮੁੱਲ ਕੱਢੋ।' }
+    }
+  },
+  {
+    code: 'candies = int(input("Total candies: "))\nfriends = int(input("Total friends: "))\neach = candies // friends\nleftover = candies % friends\nprint(f"Each gets {each}, with {leftover} left over")',
+    i18n: {
+      en: { title: 'Candy Sharing (// & %)', goal: '<strong>Task:</strong> Integer division & remainder.<br>1. Input candy count and friend count.<br>2. Output each share and leftovers.' },
+      hi: { title: 'टॉफी बांटना (// और %)', goal: '<strong>कार्य:</strong> बराबर हिस्सेदारी और बची हुई टॉफियों की संख्या निकालें।' },
+      mr: { title: 'चॉकलेट वाटप', goal: '<strong>कृती:</strong> प्रत्येकाला मिळणारे आणि उरलेले चॉकलेट काढा.' },
+      ta: { title: 'மிட்டாய் பகிர்வு', goal: '<strong>பணி:</strong> சமமாகப் பிரித்து மீதத்தை அறியவும்.' },
+      te: { title: 'మిఠాయిల పంపకం', goal: '<strong>టాస్క్:</strong> సమాన వాటా మరియు మిగిలినవి లెక్కించండి.' },
+      bn: { title: 'মিষ্টি ভাগ করা', goal: '<strong>কাজ:</strong> সমান ভাগ ও অবশিষ্ট অংশ বের করুন।' },
+      gu: { title: 'ચોકલેટ વહેંચણી', goal: '<strong>કાર્ય:</strong> સરખા ભાગે વહેંચી શેષ શોધો.' },
+      kn: { title: 'ಮಿಠಾಯಿ ಹಂಚಿಕೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಸಮವಾಗಿ ಹಂಚಿ ಉಳಿದದ್ದನ್ನು ತಿಳಿಯಿರಿ.' },
+      ml: { title: 'മിഠായി വീതംവെക്കൽ', goal: '<strong>ടാസ്ക്:</strong> തുല്യമായി വീതിച്ച് ബാക്കി കണ്ടെത്തുക.' },
+      pa: { title: 'ਟੌਫੀਆਂ ਵੰਡਣਾ', goal: '<strong>ਕੰਮ:</strong> ਬਰਾਬਰ ਵੰਡ ਕੇ ਬਾਕੀ ਬਚੀਆਂ ਟੌਫੀਆਂ ਕੱਢੋ।' }
+    }
+  },
+  {
+    code: 'name = input("Player name: ")\nlevel = int(input("Current level: "))\nscore = int(input("Points: "))\nprint(f"[{name}] Rank {level} · {score} XP")',
+    i18n: {
+      en: { title: 'Player Profile Badge', goal: '<strong>Task:</strong> Build a gamer badge string.<br>1. Collect name, level, score.<br>2. Format into badge.' },
+      hi: { title: 'गेमर प्रोफाइल बैज', goal: '<strong>कार्य:</strong> नाम, स्तर और पॉइंट्स लेकर एक प्रोफाइल बैज बनाएं।' },
+      mr: { title: 'खेळाडू प्रोफाईल बॅज', goal: '<strong>कृती:</strong> नाव, लेव्हल आणि गुण एकत्र करून बॅज बनवा.' },
+      ta: { title: 'வீரர் சுயவிவர அட்டை', goal: '<strong>பணி:</strong> விவரங்களை உள்ளிட்டு சுயவிவர அட்டை உருவாக்கவும்.' },
+      te: { title: 'ప్లేయర్ ప్రొఫైల్ బ్యాడ్జ్', goal: '<strong>టాస్క్:</strong> గేమర్ ప్రొఫైల్ బ్యాడ్జ్ తయారు చేయండి.' },
+      bn: { title: 'প্লেয়ার প্রোফাইল ব্যাজ', goal: '<strong>কাজ:</strong> নাম, লেভেল ও পয়েন্ট নিয়ে ব্যাজ তৈরি করুন।' },
+      gu: { title: 'પ્લેયર પ્રોફાઇલ બેજ', goal: '<strong>કાર્ય:</strong> પ્લેયરની વિગતો જોડી બેજ બનાવો.' },
+      kn: { title: 'ಆಟಗಾರರ ಪ್ರೊಫೈಲ್ ಬ್ಯಾಡ್ಜ್', goal: '<strong>ಕಾರ್ಯ:</strong> ಪ್ರೊಫೈಲ್ ಬ್ಯಾಡ್ಜ್ ರಚಿಸಿ.' },
+      ml: { title: 'പ്ലെയർ പ്രൊഫൈൽ ബാഡ്ജ്', goal: '<strong>ടാസ്ക്:</strong> പ്രൊഫൈൽ ബാഡ്ജ് ഉണ്ടാക്കുക.' },
+      pa: { title: 'ਪਲੇਅਰ ਪ੍ਰੋਫਾਈਲ ਬੈਜ', goal: '<strong>ਕੰਮ:</strong> ਨਾਮ, ਲੈਵਲ ਅਤੇ ਅੰਕ ਜੋੜ ਕੇ ਬੈਜ ਬਣਾਓ।' }
+    }
+  },
+  {
+    code: 'num = int(input("Enter starting number: "))\nnum *= 2\nprint(f"Doubled: {num}")',
+    i18n: {
+      en: { title: 'In-Place Input Doubler', goal: '<strong>Task:</strong> Modify input with <code>*= 2</code>.<br>1. Input a number.<br>2. Multiply in place and print.' },
+      hi: { title: 'संख्या को दोगुना करना', goal: '<strong>कार्य:</strong> इनपुट संख्या को <code>*= 2</code> से दोगुना करें।' },
+      mr: { title: 'संख्या दुप्पट करणे', goal: '<strong>कृती:</strong> इनपुट संख्या दुप्पट करा.' },
+      ta: { title: 'எண்ணை இரட்டிப்பாக்குதல்', goal: '<strong>பணி:</strong> உள்ளீட்டு எண்ணை இரட்டிப்பாக்கவும்.' },
+      te: { title: 'సంఖ్యను రెట్టింపు చేయడం', goal: '<strong>టాస్క్:</strong> ఇన్‌పుట్ సంఖ్యను రెట్టింపు చేయండి.' },
+      bn: { title: 'সংখ্যা দ্বিগুণ করা', goal: '<strong>কাজ:</strong> ইনপুট সংখ্যাকে দ্বিগুণ করুন।' },
+      gu: { title: 'સંખ્યા બમણી કરવી', goal: '<strong>કાર્ય:</strong> ઇનપુટ સંખ્યાને બમણી કરો.' },
+      kn: { title: 'ಸಂಖ್ಯೆಯನ್ನು ದ್ವಿಗುಣಗೊಳಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ಸಂಖ್ಯೆಯನ್ನು ಡಬಲ್ ಮಾಡಿ.' },
+      ml: { title: 'സംഖ്യ ഇരട്ടിയാക്കുക', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യ ഇരട്ടിയാക്കുക.' },
+      pa: { title: 'ਨੰਬਰ ਦੁੱਗਣਾ ਕਰਨਾ', goal: '<strong>ਕੰਮ:</strong> ਦਾਖਲ ਨੰਬਰ ਨੂੰ ਦੁੱਗਣਾ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'passcode = input("Secret code: ")\nis_correct = (passcode == "OPEN123")\nprint(f"Access granted: {is_correct}")',
+    i18n: {
+      en: { title: 'Secret Code Checker', goal: '<strong>Task:</strong> Compare input to a secret password.<br>1. Type <code>OPEN123</code> to grant access.' },
+      hi: { title: 'गुप्त कोड जांच', goal: '<strong>कार्य:</strong> <code>OPEN123</code> दर्ज कर सही कोड की जांच करें।' },
+      mr: { title: 'गुप्त कोड पडताळणी', goal: '<strong>कृती:</strong> कोड तपासून ऍक्सेस मिळवा.' },
+      ta: { title: 'ரகசிய குறியீடு சரிபார்ப்பு', goal: '<strong>பணி:</strong> குறியீட்டைச் சரிபார்த்து அனுமதியை அறியவும்.' },
+      te: { title: 'రహస్య కోడ్ తనిఖీ', goal: '<strong>టాస్క్:</strong> కోడ్ సరైనదో కాదో పరీక్షించండి.' },
+      bn: { title: 'গোপন কোড পরীক্ষা', goal: '<strong>কাজ:</strong> সঠিক কোড মিলিয়ে অ্যাক্সেস পান।' },
+      gu: { title: 'ગુપ્ત કોડ ચકાસણી', goal: '<strong>કાર્ય:</strong> ગુપ્ત કોડ સાચો છે કે નહીં તે તપાસો.' },
+      kn: { title: 'ರಹಸ್ಯ ಕೋಡ್ ಪರೀಕ್ಷೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ರಹಸ್ಯ ಕೋಡ್ ಸರಿ ಇದೆಯೇ ತಿಳಿಯಿರಿ.' },
+      ml: { title: 'രഹസ്യ കോഡ് പരിശോധന', goal: '<strong>ടാസ്ക്:</strong> കോഡ് ശരിയാണോ എന്ന് നോക്കുക.' },
+      pa: { title: 'ਗੁਪਤ ਕੋਡ ਪਰਖ', goal: '<strong>ਕੰਮ:</strong> ਗੁਪਤ ਕੋਡ ਦੀ ਜਾਂਚ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'hours = int(input("Enter hours: "))\nminutes = hours * 60\nseconds = minutes * 60\nprint(f"{hours} hours = {minutes} mins = {seconds} secs")',
+    i18n: {
+      en: { title: 'Hours to Minutes & Seconds', goal: '<strong>Task:</strong> Unit multiplier chain.<br>1. Input hours (e.g. <code>3</code>).<br>2. Output 180 mins and 10800 secs.' },
+      hi: { title: 'घंटे से मिनट और सेकंड', goal: '<strong>कार्य:</strong> घंटों को मिनट और सेकंड में बदलें।' },
+      mr: { title: 'तासांचे मिनिटे व सेकंदात रूपांतर', goal: '<strong>कृती:</strong> तास इनपुट देऊन मिनिटे व सेकंद काढा.' },
+      ta: { title: 'மணிநேரத்தை மாற்றுதல்', goal: '<strong>பணி:</strong> மணிநேரத்தை வினாடிகளாக மாற்றவும்.' },
+      te: { title: 'గంటలను నిమిషాలు & సెకన్లుగా మార్చడం', goal: '<strong>టాస్క్:</strong> గంటలను సెకన్లుగా మార్చండి.' },
+      bn: { title: 'ঘণ্টা থেকে মিনিট ও সেকেন্ড', goal: '<strong>কাজ:</strong> ঘণ্টাকে মিনিট ও সেকেন্ডে রূপান্তর করুন।' },
+      gu: { title: 'કલાકનું મિનિટ અને સેકન્ડમાં રૂપાંતરણ', goal: '<strong>કાર્ય:</strong> કલાકને સેકન્ડમાં ફેરવો.' },
+      kn: { title: 'ಗಂಟೆಗಳನ್ನು ನಿಮಿಷ & ಸೆಕೆಂಡುಗಳಾಗಿ ಪರಿವರ್ತಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ಗಂಟೆಗಳನ್ನು ಸೆಕೆಂಡುಗಳನ್ನಾಗಿ ಮಾಡಿ.' },
+      ml: { title: 'മണിക്കൂറുകൾ മിനിറ്റാക്കുക', goal: '<strong>ടാസ്ക്:</strong> മണിക്കൂറുകൾ സെക്കൻഡുകളാക്കുക.' },
+      pa: { title: 'ਘੰਟਿਆਂ ਨੂੰ ਮਿੰਟਾਂ ਵਿੱਚ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> ਘੰਟਿਆਂ ਨੂੰ ਸਕਿੰਟਾਂ ਵਿੱਚ ਬਦਲੋ।' }
+    }
+  },
+  {
+    code: 'n1 = float(input("Number 1: "))\nn2 = float(input("Number 2: "))\naverage = (n1 + n2) / 2\nprint(f"Average of {n1} and {n2} is {average}")',
+    i18n: {
+      en: { title: 'Two-Number Averager', goal: '<strong>Task:</strong> Calculate mean from user inputs.<br>1. Input two floats.<br>2. Compute <code>(n1 + n2) / 2</code>.' },
+      hi: { title: 'दो संख्याओं का औसत', goal: '<strong>कार्य:</strong> दो संख्याएं दर्ज कर उनका औसत निकालें।' },
+      mr: { title: 'दोन संख्यांची सरासरी', goal: '<strong>कृती:</strong> दोन संख्यांची सरासरी काढा.' },
+      ta: { title: 'சராசரி கணக்கிடுதல்', goal: '<strong>பணி:</strong> இரண்டு எண்களின் சராசரியை அறியவும்.' },
+      te: { title: 'రెండు సంఖ్యల సగటు', goal: '<strong>టాస్క్:</strong> రెండు సంఖ్యల సగటు లెక్కించండి.' },
+      bn: { title: 'দুই সংখ্যার গড়', goal: '<strong>কাজ:</strong> দুটি সংখ্যার গড় বের করুন।' },
+      gu: { title: 'બે સંખ્યાઓની સરેરાશ', goal: '<strong>કાર્ય:</strong> બે સંખ્યાઓની સરેરાશ શોધો.' },
+      kn: { title: 'ಎರಡು ಸಂಖ್ಯೆಗಳ ಸರಾಸರಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ಎರಡು ಸಂಖ್ಯೆಗಳ ಸರಾಸರಿ ಲೆಕ್ಕ ಹಾಕಿ.' },
+      ml: { title: 'ശരാശരി കണ്ടെത്തുക', goal: '<strong>ടാസ്ക്:</strong> രണ്ട് സംഖ്യകളുടെ ശരാശരി കാണുക.' },
+      pa: { title: 'ਦੋ ਨੰਬਰਾਂ ਦੀ ਔਸਤ', goal: '<strong>ਕੰਮ:</strong> ਦੋ ਸੰਖਿਆਵਾਂ ਦੀ ਔਸਤ ਕੱਢੋ।' }
+    }
+  },
+  {
+    code: 'word = input("Type a word: ")\nborder = "*" * (len(word) + 4)\nprint(border)\nprint(f"* {word} *")\nprint(border)',
+    i18n: {
+      en: { title: 'Dynamic Text Banner', goal: '<strong>Task:</strong> Frame input text with stars.<br>1. Measures word length with <code>len()</code>.<br>2. Draws matching border.' },
+      hi: { title: 'डायनामिक स्टार बैनर', goal: '<strong>कार्य:</strong> दर्ज किए गए शब्द के चारों ओर तारों का बॉर्डर बनाएं।' },
+      mr: { title: 'मजकूर बॅनर निर्मिती', goal: '<strong>कृती:</strong> शब्दाभोवती ताऱ्यांची सुंदर बॉर्डर बनवा.' },
+      ta: { title: 'உரை பேனர்', goal: '<strong>பணி:</strong> சொல்லைச் சுற்றி நட்சத்திர பார்டர் அமைக்கவும்.' },
+      te: { title: 'టెక్స్ట్ బ్యానర్ తయారీ', goal: '<strong>టాస్క్:</strong> పదం చుట్టూ స్టార్ బోర్డర్ వేయండి.' },
+      bn: { title: 'ডাইনামিক টেক্সট ব্যানার', goal: '<strong>কাজ:</strong> ইনপুট শব্দের চারিপাশে বর্ডার বানান।' },
+      gu: { title: 'ટેક્સ્ટ બેનર', goal: '<strong>કાર્ય:</strong> શબ્દની ફરતે બોર્ડર બનાવો.' },
+      kn: { title: 'ಪಠ್ಯ ಬ್ಯಾನರ್ ರಚಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ಪದದ ಸುತ್ತ ನಕ್ಷತ್ರಗಳ ಬಾರ್ಡರ್ ಹಾಕಿ.' },
+      ml: { title: 'ടെക്സ്റ്റ് ബാനർ', goal: '<strong>ടാസ്ക്:</strong> വാക്കിന് ചുറ്റും ബോർഡർ ഉണ്ടാക്കുക.' },
+      pa: { title: 'ਟੈਕਸਟ ਬੈਨਰ ਬਣਾਉਣਾ', goal: '<strong>ਕੰਮ:</strong> ਸ਼ਬਦ ਦੇ ਆਲੇ-ਦੁਆਲੇ ਬਾਰਡਰ ਬਣਾਓ।' }
+    }
+  },
+  {
+    code: 'score = int(input("Exam score (0-100): "))\npassed = (score >= 40)\nprint(f"Passed exam: {passed}")',
+    i18n: {
+      en: { title: 'Exam Pass Condition', goal: '<strong>Task:</strong> Evaluate passing mark (>= 40).<br>1. Input score.<br>2. Output True if passed.' },
+      hi: { title: 'परीक्षा उत्तीर्ण स्थिति', goal: '<strong>कार्य:</strong> 40 या अधिक अंक होने पर उत्तीर्ण (True) जांचें।' },
+      mr: { title: 'परीक्षा उत्तीर्ण चाचणी', goal: '<strong>कृती:</strong> 40 किंवा अधिक गुण तपासा.' },
+      ta: { title: 'தேர்ச்சி நிலை சரிபார்ப்பு', goal: '<strong>பணி:</strong> 40 மதிப்பெண்ணுக்கு மேல் உள்ளதா எனப் பார்க்கவும்.' },
+      te: { title: 'పరీక్ష పాస్ స్థితి', goal: '<strong>టాస్క్:</strong> 40 మార్కుల కంటే ఎక్కువో కాదో చూడండి.' },
+      bn: { title: 'পরীক্ষায় পাসের শর্ত', goal: '<strong>কাজ:</strong> ৪০ বা তার বেশি পেলে পাস যাচাই করুন।' },
+      gu: { title: 'પરીક્ષા પાસ સ્થિતિ', goal: '<strong>કાર્ય:</strong> 40 કે તેથી વધુ ગુણ ચકાસો.' },
+      kn: { title: 'ಪರೀಕ್ಷೆ ಉತ್ತೀರ್ಣ ಸ್ಥಿತಿ', goal: '<strong>ಕಾರ್ಯ:</strong> 40 ಕ್ಕಿಂತ ಹೆಚ್ಚು ಅಂಕಗಳಿವೆಯೇ ತಿಳಿಯಿರಿ.' },
+      ml: { title: 'പരീക്ഷാ വിജയം പരിശോധിക്കുക', goal: '<strong>ടാസ്ക്:</strong> 40-ൽ കൂടുതൽ മാർക്കുണ്ടോ എന്ന് നോക്കുക.' },
+      pa: { title: 'ਪ੍ਰੀਖਿਆ ਪਾਸ ਸ਼ਰਤ', goal: '<strong>ਕੰਮ:</strong> 40 ਜਾਂ ਵੱਧ ਅੰਕਾਂ ਦੀ ਜਾਂਚ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'km = float(input("Distance in km: "))\nmeters = km * 1000\nprint(f"{km} km = {meters} meters")',
+    i18n: {
+      en: { title: 'Kilometers to Meters', goal: '<strong>Task:</strong> Unit converter.<br>1. Input distance in km (e.g. <code>4.5</code>).<br>2. Output 4500.0 meters.' },
+      hi: { title: 'किलोमीटर से मीटर', goal: '<strong>कार्य:</strong> किलोमीटर को मीटर में बदलें (1 किमी = 1000 मी)।' },
+      mr: { title: 'किमी चे मीटरमध्ये रूपांतर', goal: '<strong>कृती:</strong> किलोमीटरचे मीटरमध्ये रूपांतर करा.' },
+      ta: { title: 'கி.மீ முதல் மீட்டர்', goal: '<strong>பணி:</strong> கிலோமீட்டரை மீட்டராக மாற்றவும்.' },
+      te: { title: 'కిలోమీటర్లను మీటర్లుగా మార్చడం', goal: '<strong>టాస్క్:</strong> కిలోమీటర్లను మీటర్లుగా మార్చండి.' },
+      bn: { title: 'কিলোমিটার থেকে মিটার', goal: '<strong>কাজ:</strong> কিলোমিটারকে মিটারে রূপান্তর করুন।' },
+      gu: { title: 'કિલોમીટરનું મીટરમાં રૂપાંતરણ', goal: '<strong>કાર્ય:</strong> કિલોમીટરને મીટરમાં ફેરવો.' },
+      kn: { title: 'ಕಿಲೋಮೀಟರ್‌ನಿಂದ ಮೀಟರ್', goal: '<strong>ಕಾರ್ಯ:</strong> ಕಿಲೋಮೀಟರ್ ಅನ್ನು ಮೀಟರ್ ಆಗಿ ಪರಿವರ್ತಿಸಿ.' },
+      ml: { title: 'കിലോമീറ്റർ മീറ്ററാക്കുക', goal: '<strong>ടാസ്ക്:</strong> കിലോമീറ്ററിനെ മീറ്ററാക്കുക.' },
+      pa: { title: 'ਕਿਲੋਮੀਟਰ ਨੂੰ ਮੀਟਰ ਵਿੱਚ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> ਕਿਲੋਮੀਟਰ ਨੂੰ ਮੀਟਰ ਬਣਾਓ।' }
+    }
+  },
+  {
+    code: 'bill = float(input("Food amount: "))\ntip_pct = float(input("Tip percentage (e.g. 10): "))\ntip_amount = bill * (tip_pct / 100)\ntotal_due = bill + tip_amount\nprint(f"Total payable: Rs {total_due}")',
+    i18n: {
+      en: { title: 'Tip Calculator', goal: '<strong>Task:</strong> Add tip to restaurant bill.<br>1. Input bill & tip percent.<br>2. Output total.' },
+      hi: { title: 'टिप कैलकुलेटर', goal: '<strong>कार्य:</strong> बिल और टिप प्रतिशत दर्ज कर कुल राशि निकालें।' },
+      mr: { title: 'टिप कॅल्क्युलेटर', goal: '<strong>कृती:</strong> बिलामध्ये टिप जोडून एकूण रक्कम काढा.' },
+      ta: { title: 'டிப் கால்குலேட்டர்', goal: '<strong>பணி:</strong> பில்லில் டிப்பைக் கூட்டி மொத்தத்தை அறியவும்.' },
+      te: { title: 'టిప్ కాలిక్యులేటర్', goal: '<strong>టాస్క్:</strong> బిల్లుకు టిప్ జోడించి మొత్తం లెక్కించండి.' },
+      bn: { title: 'টিপ ক্যালকুলেটর', goal: '<strong>কাজ:</strong> বিলের সাথে বকশিশ যোগ করে মোট হিসাব করুন।' },
+      gu: { title: 'ટિપ કેલ્ક્યુલેટર', goal: '<strong>કાર્ય:</strong> બિલમાં ટિપ ઉમેરી કુલ રકમ શોધો.' },
+      kn: { title: 'ಟಿಪ್ ಕ್ಯಾಲ್ಕುಲೇಟರ್', goal: '<strong>ಕಾರ್ಯ:</strong> ಬಿಲ್‌ಗೆ ಟಿಪ್ ಸೇರಿಸಿ ಒಟ್ಟು ಮೊತ್ತ ಲೆಕ್ಕ ಹಾಕಿ.' },
+      ml: { title: 'ടിപ്പ് കാൽക്കുലേറ്റർ', goal: '<strong>ടാസ്ക്:</strong> ബില്ലിൽ ടിപ്പ് ചേർത്ത് ആകെ തുക കാണുക.' },
+      pa: { title: 'ਟਿੱਪ ਕੈਲਕੁਲੇਟਰ', goal: '<strong>ਕੰਮ:</strong> ਬਿੱਲ ਵਿੱਚ ਟਿੱਪ ਜੋੜ ਕੇ ਕੁੱਲ ਰਕਮ ਕੱਢੋ।' }
+    }
+  },
+  {
+    code: 'age = int(input("Enter voter age: "))\ncan_vote = (age >= 18)\nprint(f"Eligible to vote in India: {can_vote}")',
+    i18n: {
+      en: { title: 'Voting Eligibility Checker', goal: '<strong>Task:</strong> Verify age >= 18.<br>1. Input age.<br>2. Output True or False.' },
+      hi: { title: 'मतदान पात्रता जांच', goal: '<strong>कार्य:</strong> 18 या अधिक आयु होने पर मतदान पात्रता (True) जांचें।' },
+      mr: { title: 'मतदान पात्रता पडताळणी', goal: '<strong>कृती:</strong> वय 18 पेक्षा जास्त आहे का तपासा.' },
+      ta: { title: 'வாக்களிக்கும் தகுதி', goal: '<strong>பணி:</strong> வயது 18க்கு மேல் உள்ளதா என அறியவும்.' },
+      te: { title: 'ఓటు అర్హత తనిఖీ', goal: '<strong>టాస్క్:</strong> వయస్సు 18 లేదా అంతకంటే ఎక్కువో చూడండి.' },
+      bn: { title: 'ভোটের যোগ্যতা যাচাই', goal: '<strong>কাজ:</strong> বয়স ১৮ বা বেশি কিনা পরীক্ষা করুন।' },
+      gu: { title: 'મતદાન પાત્રતા ચકાસણી', goal: '<strong>કાર્ય:</strong> ઉંમર 18 કે તેથી વધુ છે કે નહીં તે ચકાસો.' },
+      kn: { title: 'ಮತದಾನದ ಅರ್ಹತೆ ಪರೀಕ್ಷೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ವಯಸ್ಸು 18 ದಾಟಿದೆಯೇ ತಿಳಿಯಿರಿ.' },
+      ml: { title: 'വോട്ടിംഗ് യോഗ്യത', goal: '<strong>ടാസ്ക്:</strong> പ്രായം 18-ൽ കൂടുതലാണോ എന്ന് നോക്കുക.' },
+      pa: { title: 'ਵੋਟ ਪਾਉਣ ਦੀ ਯੋਗਤਾ', goal: '<strong>ਕੰਮ:</strong> ਉਮਰ 18 ਜਾਂ ਵੱਧ ਹੋਣ ਦੀ ਜਾਂਚ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'item = input("Product: ")\nprice = float(input("Unit price: "))\nqty = int(input("Quantity: "))\nsubtotal = price * qty\ngst = subtotal * 0.05\ntotal = subtotal + gst\nprint(f"Receipt: {qty}x {item} = Rs {total} (incl. 5% GST)")',
+    i18n: {
+      en: { title: 'Capstone: Supermarket Checkout', goal: '<strong>Task:</strong> Full checkout program.<br>1. Reads item name, unit price, quantity.<br>2. Computes 5% GST and prints complete receipt.' },
+      hi: { title: 'अंतिम चुनौती: सुपरमार्केट बिलिंग', goal: '<strong>कार्य:</strong> नाम, मूल्य और संख्या इनपुट लेकर 5% जीएसटी सहित पूरा बिल बनाएं।' },
+      mr: { title: 'अंतिम आव्हान: सुपरमार्केट बिलिंग', goal: '<strong>कृती:</strong> नाव, दर आणि नग घेऊन 5% GST सह पावती तयार करा.' },
+      ta: { title: 'இறுதி சவால்: பில் தயாரித்தல்', goal: '<strong>பணி:</strong> அனைத்து விவரங்களையும் உள்ளிட்டு முழுமையான ரசீதை அச்சிடவும்.' },
+      te: { title: 'చివరి సవాలు: సూపర్ మార్కెట్ రసీదు', goal: '<strong>టాస్క్:</strong> 5% జీఎస్టీతో పూర్తి బిల్లు తయారు చేయండి.' },
+      bn: { title: 'চূড়ান্ত চ্যালেঞ্জ: সুপারমার্কেট চেকআউট', goal: '<strong>কাজ:</strong> পণ্যের নাম, দাম ও সংখ্যা নিয়ে ৫% ট্যাক্সসহ রসিদ বানান।' },
+      gu: { title: 'અંતિમ પડકાર: સુપરમાર્કેટ બિલિંગ', goal: '<strong>કાર્ય:</strong> 5% GST સાથે સંપૂર્ણ રસીદ બનાવો.' },
+      kn: { title: 'ಅಂತಿಮ ಸವಾಲು: ಸೂಪರ್‌ಮಾರ್ಕೆಟ್ ರಸೀದಿ', goal: '<strong>ಕಾರ್ಯ:</strong> 5% ಜಿಎಸ್‌ಟಿ ಸೇರಿಸಿ ಸಂಪೂರ್ಣ ರಸೀದಿ ರಚಿಸಿ.' },
+      ml: { title: 'അവസാന ചലഞ്ച്: സൂപ്പർമാർക്കറ്റ് ബിൽ', goal: '<strong>ടാസ്ക്:</strong> 5% ടാക്സ് ചേർത്ത് മുഴുവൻ രസീത് ഉണ്ടാക്കുക.' },
+      pa: { title: 'ਆਖਰੀ ਚੁਣੌਤੀ: ਸੁਪਰਮਾਰਕੀਟ ਬਿਲਿੰਗ', goal: '<strong>ਕੰਮ:</strong> 5% ਟੈਕਸ ਸਮੇਤ ਪੂਰਾ ਬਿੱਲ ਬਣਾਓ।' }
+    }
+  }
+];
+
+const STEP_LABELS = {
+  en: (i, n) => `Lesson ${i} of ${n}`,
+  hi: (i, n) => `पाठ ${i} / ${n}`,
+  mr: (i, n) => `धडा ${i} / ${n}`,
+  ta: (i, n) => `பாடம் ${i} / ${n}`,
+  te: (i, n) => `పాఠం ${i} / ${n}`,
+  bn: (i, n) => `পাঠ ${i} / ${n}`,
+  gu: (i, n) => `પાઠ ${i} / ${n}`,
+  kn: (i, n) => `ಪಾಠ ${i} / ${n}`,
+  ml: (i, n) => `പാഠം ${i} / ${n}`,
+  pa: (i, n) => `ਪਾਠ ${i} / ${n}`
+};
+
+const KID_TYPE_INFO = {
+  str: { emoji: '⌨️', name: 'User Typed Text', desc: 'Message typed in terminal (str)', shadow: '#9ae6b4', color: '#38a169' },
+  int: { emoji: '🔢', name: 'Whole Number', desc: 'Converted number (int)', shadow: '#90cdf4', color: '#3182ce' },
+  float: { emoji: '🎯', name: 'Decimal Number', desc: 'Number with dot . (float)', shadow: '#d6bcfa', color: '#805ad5' },
+  bool: { emoji: '🚦', name: 'Yes / No Choice', desc: 'Decision (bool)', shadow: '#fbd38d', color: '#dd6b20' },
+  none: { emoji: '📭', name: 'Empty', desc: 'Nothing yet', shadow: '#cbd5e0', color: '#718096' }
+};
+
+const TYPE_COLOR = { str: 'var(--green)', int: 'var(--blue)', float: 'var(--violet)', bool: 'var(--amber)', none: 'var(--grey)' };
+const TYPE_TINT = { str: 'rgba(79,157,99,0.18)', int: 'rgba(91,141,239,0.18)', float: 'rgba(182,124,224,0.20)', bool: 'rgba(217,162,75,0.22)', none: 'rgba(144,152,163,0.20)' };
+const TYPE_DESC = { str: 'text input', int: 'whole number', float: 'decimal number', bool: 'True or False', none: 'no value yet' };
+
+// ============================================================
+// UI Wiring
+// ============================================================
+const els = {
+  lessons: document.getElementById('lessons'),
+  step: document.getElementById('lesson-step'),
+  title: document.getElementById('lesson-title'),
+  goal: document.getElementById('lesson-goal'),
+  code: document.getElementById('code'),
+  gutter: document.getElementById('gutter'),
+  currentLine: document.getElementById('current-line'),
+  lineCount: document.getElementById('line-count'),
+  runBtn: document.getElementById('run-btn'),
+  resetBtn: document.getElementById('reset-btn'),
+  peekBtn: document.getElementById('peek-btn'),
+  peekBadge: document.getElementById('peek-badge'),
+  editorPanel: document.getElementById('editor-panel'),
+  visualPanel: document.getElementById('visual-panel'),
+  kidsToggleBtn: document.getElementById('kids-toggle-btn'),
+  emptyStateText: document.getElementById('empty-state-text'),
+  legendBar: document.getElementById('legend-bar'),
+  boxes: document.getElementById('boxes'),
+  terminal: document.getElementById('terminal'),
+  runHint: document.getElementById('run-hint'),
+  progressBar: document.getElementById('progress-bar'),
+  levelBadge: document.getElementById('lesson-level'),
+  langSelect: document.getElementById('lang-select')
+};
+
+const LINE_HEIGHT = 22;
+const STEP_DELAY = 450;
+const STEP_GAP = 200;
+const PROGRESS_KEY = 'input-lab-progress';
+const USER_CODE_KEY = 'input-lab-user-code';
+const KIDS_MODE_KEY = 'input-lab-kids-mode';
+
+let state = { running: false, lessonIndex: 0 };
+let userCodeStore = {};
+let isPeeking = false;
+let prePeekDraft = '';
+let currentLanguage = 'en';
+let isKidsMode = localStorage.getItem(KIDS_MODE_KEY) !== 'false';
+
+try { userCodeStore = JSON.parse(localStorage.getItem(USER_CODE_KEY) || '{}'); }
+catch { userCodeStore = {}; }
+
+function saveUserCodes() {
+  try { localStorage.setItem(USER_CODE_KEY, JSON.stringify(userCodeStore)); } catch {}
+}
+
+function loadProgress() {
+  try { return new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || '[]')); }
+  catch { return new Set(); }
+}
+function saveProgress(done) {
+  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify([...done])); } catch {}
+}
+let completed = loadProgress();
+
+function levelFor(i) {
+  if (i < 10) return { text: 'Beginner', cls: '' };
+  if (i < 20) return { text: 'Intermediate', cls: 'mid' };
+  return { text: 'Advanced', cls: 'adv' };
+}
+
+function updateProgressBar() {
+  const pct = Math.round((completed.size / LESSONS.length) * 100);
+  els.progressBar.style.width = pct + '%';
+}
+
+function buildLessonPills() {
+  els.lessons.innerHTML = '';
+  let activePill = null;
+  LESSONS.forEach((l, i) => {
+    const pill = document.createElement('button');
+    let cls = 'lesson-pill';
+    if (i === state.lessonIndex) cls += ' active';
+    if (completed.has(i)) cls += ' done';
+    pill.className = cls;
+    pill.textContent = String(i + 1);
+    const localized = l.i18n[currentLanguage] || l.i18n.en;
+    pill.title = localized.title;
+    pill.setAttribute('aria-label', localized.title);
+    pill.onclick = () => { if (!state.running && !isPeeking) loadLesson(i); };
+    if (i === state.lessonIndex) activePill = pill;
+    els.lessons.appendChild(pill);
+  });
+  if (activePill) activePill.scrollIntoView({ inline: 'center', block: 'nearest' });
+}
+
+function updateQuestionUI(i) {
+  const l = LESSONS[i];
+  const localized = l.i18n[currentLanguage] || l.i18n.en;
+  els.title.textContent = localized.title;
+  els.goal.innerHTML = localized.goal;
+  
+  const stepFormatter = STEP_LABELS[currentLanguage] || STEP_LABELS.en;
+  els.step.textContent = stepFormatter(i + 1, LESSONS.length);
+}
+
+function updateKidsModeUI() {
+  if (isKidsMode) {
+    els.kidsToggleBtn.classList.add('is-active');
+    els.kidsToggleBtn.textContent = '🧸 Kids Mode: ON';
+    els.visualPanel.classList.add('kids-active');
+    els.emptyStateText.textContent = '🚀 Run your code & type in the terminal to fill your live memory cards!';
+    els.legendBar.innerHTML = `
+      <div class="legend-item"><span>⌨️</span> str (Typed Text)</div>
+      <div class="legend-item"><span>🔢</span> int (Whole #)</div>
+      <div class="legend-item"><span>🎯</span> float (Decimal)</div>
+      <div class="legend-item"><span>🚦</span> bool (Yes/No)</div>
+    `;
+  } else {
+    els.kidsToggleBtn.classList.remove('is-active');
+    els.kidsToggleBtn.textContent = '🧸 Kids Mode: OFF';
+    els.visualPanel.classList.remove('kids-active');
+    els.emptyStateText.textContent = 'Run your code and type into the terminal to populate variable boxes!';
+    els.legendBar.innerHTML = `
+      <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>str (Text Input)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>int (Whole #)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--violet)"></span>float (Decimal)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>bool (Yes/No)</div>
+    `;
+  }
+}
+
+function loadLesson(i) {
+  state.lessonIndex = i;
+  const lvl = levelFor(i);
+  els.levelBadge.textContent = lvl.text;
+  els.levelBadge.className = 'level-badge ' + lvl.cls;
+
+  const savedUserCode = userCodeStore[i];
+  els.code.value = (savedUserCode !== undefined) ? savedUserCode : '# Type your code with input()\n';
+  els.code.readOnly = false;
+  
+  updateQuestionUI(i);
+  buildLessonPills();
+  updateProgressBar();
+  syncGutter();
+  clearOutputs();
+}
+
+function syncGutter() {
+  const n = els.code.value.split('\n').length;
+  let s = '';
+  for (let i = 1; i <= n; i++) s += i + (i < n ? '\n' : '');
+  els.gutter.textContent = s;
+  els.gutter.scrollTop = els.code.scrollTop;
+  els.lineCount.textContent = n + (n === 1 ? ' line' : ' lines');
+}
+
+function clearOutputs() {
+  els.boxes.innerHTML = `<div class="empty-state"><div class="icon"></div><p id="empty-state-text">${isKidsMode ? '🚀 Run your code & type in the terminal to fill your live memory cards!' : 'Run your code and type into the terminal to populate variable boxes!'}</p></div>`;
+  els.terminal.innerHTML = '<div class="term-line is-muted">Waiting for you to press Run…</div>';
+  els.currentLine.style.display = 'none';
+  els.currentLine.classList.remove('err');
+}
+
+function setCurrentLine(idx, isErr) {
+  els.currentLine.style.display = 'block';
+  els.currentLine.style.transform = `translateY(${14 + idx * LINE_HEIGHT - els.code.scrollTop}px)`;
+  els.currentLine.classList.toggle('err', !!isErr);
+}
+
+function renderVars(env, order, created, updated, referenced) {
+  if (order.length === 0) {
+    clearOutputs();
+    return;
+  }
+  els.boxes.innerHTML = '';
+  order.forEach(name => {
+    const val = env[name];
+    const color = TYPE_COLOR[val.t] || 'var(--grey)';
+    const box = document.createElement('div');
+    
+    if (isKidsMode) {
+      const kidInfo = KID_TYPE_INFO[val.t] || KID_TYPE_INFO.none;
+      box.className = 'vbox kid-card';
+      box.style.setProperty('--tag-color', kidInfo.color);
+      box.style.setProperty('--kid-shadow', kidInfo.shadow);
+
+      box.setAttribute('data-name', `📦 ${name}`);
+      box.title = `Variable "${name}" = ${pyDisplay(val)}`;
+      box.innerHTML = `
+        <div class="kid-inner">
+          <div class="kid-val-row">
+            <span class="kid-emoji">${kidInfo.emoji}</span>
+            <span class="kid-val">${escapeHtml(pyDisplay(val))}</span>
+          </div>
+          <div class="kid-desc">${kidInfo.desc}</div>
+        </div>
+      `;
+    } else {
+      box.className = 'vbox';
+      box.setAttribute('data-name', name);
+      box.style.setProperty('--tag-color', color);
+      box.title = `${name} = ${pyDisplay(val)} — ${TYPE_DESC[val.t] || pyTypeName(val)}`;
+      box.innerHTML = `<div class="val">${escapeHtml(pyDisplay(val))}</div><div class="type">${pyTypeName(val)}</div>`;
+    }
+
+    if (created.has(name)) box.classList.add('is-new');
+    else if (updated.has(name)) box.classList.add('is-updated');
+    else if (referenced && referenced.has(name)) {
+      box.classList.add('is-referenced');
+      box.style.setProperty('--tag-tint', TYPE_TINT[val.t] || TYPE_TINT.none);
+    }
+
+    els.boxes.appendChild(box);
+  });
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+}
+
+function writeTerminalLine(text, cls) {
+  const div = document.createElement('div');
+  div.className = 'term-line' + (cls ? ' ' + cls : '');
+  div.textContent = text;
+  els.terminal.appendChild(div);
+  els.terminal.scrollTop = els.terminal.scrollHeight;
+}
+
+function promptTerminalInput(promptText) {
+  return new Promise((resolve) => {
+    const row = document.createElement('div');
+    row.className = 'term-input-row';
+
+    const promptSpan = document.createElement('span');
+    promptSpan.className = 'term-prompt-text';
+    promptSpan.textContent = promptText || '▶ ';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'term-input-field';
+    input.placeholder = 'type here...';
+
+    const enterBadge = document.createElement('span');
+    enterBadge.className = 'term-enter-badge';
+    enterBadge.textContent = '↵ Enter';
+
+    row.appendChild(promptSpan);
+    row.appendChild(input);
+    row.appendChild(enterBadge);
+    els.terminal.appendChild(row);
+    els.terminal.scrollTop = els.terminal.scrollHeight;
+
+    input.focus();
+
+    function submit() {
+      const val = input.value.trim() || 'Alex';
+      row.innerHTML = `<span class="term-prompt-text">${escapeHtml(promptText || '▶ ')}</span><span style="color:#ffffff;">${escapeHtml(val)}</span>`;
+      resolve(val);
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        submit();
+      }
+    });
+  });
+}
+
+function writeCursor() {
+  const div = document.createElement('div');
+  div.className = 'term-line cursor-line';
+  div.innerHTML = '<span class="blink">▍</span>';
+  els.terminal.appendChild(div);
+  els.terminal.scrollTop = els.terminal.scrollHeight;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function runProgram() {
+  if (state.running || isPeeking) return;
+  state.running = true;
+  els.runBtn.disabled = true;
+  els.runBtn.textContent = 'Running…';
+  els.resetBtn.disabled = true;
+  els.peekBtn.disabled = true;
+  els.code.readOnly = true;
+  els.runHint.textContent = 'Type your answer in the Terminal when prompted!';
+
+  els.boxes.innerHTML = '';
+  els.terminal.innerHTML = '';
+
+  const lines = els.code.value.split('\n');
+  const env = Object.create(null);
+  const order = [];
+  let stopped = false;
+  let anyOutput = false;
+
+  for (let i = 0; i < lines.length && !stopped; i++) {
+    const stripped = stripComment(lines[i]).trim();
+    if (!stripped) continue;
+    setCurrentLine(i, false);
+    await sleep(STEP_DELAY);
+
+    const created = new Set(), updated = new Set(), referenced = new Set();
+    try {
+      const toks = tokenize(stripped);
+      await executeStatement(toks, env, order, created, updated, referenced, 
+        (txt) => { writeTerminalLine(txt); anyOutput = true; },
+        async (promptText) => { anyOutput = true; return await promptTerminalInput(promptText); }
+      );
+    } catch (err) {
+      writeTerminalLine(`Line ${i + 1}: ${err.message}`, 'is-error');
+      setCurrentLine(i, true);
+      stopped = true;
+      break;
+    }
+    renderVars(env, order, created, updated, referenced);
+    await sleep(STEP_GAP);
+  }
+
+  if (!stopped) {
+    els.currentLine.style.display = 'none';
+    if (!anyOutput) writeTerminalLine('(no output — try print() or input())', 'is-muted');
+    writeCursor();
+    if (!completed.has(state.lessonIndex)) {
+      completed.add(state.lessonIndex);
+      saveProgress(completed);
+      buildLessonPills();
+      updateProgressBar();
+    }
+  }
+
+  if (order.length === 0 && !stopped) {
+    clearOutputs();
+  }
+
+  els.code.readOnly = false;
+  state.running = false;
+  els.runBtn.disabled = false;
+  els.runBtn.textContent = 'Run ▶';
+  els.resetBtn.disabled = false;
+  els.peekBtn.disabled = false;
+  els.runHint.textContent = 'Runs line by line & prompts for typing in Terminal';
+}
+
+// Hold to Peek Solution
+function startPeek(e) {
+  if (e) e.preventDefault();
+  if (isPeeking || state.running) return;
+  isPeeking = true;
+  prePeekDraft = els.code.value;
+  els.code.value = LESSONS[state.lessonIndex].code;
+  els.code.readOnly = true;
+  els.peekBtn.classList.add('is-holding');
+  els.editorPanel.classList.add('peeking');
+  els.peekBadge.style.display = 'inline-block';
+  syncGutter();
+}
+
+function stopPeek(e) {
+  if (e) e.preventDefault();
+  if (!isPeeking) return;
+  isPeeking = false;
+  els.code.value = prePeekDraft;
+  if (!state.running) els.code.readOnly = false;
+  els.peekBtn.classList.remove('is-holding');
+  els.editorPanel.classList.remove('peeking');
+  els.peekBadge.style.display = 'none';
+  syncGutter();
+}
+
+els.peekBtn.addEventListener('mousedown', startPeek);
+window.addEventListener('mouseup', stopPeek);
+els.peekBtn.addEventListener('mouseleave', stopPeek);
+els.peekBtn.addEventListener('touchstart', startPeek, { passive: false });
+window.addEventListener('touchend', stopPeek);
+window.addEventListener('touchcancel', stopPeek);
+
+els.runBtn.addEventListener('click', runProgram);
+els.resetBtn.addEventListener('click', () => {
+  if (!state.running && !isPeeking) {
+    delete userCodeStore[state.lessonIndex];
+    saveUserCodes();
+    loadLesson(state.lessonIndex);
+  }
+});
+
+els.kidsToggleBtn.addEventListener('click', () => {
+  isKidsMode = !isKidsMode;
+  localStorage.setItem(KIDS_MODE_KEY, isKidsMode);
+  updateKidsModeUI();
+  if (!state.running && els.code.value) {
+    runProgram();
+  }
+});
+
+els.code.addEventListener('input', () => {
+  if (!isPeeking) {
+    userCodeStore[state.lessonIndex] = els.code.value;
+    saveUserCodes();
+  }
+  syncGutter();
+});
+els.code.addEventListener('scroll', () => {
+  els.gutter.scrollTop = els.code.scrollTop;
+});
+els.code.addEventListener('keydown', (e) => {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const s = els.code.selectionStart, en = els.code.selectionEnd;
+    els.code.value = els.code.value.slice(0, s) + '    ' + els.code.value.slice(en);
+    els.code.selectionStart = els.code.selectionEnd = s + 4;
+    if (!isPeeking) {
+      userCodeStore[state.lessonIndex] = els.code.value;
+      saveUserCodes();
+    }
+    syncGutter();
+  }
+});
+
+els.langSelect.addEventListener('change', (e) => {
+  currentLanguage = e.target.value;
+  updateQuestionUI(state.lessonIndex);
+  buildLessonPills();
+});
+
+updateKidsModeUI();
+buildLessonPills();
+loadLesson(0);
+</script>
+</body>
+</html>
