@@ -6,7 +6,7 @@
 <title>Variable Lab · Learn Python</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#14161f;
@@ -46,7 +46,7 @@
   .wrap{
     max-width:1400px;
     margin:0 auto;
-    padding:28px 28px 10px;
+    padding:28px 28px 60px;
   }
 
   /* ---------- Header ---------- */
@@ -430,6 +430,11 @@
     color:var(--text-light);
     border:1px solid var(--line-light);
     min-height:230px;
+    transition:background-color .25s ease;
+  }
+  .visual-panel.kids-active{
+    background:#edf4fa;
+    border-color:#b5d4ed;
   }
   .visual-panel .panel-head{
     background:var(--paper-2);
@@ -438,6 +443,35 @@
   .visual-panel .panel-head .title{ color:var(--text-light); }
   .visual-panel .panel-head .sub{ color:var(--muted-light); }
 
+  /* Kids Mode Toggle Button */
+  .kids-toggle-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'Fredoka','Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    padding:4px 10px;
+    border-radius:20px;
+    border:1.5px solid #bdc7d0;
+    background:#ffffff;
+    color:#4a5568;
+    cursor:pointer;
+    transition:all .2s ease;
+    box-shadow:0 1px 2px rgba(0,0,0,0.05);
+  }
+  .kids-toggle-btn:hover{
+    transform:translateY(-1px);
+    border-color:#5b8def;
+    color:#2b6cb0;
+  }
+  .kids-toggle-btn.is-active{
+    background:linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+    border-color:#ff758c;
+    color:#742a2a;
+    box-shadow:0 2px 6px rgba(255,117,140,0.3);
+  }
+
   .legend{
     display:flex;
     gap:12px;
@@ -445,6 +479,10 @@
     padding:10px 16px;
     border-bottom:1px solid var(--line-light);
     background:var(--paper);
+    transition:background-color .25s ease;
+  }
+  .kids-active .legend{
+    background:#e2edf7;
   }
   .legend-item{
     display:flex;
@@ -462,7 +500,7 @@
     display:flex;
     flex-wrap:wrap;
     align-content:flex-start;
-    gap:12px;
+    gap:14px;
     min-height:150px;
     background-image:radial-gradient(circle, rgba(32,35,43,0.07) 1px, transparent 1px);
     background-size:15px 15px;
@@ -496,6 +534,7 @@
   }
   .empty-state p{ margin:0; font-size:13.5px; max-width:30ch; }
 
+  /* Standard Variable Box */
   .vbox{
     position:relative;
     background:#ffffff;
@@ -549,6 +588,78 @@
     animation:fadeBadge 1.3s ease;
     pointer-events:none;
   }
+
+  /* ========================================================
+     KIDS MODE STYLES (Gamified & Highly Intuitive)
+     ======================================================== */
+  .vbox.kid-card{
+    background:#ffffff;
+    border:2.5px solid var(--tag-color, #4a5568);
+    border-radius:16px;
+    padding:16px 16px 14px;
+    min-width:150px;
+    box-shadow:0 6px 0 var(--kid-shadow, #cbd5e0), 0 8px 15px rgba(0,0,0,0.06);
+    transform:translateY(0);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .vbox.kid-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 9px 0 var(--kid-shadow, #cbd5e0), 0 12px 20px rgba(0,0,0,0.09);
+  }
+  .vbox.kid-card::before{
+    font-family:'Fredoka','Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:12px;
+    top:-12px;
+    left:12px;
+    letter-spacing:0.02em;
+    box-shadow:0 2px 4px rgba(0,0,0,0.1);
+  }
+  .kid-inner{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    margin-top:6px;
+  }
+  .kid-val-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .kid-emoji{
+    font-size:22px;
+    line-height:1;
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+  }
+  .kid-val{
+    font-family:'Fredoka','JetBrains Mono',monospace;
+    font-size:17px;
+    font-weight:700;
+    color:#1a202c;
+    word-break:break-word;
+  }
+  .kid-val.is-str{
+    color:#22543d;
+    background:#ebf8f2;
+    padding:2px 8px;
+    border-radius:8px;
+    border:1px dashed #38a169;
+  }
+  .kid-val.is-bool-true{ color:#22543d; background:#c6f6d5; padding:2px 6px; border-radius:6px; }
+  .kid-val.is-bool-false{ color:#742a2a; background:#fed7d7; padding:2px 6px; border-radius:6px; }
+  .kid-desc{
+    font-size:11.5px;
+    font-weight:600;
+    color:#4a5568;
+    background:rgba(0,0,0,0.04);
+    padding:3px 6px;
+    border-radius:6px;
+    margin-top:4px;
+    display:inline-block;
+  }
+
   @keyframes popIn{
     0%{ transform:scale(0.6); opacity:0; }
     100%{ transform:scale(1); opacity:1; }
@@ -604,7 +715,7 @@
       <div class="dot"></div>
       <div>
         <h1>Variable Lab</h1>
-        <p>Write real Python on the left, watch each variable appear as a labeled box, and see the program's output in the terminal — one line at a time.</p>
+        <p>Write real Python on the left, watch each variable appear as a labeled box, and see the program's output in the terminal — one line at a time.[cite: 1]</p>
       </div>
     </div>
   </header>
@@ -662,28 +773,31 @@
           <button class="btn btn-run" id="run-btn">Run ▶</button>
           <button class="btn btn-ghost" id="reset-btn">Reset</button>
           <button class="btn btn-peek" id="peek-btn" title="Press & hold to view the solution">👁️ Hold to View Answer</button>
-          <span class="run-hint" id="run-hint">Runs line by line so you can watch it happen</span>
+          <span class="run-hint" id="run-hint">Runs line by line so you can watch it happen[cite: 1]</span>
         </div>
       </div>
     </div>
 
     <div class="col">
-      <div class="panel visual-panel" style="flex:1.15;">
+      <div class="panel visual-panel" id="visual-panel" style="flex:1.15;">
         <div class="panel-head">
           <div class="title"><span class="swatch" style="background:var(--blue)"></span>Variables</div>
-          <div class="sub">live view</div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <button class="kids-toggle-btn" id="kids-toggle-btn" title="Toggle 12-Year-Old Kid Friendly Mode">🧸 Kids Mode: ON</button>
+            <div class="sub" id="live-sub">live view</div>
+          </div>
         </div>
-        <div class="legend">
-          <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>int</div>
-          <div class="legend-item"><span class="legend-dot" style="background:var(--violet)"></span>float</div>
-          <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>str</div>
-          <div class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>bool</div>
-          <div class="legend-item"><span class="legend-dot" style="background:var(--grey)"></span>None</div>
+        <div class="legend" id="legend-bar">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>int (Whole #)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--violet)"></span>float (Decimal)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>str (Text)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>bool (Yes/No)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--grey)"></span>None (Empty)</div>
         </div>
         <div class="boxes" id="boxes">
           <div class="empty-state">
             <div class="icon"></div>
-            <p>Run your code to see each variable appear here as a labeled box.</p>
+            <p id="empty-state-text">Run your code to see each variable appear here as a toy storage box!</p>
           </div>
         </div>
       </div>
@@ -1204,7 +1318,7 @@ const LESSONS = [
       en: { title: 'Checking Types with type()', goal: '<strong>Task:</strong> Inspect data types.<br>1. Create <code>speed = 45</code> and <code>is_racing = True</code>.<br>2. Inspect with <code>print(type(speed))</code> and <code>print(type(is_racing))</code>.' },
       hi: { title: 'type() से डेटा प्रकार जांचना', goal: '<strong>कार्य:</strong> डेटा प्रकार का निरीक्षण करें।<br>1. <code>speed = 45</code> और <code>is_racing = True</code> बनाएं।<br>2. <code>print(type(...))</code> से प्रकार प्रिंट करें।' },
       mr: { title: 'type() ने प्रकार तपासणे', goal: '<strong>कृती:</strong> व्हेरिएबलचा डेटा प्रकार तपासा.<br>1. <code>speed = 45</code> आणि <code>is_racing = True</code> तयार करा.<br>2. <code>print(type(...))</code> चा वापर करा.' },
-      ta: { title: 'type() மூலம் தரவு வகையை அறிதல்', goal: '<strong>பணி:</strong> தரவு வகைகளைச் சரிபார்க்கவும்.<br>1. <code>speed = 45</code> மற்றும் <code>is_racing = True</code> உருவாக்கவும்.<br>2. <code>print(type(...))</code> ஐப் பயன்படுத்தவும்.' },
+      ta: { title: 'type() மூலம் தரவு வகையை அறிதல்', goal: '<strong>பணி:</strong> தரவு வகைகளைச் சரிபார்க்கவும்.<br>1. <code>speed = 45</code> மற்றும் <code>is_racing = True</code> உருவாக்கவும்.<br>2. <code>print(type(...))</code> ஐப் pattern செய்யவும்.' },
       te: { title: 'type() తో రకాలను తనిఖీ చేయడం', goal: '<strong>టాస్క్:</strong> డేటా రకాలను తనిఖీ చేయండి.<br>1. వేరియబుల్స్ సృష్టించండి.<br>2. <code>print(type(...))</code> ఉపయోగించండి.' },
       bn: { title: 'type() দিয়ে ডেটা টাইপ দেখা', goal: '<strong>কাজ:</strong> টাইপ পরীক্ষা করুন।<br>1. <code>speed = 45</code> ও <code>is_racing = True</code> লিখুন।<br>2. <code>print(type(...))</code> দিয়ে প্রিন্ট করুন।' },
       gu: { title: 'type() વડે પ્રકાર તપાસવો', goal: '<strong>કાર્ય:</strong> ડેટા પ્રકાર તપાસો.<br>1. વેરિયેબલ્સ બનાવો.<br>2. <code>print(type(...))</code> વાપરો.' },
@@ -1234,7 +1348,7 @@ const LESSONS = [
       en: { title: 'Basic Math with Variables', goal: '<strong>Task:</strong> Add two variables.<br>1. Set <code>base_salary = 3000</code> and <code>bonus = 450</code>.<br>2. Compute <code>total_pay = base_salary + bonus</code>.<br>3. Print <code>total_pay</code>.' },
       hi: { title: 'वेरिएबल्स के साथ बुनियादी गणित', goal: '<strong>कार्य:</strong> वेरिएबल्स को जोड़ें।<br>1. <code>base_salary = 3000</code> और <code>bonus = 450</code> सेट करें।<br>2. <code>total_pay = base_salary + bonus</code> निकालें और प्रिंट करें।' },
       mr: { title: 'व्हेरिएबल्ससह बेरीज करणे', goal: '<strong>कृती:</strong> गणितीय प्रक्रिया करा.<br>1. वेतन व बोनस सेट करा.<br>2. <code>total_pay</code> काढून प्रिंट करा.' },
-      ta: { title: 'மாறികളுடன் எளிய கணிதம்', goal: '<strong>பணி:</strong> மாறிகளைக் கூட்டவும்.<br>1. <code>base_salary</code> மற்றும் <code>bonus</code> அமைக்கவும்.<br>2. <code>total_pay</code> கணக்கிட்டு அச்சிடவும்.' },
+      ta: { title: 'மாறிகளுடன் எளிய கணிதம்', goal: '<strong>பணி:</strong> மாறிகளைக் கூட்டவும்.<br>1. <code>base_salary</code> மற்றும் <code>bonus</code> அமைக்கவும்.<br>2. <code>total_pay</code> கணக்கிட்டு அச்சிடவும்.' },
       te: { title: 'వేరియబుల్స్‌తో కూడికలు', goal: '<strong>టాస్క్:</strong> రెండు వేరియబుల్స్ కూడండి.<br>1. జీతం, బోనస్ విలువలు ఇవ్వండి.<br>2. మొత్తం లెక్కించి ప్రింట్ చేయండి.' },
       bn: { title: 'ভেরিয়েবল দিয়ে যোগফল', goal: '<strong>কাজ:</strong> গাণিতিক হিসাব করুন।<br>1. বেতন ও বোনাস নির্ধারণ করুন।<br>2. <code>total_pay</code> হিসাব করে প্রিন্ট করুন।' },
       gu: { title: 'વેરિયેબલ્સ સાથે ગણતરી', goal: '<strong>કાર્ય:</strong> બે વેરિયેબલ્સનો સરવાળો કરો.<br>1. પગાર અને બોનસ સેટ કરો.<br>2. <code>total_pay</code> શોધી પ્રિન્ટ કરો.' },
@@ -1618,6 +1732,15 @@ const STEP_LABELS = {
   pa: (i, n) => `ਪਾਠ ${i} / ${n}`
 };
 
+// Kids Mode metadata tailored for 12-year-olds
+const KID_TYPE_INFO = {
+  int: { emoji: '🔢', name: 'Whole Number', desc: 'Counting number (int)', shadow: '#90cdf4', color: '#3182ce' },
+  float: { emoji: '🎯', name: 'Decimal Number', desc: 'Number with dot . (float)', shadow: '#d6bcfa', color: '#805ad5' },
+  str: { emoji: '💬', name: 'Word / Text', desc: 'Message in quotes (str)', shadow: '#9ae6b4', color: '#38a169' },
+  bool: { emoji: '🚦', name: 'Yes / No Switch', desc: 'True or False (bool)', shadow: '#fbd38d', color: '#dd6b20' },
+  none: { emoji: '📭', name: 'Empty Box', desc: 'Nothing in here yet (None)', shadow: '#cbd5e0', color: '#718096' }
+};
+
 const TYPE_COLOR = { int: 'var(--blue)', float: 'var(--violet)', str: 'var(--green)', bool: 'var(--amber)', none: 'var(--grey)' };
 const TYPE_TINT = { int: 'rgba(91,141,239,0.18)', float: 'rgba(182,124,224,0.20)', str: 'rgba(79,157,99,0.18)', bool: 'rgba(217,162,75,0.22)', none: 'rgba(144,152,163,0.20)' };
 const TYPE_DESC = { int: 'whole number', float: 'decimal number', str: 'text', bool: 'True or False', none: 'no value yet' };
@@ -1639,6 +1762,10 @@ const els = {
   peekBtn: document.getElementById('peek-btn'),
   peekBadge: document.getElementById('peek-badge'),
   editorPanel: document.getElementById('editor-panel'),
+  visualPanel: document.getElementById('visual-panel'),
+  kidsToggleBtn: document.getElementById('kids-toggle-btn'),
+  emptyStateText: document.getElementById('empty-state-text'),
+  legendBar: document.getElementById('legend-bar'),
   boxes: document.getElementById('boxes'),
   terminal: document.getElementById('terminal'),
   runHint: document.getElementById('run-hint'),
@@ -1652,12 +1779,14 @@ const STEP_DELAY = 480;
 const STEP_GAP = 220;
 const PROGRESS_KEY = 'variable-lab-progress';
 const USER_CODE_KEY = 'variable-lab-user-code';
+const KIDS_MODE_KEY = 'variable-lab-kids-mode';
 
 let state = { running: false, lessonIndex: 0 };
 let userCodeStore = {};
 let isPeeking = false;
 let prePeekDraft = '';
 let currentLanguage = 'en';
+let isKidsMode = localStorage.getItem(KIDS_MODE_KEY) !== 'false'; // Enabled by default for learners
 
 try {
   userCodeStore = JSON.parse(localStorage.getItem(USER_CODE_KEY) || '{}');
@@ -1721,6 +1850,34 @@ function updateQuestionUI(i) {
   els.step.textContent = stepFormatter(i + 1, LESSONS.length);
 }
 
+function updateKidsModeUI() {
+  if (isKidsMode) {
+    els.kidsToggleBtn.classList.add('is-active');
+    els.kidsToggleBtn.textContent = '🧸 Kids Mode: ON';
+    els.visualPanel.classList.add('kids-active');
+    els.emptyStateText.textContent = '🚀 Run your code to build your toy inventory boxes!';
+    els.legendBar.innerHTML = `
+      <div class="legend-item"><span>🔢</span> int (Whole Number)</div>
+      <div class="legend-item"><span>🎯</span> float (Decimal)</div>
+      <div class="legend-item"><span>💬</span> str (Text Word)</div>
+      <div class="legend-item"><span>🚦</span> bool (Yes/No)</div>
+      <div class="legend-item"><span>📭</span> None (Empty)</div>
+    `;
+  } else {
+    els.kidsToggleBtn.classList.remove('is-active');
+    els.kidsToggleBtn.textContent = '🧸 Kids Mode: OFF';
+    els.visualPanel.classList.remove('kids-active');
+    els.emptyStateText.textContent = 'Run your code to see each variable appear here as a labeled box.';
+    els.legendBar.innerHTML = `
+      <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>int</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--violet)"></span>float</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>str</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>bool</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--grey)"></span>None</div>
+    `;
+  }
+}
+
 function loadLesson(i) {
   state.lessonIndex = i;
   const lvl = levelFor(i);
@@ -1748,7 +1905,7 @@ function syncGutter() {
 }
 
 function clearOutputs() {
-  els.boxes.innerHTML = '<div class="empty-state"><div class="icon"></div><p>Run your code to see each variable appear here as a labeled box.</p></div>';
+  els.boxes.innerHTML = `<div class="empty-state"><div class="icon"></div><p id="empty-state-text">${isKidsMode ? '🚀 Run your code to build your toy inventory boxes!' : 'Run your code to see each variable appear here as a labeled box.'}</p></div>`;
   els.terminal.innerHTML = '<div class="term-line is-muted">Waiting for you to press Run…</div>';
   els.currentLine.style.display = 'none';
   els.currentLine.classList.remove('err');
@@ -1762,7 +1919,7 @@ function setCurrentLine(idx, isErr) {
 
 function renderVars(env, order, created, updated, referenced) {
   if (order.length === 0) {
-    els.boxes.innerHTML = '<div class="empty-state"><div class="icon"></div><p>Run your code to see each variable appear here as a labeled box.</p></div>';
+    clearOutputs();
     return;
   }
   els.boxes.innerHTML = '';
@@ -1770,17 +1927,52 @@ function renderVars(env, order, created, updated, referenced) {
     const val = env[name];
     const color = TYPE_COLOR[val.t] || 'var(--grey)';
     const box = document.createElement('div');
-    box.className = 'vbox';
+    
+    if (isKidsMode) {
+      // Kid-friendly playful visual card
+      const kidInfo = KID_TYPE_INFO[val.t] || KID_TYPE_INFO.none;
+      box.className = 'vbox kid-card';
+      box.style.setProperty('--tag-color', kidInfo.color);
+      box.style.setProperty('--kid-shadow', kidInfo.shadow);
+
+      let valDisplayHtml = escapeHtml(pyDisplay(val));
+      if (val.t === 'str') {
+        valDisplayHtml = `<span class="kid-val is-str">“${escapeHtml(val.v)}”</span>`;
+      } else if (val.t === 'bool') {
+        valDisplayHtml = val.v 
+          ? `<span class="kid-val is-bool-true">✅ True</span>` 
+          : `<span class="kid-val is-bool-false">❌ False</span>`;
+      } else {
+        valDisplayHtml = `<span class="kid-val">${escapeHtml(pyStr(val))}</span>`;
+      }
+
+      box.setAttribute('data-name', `📦 ${name}`);
+      box.title = `Variable "${name}" is holding a ${kidInfo.name}`;
+      box.innerHTML = `
+        <div class="kid-inner">
+          <div class="kid-val-row">
+            <span class="kid-emoji">${kidInfo.emoji}</span>
+            ${valDisplayHtml}
+          </div>
+          <div class="kid-desc">${kidInfo.desc}</div>
+        </div>
+      `;
+    } else {
+      // Standard professional visual card
+      box.className = 'vbox';
+      box.setAttribute('data-name', name);
+      box.style.setProperty('--tag-color', color);
+      box.title = `${name} = ${pyDisplay(val)} — ${TYPE_DESC[val.t] || pyTypeName(val)}`;
+      box.innerHTML = `<div class="val">${escapeHtml(pyDisplay(val))}</div><div class="type">${pyTypeName(val)}</div>`;
+    }
+
     if (created.has(name)) box.classList.add('is-new');
     else if (updated.has(name)) box.classList.add('is-updated');
     else if (referenced && referenced.has(name)) {
       box.classList.add('is-referenced');
       box.style.setProperty('--tag-tint', TYPE_TINT[val.t] || TYPE_TINT.none);
     }
-    box.setAttribute('data-name', name);
-    box.style.setProperty('--tag-color', color);
-    box.title = `${name} = ${pyDisplay(val)} — ${TYPE_DESC[val.t] || pyTypeName(val)}`;
-    box.innerHTML = `<div class="val">${escapeHtml(pyDisplay(val))}</div><div class="type">${pyTypeName(val)}</div>`;
+
     els.boxes.appendChild(box);
   });
 }
@@ -1862,7 +2054,7 @@ async function runProgram() {
   }
 
   if (order.length === 0 && !stopped) {
-    els.boxes.innerHTML = '<div class="empty-state"><div class="icon"></div><p>No variables yet — try assigning something, like <code>x = 5</code>.</p></div>';
+    clearOutputs();
   }
 
   els.code.readOnly = false;
@@ -1919,6 +2111,16 @@ els.resetBtn.addEventListener('click', () => {
   }
 });
 
+// Kids Mode Toggle Listener
+els.kidsToggleBtn.addEventListener('click', () => {
+  isKidsMode = !isKidsMode;
+  localStorage.setItem(KIDS_MODE_KEY, isKidsMode);
+  updateKidsModeUI();
+  if (!state.running && els.code.value) {
+    runProgram();
+  }
+});
+
 els.code.addEventListener('input', () => {
   if (!isPeeking) {
     userCodeStore[state.lessonIndex] = els.code.value;
@@ -1949,6 +2151,7 @@ els.langSelect.addEventListener('change', (e) => {
   buildLessonPills();
 });
 
+updateKidsModeUI();
 buildLessonPills();
 loadLesson(0);
 </script>
