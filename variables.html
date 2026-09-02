@@ -79,7 +79,6 @@
     color:var(--muted-dark);
     font-size:14.5px;
     line-height:1.55;
-    /* max-width:65ch; */
   }
 
   .lessons{
@@ -949,31 +948,6 @@ function stripComment(line) {
   return out;
 }
 
-function evalFString(raw, env) {
-  let out = '', i = 0;
-  while (i < raw.length) {
-    const c = raw[i];
-    if (c === '{') {
-      if (raw[i + 1] === '{') { out += '{'; i += 2; continue; }
-      let depth = 1, j = i + 1;
-      while (j < raw.length && depth > 0) {
-        if (raw[j] === '{') depth++; else if (raw[j] === '}') depth--;
-        if (depth > 0) j++;
-      }
-      if (depth !== 0) throw pyErr('SyntaxError', "f-string: expecting '}'");
-      const exprSrc = raw.slice(i + 1, j);
-      const toks = tokenize(exprSrc);
-      const { val, pos } = parseExprTop(toks, 0, env);
-      if (pos !== toks.length) throw pyErr('SyntaxError', 'invalid syntax');
-      out += pyStr(val); i = j + 1; continue;
-    }
-    if (c === '}' && raw[i + 1] === '}') { out += '}'; i += 2; continue; }
-    if (c === '\\') { out += processEscapes(raw.slice(i, i + 2)); i += 2; continue; }
-    out += c; i++;
-  }
-  return mkStr(out);
-}
-
 function applyBinOp(op, l, r) {
   if (op === '+') {
     if (isNumeric(l) && isNumeric(r)) {
@@ -1065,9 +1039,6 @@ function callFunction(name, args) {
   switch (name) {
     case 'print': activeWrite(args.map(pyStr).join(' ')); return mkNone();
     case 'type': return mkStr(`<class '${pyTypeName(args[0])}'>`);
-    case 'len':
-      if (args[0].t !== 'str') throw pyErr('TypeError', `object of type '${pyTypeName(args[0])}' has no len()`);
-      return mkInt(args[0].v.length);
     case 'str': return mkStr(pyStr(args[0]));
     case 'int': return mkInt(toIntVal(args[0]));
     case 'float': return mkFloat(toFloatVal(args[0]));
@@ -1082,7 +1053,6 @@ function parseAtom(toks, pos, env) {
   if (!t) throw pyErr('SyntaxError', 'unexpected end of expression');
   if (t.type === 'NUM') return { val: t.isFloat ? mkFloat(t.value) : mkInt(t.value), pos: pos + 1 };
   if (t.type === 'STR') return { val: mkStr(t.value), pos: pos + 1 };
-  if (t.type === 'FSTR') return { val: evalFString(t.raw, env), pos: pos + 1 };
   if (t.type === 'LPAREN') {
     const inner = parseExprTop(toks, pos + 1, env);
     if (!toks[inner.pos] || toks[inner.pos].type !== 'RPAREN') throw pyErr('SyntaxError', 'invalid syntax (missing ")")');
@@ -1275,457 +1245,457 @@ function executeStatement(toks, env, order, created, updated, referenced, write)
 }
 
 // ============================================================
-// 30 Lessons with Embedded Indian Languages
+// Exactly 30 Lessons on Core Variables (Q28 & Q30 are hard swaps)
 // ============================================================
 const LESSONS = [
   {
     code: 'quantity = 5\nprice = 12.50',
     i18n: {
       en: { title: 'Declaring Numbers (int and float)', goal: '<strong>Task:</strong> Create two numeric variables.<br>1. Set <code>quantity = 5</code> (whole number / int).<br>2. Set <code>price = 12.50</code> (decimal / float).<br>Press <strong>Run</strong> to see their boxes appear.' },
-      hi: { title: 'संख्याएँ घोषित करना (int और float)', goal: '<strong>कार्य:</strong> दो संख्यात्मक वेरिएबल्स बनाएं।<br>1. <code>quantity = 5</code> (पूर्ण संख्या) सेट करें।<br>2. <code>price = 12.50</code> (दशमलव) सेट करें।<br>बॉक्स देखने के लिए <strong>Run</strong> दबाएं।' },
-      mr: { title: 'संख्या घोषित करणे (int आणि float)', goal: '<strong>कृती:</strong> दोन संख्या व्हेरिएबल्स तयार करा.<br>1. <code>quantity = 5</code> सेट करा.<br>2. <code>price = 12.50</code> सेट करा.<br>बॉक्स पाहण्यासाठी <strong>Run</strong> दाबा.' },
-      ta: { title: 'எண்களை உருவாக்குதல் (int மற்றும் float)', goal: '<strong>பணி:</strong> இரண்டு எண் மாறிகளை உருவாக்கவும்.<br>1. <code>quantity = 5</code> என அமைக்கவும்.<br>2. <code>price = 12.50</code> என அமைக்கவும்.<br>பெட்டிகளைக் காண <strong>Run</strong> ஐ அழுத்தவும்.' },
-      te: { title: 'సంఖ్యలను ప్రకటించడం (int మరియు float)', goal: '<strong>టాస్క్:</strong> రెండు సంఖ్యా వేరియబుల్స్‌ను సృష్టించండి.<br>1. <code>quantity = 5</code> సెట్ చేయండి.<br>2. <code>price = 12.50</code> సెట్ చేయండి.<br>పెట్టెలను చూడటానికి <strong>Run</strong> నొక్కండి.' },
-      bn: { title: 'সংখ্যা ঘোষণা করা (int এবং float)', goal: '<strong>কাজ:</strong> দুটি সংখ্যা ভেরিয়েবল তৈরি করুন।<br>1. <code>quantity = 5</code> লিখুন।<br>2. <code>price = 12.50</code> লিখুন।<br>বাক্স দেখতে <strong>Run</strong> চাপুন।' },
-      gu: { title: 'સંખ્યાઓ બનાવવી (int અને float)', goal: '<strong>કાર્ય:</strong> બે સંખ્યા વેરિયેબલ બનાવો.<br>1. <code>quantity = 5</code> સેટ કરો.<br>2. <code>price = 12.50</code> સેટ કરો.<br>બોક્સ જોવા <strong>Run</strong> દબાવો.' },
-      kn: { title: 'ಸಂಖ್ಯೆಗಳನ್ನು ರಚಿಸುವುದು (int ಮತ್ತು float)', goal: '<strong>ಕಾರ್ಯ:</strong> ಎರಡು ಸಂಖ್ಯೆ ವೇರಿಯೇಬಲ್‌ಗಳನ್ನು ರಚಿಸಿ.<br>1. <code>quantity = 5</code> ಹೊಂದಿಸಿ.<br>2. <code>price = 12.50</code> ಹೊಂದಿಸಿ.<br>ಪೆಟ್ಟಿಗೆಗಳನ್ನು ನೋಡಲು <strong>Run</strong> ಒತ್ತಿರಿ.' },
-      ml: { title: 'സംഖ്യകൾ പ്രഖ്യാപിക്കുക (int, float)', goal: '<strong>ടാസ്ക്:</strong> രണ്ട് സംഖ്യാ വേരിയബിളുകൾ ഉണ്ടാക്കുക.<br>1. <code>quantity = 5</code> നൽകുക.<br>2. <code>price = 12.50</code> നൽകുക.<br><strong>Run</strong> ക്ലിക്ക് ചെയ്യുക.' },
-      pa: { title: 'ਨੰਬਰ ਬਣਾਉਣਾ (int ਅਤੇ float)', goal: '<strong>ਕੰਮ:</strong> ਦੋ ਨੰਬਰ ਵੇਰੀਏਬਲ ਬਣਾਓ।<br>1. <code>quantity = 5</code> ਸੈੱਟ ਕਰੋ।<br>2. <code>price = 12.50</code> ਸੈੱਟ ਕਰੋ।<br><strong>Run</strong> ਦਬਾਓ।' }
-    }
-  },
-  {
-    code: 'first_name = "Alex"\nrole = "Coder"',
-    i18n: {
-      en: { title: 'Storing Text (Strings)', goal: '<strong>Task:</strong> Text in Python must be in quotes.<br>1. Set <code>first_name = "Alex"</code>.<br>2. Set <code>role = "Coder"</code>.<br>Press <strong>Run</strong> to see green string boxes.' },
-      hi: { title: 'टेक्स्ट स्टोर करना (Strings)', goal: '<strong>कार्य:</strong> पायथन में टेक्स्ट कोट्स ("") में होना चाहिए।<br>1. <code>first_name = "Alex"</code> सेट करें।<br>2. <code>role = "Coder"</code> सेट करें।<br><strong>Run</strong> दबाएं।' },
-      mr: { title: 'मजकूर साठवणे (Strings)', goal: '<strong>कृती:</strong> मजकूर नेहमी कोट्समध्ये लिहा.<br>1. <code>first_name = "Alex"</code> सेट करा.<br>2. <code>role = "Coder"</code> सेट करा.<br><strong>Run</strong> दाबा.' },
-      ta: { title: 'உரையைச் சேமித்தல் (Strings)', goal: '<strong>பணி:</strong> உரை மேற்கோள் குறிகளுக்குள் இருக்க வேண்டும்.<br>1. <code>first_name = "Alex"</code> அமைக்கவும்.<br>2. <code>role = "Coder"</code> அமைக்கவும்.' },
-      te: { title: 'టెక్స్ట్‌ను నిల్వ చేయడం (Strings)', goal: '<strong>టాస్క్:</strong> టెక్స్ట్ తప్పనిసరిగా కోట్స్‌లో ఉండాలి.<br>1. <code>first_name = "Alex"</code> సెట్ చేయండి.<br>2. <code>role = "Coder"</code> సెట్ చేయండి.' },
-      bn: { title: 'টেক্সট সংরক্ষণ করা (Strings)', goal: '<strong>কাজ:</strong> পাইথনে টেক্সট কোটেশন চিহ্নে রাখতে হয়।<br>1. <code>first_name = "Alex"</code> লিখুন।<br>2. <code>role = "Coder"</code> লিখুন।' },
-      gu: { title: 'ટેક્સ્ટ સંગ્રહ કરવો (Strings)', goal: '<strong>કાર્ય:</strong> લખાણ હંમેશા અવતરણ ચિહ્નોમાં હોવું જોઈએ.<br>1. <code>first_name = "Alex"</code> સેટ કરો.<br>2. <code>role = "Coder"</code> સેટ કરો.' },
-      kn: { title: 'ಪಠ್ಯವನ್ನು ಸಂಗ್ರಹಿಸುವುದು (Strings)', goal: '<strong>ಕಾರ್ಯ:</strong> ಪಠ್ಯವನ್ನು ಕೋಟ್ಸ್‌ನಲ್ಲಿ ಬರೆಯಬೇಕು.<br>1. <code>first_name = "Alex"</code> ಹೊಂದಿಸಿ.<br>2. <code>role = "Coder"</code> ಹೊಂದಿಸಿ.' },
-      ml: { title: 'ടെക്സ്റ്റ് സൂക്ഷിക്കുക (Strings)', goal: '<strong>ടാസ്ക്:</strong> ടെക്സ്റ്റ് കോട്സിനുള്ളിൽ എഴുതുക.<br>1. <code>first_name = "Alex"</code> നൽകുക.<br>2. <code>role = "Coder"</code> നൽകുക.' },
-      pa: { title: 'ਟੈਕਸਟ ਸਟੋਰ ਕਰਨਾ (Strings)', goal: '<strong>ਕੰਮ:</strong> ਟੈਕਸਟ ਨੂੰ ਕੋਟਸ ਵਿੱਚ ਰੱਖੋ।<br>1. <code>first_name = "Alex"</code> ਸੈੱਟ ਕਰੋ।<br>2. <code>role = "Coder"</code> ਸੈੱਟ ਕਰੋ।' }
+      hi: { title: 'संख्याएँ घोषित करना', goal: '<strong>कार्य:</strong> <code>quantity = 5</code> और <code>price = 12.50</code> सेट करें।' },
+      mr: { title: 'संख्या घोषित करणे', goal: '<strong>कृती:</strong> <code>quantity = 5</code> आणि <code>price = 12.50</code> सेट करा.' },
+      ta: { title: 'எண்களை உருவாக்குதல்', goal: '<strong>பணி:</strong> <code>quantity = 5</code> மற்றும் <code>price = 12.50</code> அமைக்கவும்.' },
+      te: { title: 'సంఖ్యలను ప్రకటించడం', goal: '<strong>టాస్క్:</strong> <code>quantity = 5</code> మరియు <code>price = 12.50</code> సెట్ చేయండి.' },
+      bn: { title: 'সংখ্যা ঘোষণা করা', goal: '<strong>কাজ:</strong> <code>quantity = 5</code> এবং <code>price = 12.50</code> লিখুন।' },
+      gu: { title: 'સંખ્યાઓ બનાવવી', goal: '<strong>કાર્ય:</strong> <code>quantity = 5</code> અને <code>price = 12.50</code> સેટ કરો.' },
+      kn: { title: 'ಸಂಖ್ಯೆಗಳನ್ನು ರಚಿಸುವುದು', goal: '<strong>ಕಾರ್ಯ:</strong> <code>quantity = 5</code> ಮತ್ತು <code>price = 12.50</code> ಹೊಂದಿಸಿ.' },
+      ml: { title: 'സംഖ്യകൾ പ്രഖ്യാപിക്കുക', goal: '<strong>ടാസ്ക്:</strong> <code>quantity = 5</code> ഉം <code>price = 12.50</code> ഉം നൽകുക.' },
+      pa: { title: 'ਨੰਬਰ ਬਣਾਉਣਾ', goal: '<strong>ਕੰਮ:</strong> <code>quantity = 5</code> ਅਤੇ <code>price = 12.50</code> ਸੈੱਟ ਕਰੋ।' }
     }
   },
   {
     code: 'is_active = True\nhas_membership = False',
     i18n: {
       en: { title: 'Boolean Flags (True and False)', goal: '<strong>Task:</strong> Booleans store binary states.<br>1. Set <code>is_active = True</code>.<br>2. Set <code>has_membership = False</code>.<br>(Note: Capitalize True and False).' },
-      hi: { title: 'बूलियन फ्लैग्स (True और False)', goal: '<strong>कार्य:</strong> बूलियन हां/ना मान संग्रहीत करते हैं।<br>1. <code>is_active = True</code> सेट करें।<br>2. <code>has_membership = False</code> सेट करें।' },
-      mr: { title: 'बूलियन फ्लॅग्स (True आणि False)', goal: '<strong>कृती:</strong> बूलियन मूल्ये सत्य किंवा असत्य असतात.<br>1. <code>is_active = True</code> सेट करा.<br>2. <code>has_membership = False</code> सेट करा.' },
-      ta: { title: 'பூலியன் குறிகள் (True மற்றும் False)', goal: '<strong>பணி:</strong> ஆம்/இல்லை நிலைகளைச் சேமிக்கவும்.<br>1. <code>is_active = True</code> அமைக்கவும்.<br>2. <code>has_membership = False</code> அமைக்கவும்.' },
-      te: { title: 'బూలియన్ ఫ్లాగ్స్ (True మరియు False)', goal: '<strong>టాస్క్:</strong> అవును/కాదు విలువలను నిల్వ చేయండి.<br>1. <code>is_active = True</code> సెట్ చేయండి.<br>2. <code>has_membership = False</code> సెట్ చేయండి.' },
-      bn: { title: 'বুলিয়ান ফ্ল্যাগ (True এবং False)', goal: '<strong>কাজ:</strong> সত্য বা মিথ্যা মান সংরক্ষণ করুন।<br>1. <code>is_active = True</code> লিখুন।<br>2. <code>has_membership = False</code> লিখুন।' },
-      gu: { title: 'બુલિયન ફ્લેગ્સ (True અને False)', goal: '<strong>કાર્ય:</strong> સાચું કે ખોટું મૂલ્ય સેટ કરો.<br>1. <code>is_active = True</code> સેટ કરો.<br>2. <code>has_membership = False</code> સેટ કરો.' },
-      kn: { title: 'ಬೂಲಿಯನ್ ಮೌಲ್ಯಗಳು (True ಮತ್ತು False)', goal: '<strong>ಕಾರ್ಯ:</strong> ಸರಿ ಅಥವಾ ತಪ್ಪು ಮೌಲ್ಯ ಹೊಂದಿಸಿ.<br>1. <code>is_active = True</code> ಹೊಂದಿಸಿ.<br>2. <code>has_membership = False</code> ಹೊಂದಿಸಿ.' },
-      ml: { title: 'ബൂളിയൻ ഫ്ലാഗുകൾ (True, False)', goal: '<strong>ടാസ്ക്:</strong> ശരി അല്ലെങ്കിൽ തെറ്റ് നിലകൾ രേഖപ്പെടുത്തുക.<br>1. <code>is_active = True</code> നൽകുക.<br>2. <code>has_membership = False</code> നൽകുക.' },
-      pa: { title: 'ਬੂਲੀਅਨ ਫਲੈਗ (True ਅਤੇ False)', goal: '<strong>ਕੰਮ:</strong> ਸਹੀ ਜਾਂ ਗਲਤ ਮੁੱਲ ਸੈੱਟ ਕਰੋ।<br>1. <code>is_active = True</code> ਸੈੱਟ ਕਰੋ।<br>2. <code>has_membership = False</code> ਸੈੱਟ ਕਰੋ।' }
+      hi: { title: 'बूलियन फ्लैग्स (True और False)', goal: '<strong>कार्य:</strong> <code>is_active = True</code> और <code>has_membership = False</code> सेट करें।' },
+      mr: { title: 'बूलियन फ्लॅग्स (True आणि False)', goal: '<strong>कृती:</strong> <code>is_active = True</code> आणि <code>has_membership = False</code> सेट करा.' },
+      ta: { title: 'பூலியன் குறிகள் (True மற்றும் False)', goal: '<strong>பணி:</strong> <code>is_active = True</code> மற்றும் <code>has_membership = False</code> அமைக்கவும்.' },
+      te: { title: 'బూలియన్ ఫ్లాగ్స్ (True మరియు False)', goal: '<strong>టాస్క్:</strong> <code>is_active = True</code> మరియు <code>has_membership = False</code> సెట్ చేయండి.' },
+      bn: { title: 'বুলিয়ান ফ্ল্যাগ (True এবং False)', goal: '<strong>কাজ:</strong> <code>is_active = True</code> এবং <code>has_membership = False</code> লিখুন।' },
+      gu: { title: 'બુલિયન ફ્લેગ્સ (True અને False)', goal: '<strong>કાર્ય:</strong> <code>is_active = True</code> અને <code>has_membership = False</code> સેટ કરો.' },
+      kn: { title: 'ಬೂಲಿಯನ್ ಮೌಲ್ಯಗಳು (True ಮತ್ತು False)', goal: '<strong>ಕಾರ್ಯ:</strong> <code>is_active = True</code> ಮತ್ತು <code>has_membership = False</code> ಹೊಂದಿಸಿ.' },
+      ml: { title: 'ബൂളിയൻ ഫ്ലാഗുകൾ (True, False)', goal: '<strong>ടാസ്ക്:</strong> <code>is_active = True</code> ഉം <code>has_membership = False</code> ഉം നൽകുക.' },
+      pa: { title: 'ਬੂਲੀਅਨ ਫਲੈਗ (True ਅਤੇ False)', goal: '<strong>ਕੰਮ:</strong> <code>is_active = True</code> ਅਤੇ <code>has_membership = False</code> ਸੈੱਟ ਕਰੋ।' }
     }
   },
   {
     code: 'speed = 45\nis_racing = True\nprint(type(speed))\nprint(type(is_racing))',
     i18n: {
       en: { title: 'Checking Types with type()', goal: '<strong>Task:</strong> Inspect data types.<br>1. Create <code>speed = 45</code> and <code>is_racing = True</code>.<br>2. Inspect with <code>print(type(speed))</code> and <code>print(type(is_racing))</code>.' },
-      hi: { title: 'type() से डेटा प्रकार जांचना', goal: '<strong>कार्य:</strong> डेटा प्रकार का निरीक्षण करें।<br>1. <code>speed = 45</code> और <code>is_racing = True</code> बनाएं।<br>2. <code>print(type(...))</code> से प्रकार प्रिंट करें।' },
-      mr: { title: 'type() ने प्रकार तपासणे', goal: '<strong>कृती:</strong> व्हेरिएबलचा डेटा प्रकार तपासा.<br>1. <code>speed = 45</code> आणि <code>is_racing = True</code> तयार करा.<br>2. <code>print(type(...))</code> चा वापर करा.' },
-      ta: { title: 'type() மூலம் தரவு வகையை அறிதல்', goal: '<strong>பணி:</strong> தரவு வகைகளைச் சரிபார்க்கவும்.<br>1. <code>speed = 45</code> மற்றும் <code>is_racing = True</code> உருவாக்கவும்.<br>2. <code>print(type(...))</code> ஐப் பயன்படுத்தவும்.' },
-      te: { title: 'type() తో రకాలను తనిఖీ చేయడం', goal: '<strong>టాస్క్:</strong> డేటా రకాలను తనిఖీ చేయండి.<br>1. వేరియబుల్స్ సృష్టించండి.<br>2. <code>print(type(...))</code> ఉపయోగించండి.' },
-      bn: { title: 'type() দিয়ে ডেটা টাইপ দেখা', goal: '<strong>কাজ:</strong> টাইপ পরীক্ষা করুন।<br>1. <code>speed = 45</code> ও <code>is_racing = True</code> লিখুন।<br>2. <code>print(type(...))</code> দিয়ে প্রিন্ট করুন।' },
-      gu: { title: 'type() વડે પ્રકાર તપાસવો', goal: '<strong>કાર્ય:</strong> ડેટા પ્રકાર તપાસો.<br>1. વેરિયેબલ્સ બનાવો.<br>2. <code>print(type(...))</code> વાપરો.' },
-      kn: { title: 'type() ಮೂಲಕ ಪ್ರಕಾರ ಪರೀಕ್ಷಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ಡೇಟಾ ಪ್ರಕಾರಗಳನ್ನು ತಿಳಿಯಿರಿ.<br>1. ವೇರಿಯೇಬಲ್‌ಗಳನ್ನು ರಚಿಸಿ.<br>2. <code>print(type(...))</code> ಬಳಸಿ.' },
-      ml: { title: 'type() ഉപയോഗിച്ച് തരം പരിശോധിക്കുക', goal: '<strong>ടാസ്ക്:</strong> ഡാറ്റാ ടൈപ്പുകൾ പരിശോധിക്കുക.<br>1. വേരിയബിളുകൾ ഉണ്ടാക്കുക.<br>2. <code>print(type(...))</code> ഉപയോഗിക്കുക.' },
-      pa: { title: 'type() ਨਾਲ ਡਾਟਾ ਕਿਸਮ ਜਾਣੋ', goal: '<strong>ਕੰਮ:</strong> ਡਾਟਾ ਕਿਸਮ ਦੀ ਜਾਂਚ ਕਰੋ।<br>1. ਵੇਰੀਏਬਲ ਬਣਾਓ।<br>2. <code>print(type(...))</code> ਵਰਤੋ।' }
+      hi: { title: 'type() से डेटा प्रकार जांचना', goal: '<strong>कार्य:</strong> वेरिएबल्स बनाएं और <code>print(type(...))</code> से प्रकार प्रिंट करें।' },
+      mr: { title: 'type() ने प्रकार तपासणे', goal: '<strong>कृती:</strong> व्हेरिएबल्स तयार करा आणि <code>print(type(...))</code> चा वापर करा.' },
+      ta: { title: 'type() மூலம் தரவு வகையை அறிதல்', goal: '<strong>பணி:</strong> மாறிகளை உருவாக்கி <code>print(type(...))</code> ஐப் பயன்படுத்தவும்.' },
+      te: { title: 'type() తో రకాలను తనిఖీ చేయడం', goal: '<strong>టాస్క్:</strong> వేరియబుల్స్ సృష్టించి, <code>print(type(...))</code> ఉపయోగించండి.' },
+      bn: { title: 'type() দিয়ে ডেটা টাইপ দেখা', goal: '<strong>কাজ:</strong> ভেরিয়েবল তৈরি করে <code>print(type(...))</code> দিয়ে প্রিন্ট করুন।' },
+      gu: { title: 'type() વડે પ્રકાર તપાસવો', goal: '<strong>કાર્ય:</strong> વેરિયેબલ્સ બનાવો અને <code>print(type(...))</code> વાપરો.' },
+      kn: { title: 'type() ಮೂಲಕ ಪ್ರಕಾರ ಪರೀಕ್ಷಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ವೇರಿಯೇಬಲ್‌ಗಳನ್ನು ರಚಿಸಿ ಮತ್ತು <code>print(type(...))</code> ಬಳಸಿ.' },
+      ml: { title: 'type() ഉപയോഗിച്ച് തരം പരിശോധിക്കുക', goal: '<strong>ടാസ്ക്:</strong> വേരിയബിളുകൾ ഉണ്ടാക്കി <code>print(type(...))</code> ഉപയോഗിക്കുക.' },
+      pa: { title: 'type() ਨਾਲ ਡਾਟਾ ਕਿਸਮ ਜਾਣੋ', goal: '<strong>ਕੰਮ:</strong> ਵੇਰੀਏਬਲ ਬਣਾਓ ਅਤੇ <code>print(type(...))</code> ਵਰਤੋ।' }
     }
   },
   {
     code: 'energy = 100\nprint(energy)\nenergy = 75\nprint(energy)',
     i18n: {
       en: { title: 'Overwriting Existing Variables', goal: '<strong>Task:</strong> Update a stored value.<br>1. Set <code>energy = 100</code> and print it.<br>2. Overwrite <code>energy = 75</code> and print it again.' },
-      hi: { title: 'मौजूदा वेरिएबल का मान बदलना', goal: '<strong>कार्य:</strong> मान अपडेट करें।<br>1. <code>energy = 100</code> सेट करें और प्रिंट करें।<br>2. <code>energy = 75</code> असाइन करें और दोबारा प्रिंट करें।' },
-      mr: { title: 'व्हेरिएबलचे मूल्य बदलणे', goal: '<strong>कृती:</strong> साठवलेले मूल्य अपडेट करा.<br>1. <code>energy = 100</code> सेट करून प्रिंट करा.<br>2. <code>energy = 75</code> करून पुन्हा प्रिंट करा.' },
-      ta: { title: 'மாறியின் மதிப்பை மாற்றுதல்', goal: '<strong>பணி:</strong> புதிய மதிப்பை ஒதுக்கவும்.<br>1. <code>energy = 100</code> அமைத்து அச்சிடவும்.<br>2. <code>energy = 75</code> என மாற்றி மீண்டும் அச்சிடவும்.' },
-      te: { title: 'వేరియబుల్ విలువను మార్చడం', goal: '<strong>టాస్క్:</strong> నిల్వ చేసిన విలువను అప్‌డేట్ చేయండి.<br>1. <code>energy = 100</code> ప్రింట్ చేయండి.<br>2. <code>energy = 75</code> గా మార్చి ప్రింట్ చేయండి.' },
-      bn: { title: 'ভেরিয়েবলের মান পরিবর্তন', goal: '<strong>কাজ:</strong> নতুন মান সেট করুন।<br>1. <code>energy = 100</code> প্রিন্ট করুন।<br>2. <code>energy = 75</code> করে আবার প্রিন্ট করুন।' },
-      gu: { title: 'વેરિયેબલની કિંમત બદલવી', goal: '<strong>કાર્ય:</strong> કિંમત અપડેટ કરો.<br>1. <code>energy = 100</code> પ્રિન્ટ કરો.<br>2. <code>energy = 75</code> સેટ કરી ફરી પ્રિન્ટ કરો.' },
-      kn: { title: 'ಮೌಲ್ಯವನ್ನು ನವೀಕರಿಸುವುದು', goal: '<strong>ಕಾರ್ಯ:</strong> ಹೊಸ ಮೌಲ್ಯವನ್ನು ನಿಗದಿಪಡಿಸಿ.<br>1. <code>energy = 100</code> ಪ್ರಿಂಟ್ ಮಾಡಿ.<br>2. <code>energy = 75</code> ಮಾಡಿ ಮತ್ತೆ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'വേരിയബിൾ മൂല്യം മാറ്റുക', goal: '<strong>ടാസ്ക്:</strong> പുതിയ മൂല്യം നൽകുക.<br>1. <code>energy = 100</code> പ്രിന്റ് ചെയ്യുക.<br>2. <code>energy = 75</code> ആക്കി വീണ്ടും പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਵੇਰੀਏਬਲ ਦਾ ਮੁੱਲ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> ਨਵਾਂ ਮੁੱਲ ਸੈੱਟ ਕਰੋ।<br>1. <code>energy = 100</code> ਪ੍ਰਿੰਟ ਕਰੋ।<br>2. <code>energy = 75</code> ਕਰਕੇ ਦੁਬਾਰਾ ਪ੍ਰਿੰਟ ਕਰੋ।' }
-    }
-  },
-  {
-    code: 'base_salary = 3000\nbonus = 450\ntotal_pay = base_salary + bonus\nprint(total_pay)',
-    i18n: {
-      en: { title: 'Basic Math with Variables', goal: '<strong>Task:</strong> Add two variables.<br>1. Set <code>base_salary = 3000</code> and <code>bonus = 450</code>.<br>2. Compute <code>total_pay = base_salary + bonus</code>.<br>3. Print <code>total_pay</code>.' },
-      hi: { title: 'वेरिएबल्स के साथ बुनियादी गणित', goal: '<strong>कार्य:</strong> वेरिएबल्स को जोड़ें।<br>1. <code>base_salary = 3000</code> और <code>bonus = 450</code> सेट करें।<br>2. <code>total_pay = base_salary + bonus</code> निकालें और प्रिंट करें।' },
-      mr: { title: 'व्हेरिएबल्ससह बेरीज करणे', goal: '<strong>कृती:</strong> गणितीय प्रक्रिया करा.<br>1. वेतन व बोनस सेट करा.<br>2. <code>total_pay</code> काढून प्रिंट करा.' },
-      ta: { title: 'மாறிகளுடன் எளிய கணிதம்', goal: '<strong>பணி:</strong> மாறிகளைக் கூட்டவும்.<br>1. <code>base_salary</code> மற்றும் <code>bonus</code> அமைக்கவும்.<br>2. <code>total_pay</code> கணக்கிட்டு அச்சிடவும்.' },
-      te: { title: 'వేరియబుల్స్‌తో కూడికలు', goal: '<strong>టాస్క్:</strong> రెండు వేరియబుల్స్ కూడండి.<br>1. జీతం, బోనస్ విలువలు ఇవ్వండి.<br>2. మొత్తం లెక్కించి ప్రింట్ చేయండి.' },
-      bn: { title: 'ভেরিয়েবল দিয়ে যোগফল', goal: '<strong>কাজ:</strong> গাণিতিক হিসাব করুন।<br>1. বেতন ও বোনাস নির্ধারণ করুন।<br>2. <code>total_pay</code> হিসাব করে প্রিন্ট করুন।' },
-      gu: { title: 'વેરિયેબલ્સ સાથે ગણતરી', goal: '<strong>કાર્ય:</strong> બે વેરિયેબલ્સનો સરવાળો કરો.<br>1. પગાર અને બોનસ સેટ કરો.<br>2. <code>total_pay</code> શોધી પ્રિન્ટ કરો.' },
-      kn: { title: 'ವೇರಿಯೇಬಲ್‌ಗಳೊಂದಿಗೆ ಗಣಿತ', goal: '<strong>ಕಾರ್ಯ:</strong> ಎರಡು ವೇರಿಯೇಬಲ್‌ಗಳನ್ನು ಕೂಡಿಸಿ.<br>1. ಸಂಬಳ ಮತ್ತು ಬೋನಸ್ ನಮೂದಿಸಿ.<br>2. ಒಟ್ಟು ಮೊತ್ತ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'വേരിയബിളുകൾ കൂട്ടിച്ചേർക്കുക', goal: '<strong>ടാസ്ക്:</strong> അടിസ്ഥാന കണക്കുകൂട്ടൽ നടത്തുക.<br>1. സാലറിയും ബോണസും നൽകുക.<br>2. ആകെ തുക പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਵੇਰੀਏਬਲਾਂ ਨਾਲ ਗਣਿਤ', goal: '<strong>ਕੰਮ:</strong> ਦੋ ਵੇਰੀਏਬਲਾਂ ਨੂੰ ਜੋੜੋ।<br>1. ਤਨਖਾਹ ਅਤੇ ਬੋਨਸ ਸੈੱਟ ਕਰੋ।<br>2. ਕੁੱਲ ਰਕਮ ਪ੍ਰਿੰਟ ਕਰੋ।' }
-    }
-  },
-  {
-    code: 'score = 50\nscore += 25\nscore -= 10\nprint(score)',
-    i18n: {
-      en: { title: 'Shortcut Assignment (+= and -=)', goal: '<strong>Task:</strong> Modify a variable in place.<br>1. Set <code>score = 50</code>.<br>2. Add 25 using <code>score += 25</code>.<br>3. Subtract 10 using <code>score -= 10</code> and print.' },
-      hi: { title: 'शॉर्टकट असाइनमेंट (+= और -=)', goal: '<strong>कार्य:</strong> शॉर्टकट से मान बदलें।<br>1. <code>score = 50</code> लें।<br>2. <code>score += 25</code> और <code>score -= 10</code> करके प्रिंट करें।' },
-      mr: { title: 'शॉर्टकट असाइनमेंट (+= आणि -=)', goal: '<strong>कृती:</strong> थेट मूल्य बदला.<br>1. <code>score = 50</code> घ्या.<br>2. <code>score += 25</code> आणि <code>score -= 10</code> करून प्रिंट करा.' },
-      ta: { title: 'குறுக்குவழி ஒதுக்கீடு (+= மற்றும் -=)', goal: '<strong>பணி:</strong> மதிப்பை நேரடியாக மாற்றவும்.<br>1. <code>score = 50</code> அமைக்கவும்.<br>2. <code>+= 25</code> மற்றும் <code>-= 10</code> செய்து அச்சிடவும்.' },
-      te: { title: 'షార్ట్‌కట్ అసైన్‌మెంట్ (+= మరియు -=)', goal: '<strong>టాస్క్:</strong> సంక్షిప్త పద్ధతిలో మార్చండి.<br>1. <code>score = 50</code> ఇవ్వండి.<br>2. 25 కలిపి, 10 తీసివేసి ప్రింట్ చేయండి.' },
-      bn: { title: 'সংক্ষিপ্ত অ্যাসাইনমেন্ট (+= ও -=)', goal: '<strong>কাজ:</strong> সরাসরি মান পরিবর্তন করুন।<br>1. <code>score = 50</code> নিন।<br>2. <code>score += 25</code> এবং <code>score -= 10</code> করে প্রিন্ট করুন।' },
-      gu: { title: 'શોર્ટકી અસાઇનમેન્ટ (+= અને -=)', goal: '<strong>કાર્ય:</strong> કિંમતમાં સીધો ફેરફાર કરો.<br>1. <code>score = 50</code> લો.<br>2. 25 ઉમેરો અને 10 બાદ કરી પ્રિન્ટ કરો.' },
-      kn: { title: 'ಶಾರ್ಟ್‌ಕಟ್ ನಿಯೋಜನೆ (+= ಮತ್ತು -=)', goal: '<strong>ಕಾರ್ಯ:</strong> ಶಾರ್ಟ್‌ಕಟ್ ಬಳಸಿ ಮೌಲ್ಯ ಬದಲಿಸಿ.<br>1. <code>score = 50</code> ಹೊಂದಿಸಿ.<br>2. 25 ಸೇರಿಸಿ ಮತ್ತು 10 ಕಳೆದು ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'ഷോർട്ട്കട്ട് അസൈൻമെന്റ് (+=, -=)', goal: '<strong>ടാസ്ക്:</strong> മൂല്യം നേരിട്ട് മാറ്റുക.<br>1. <code>score = 50</code> നൽകുക.<br>2. <code>score += 25</code>, <code>score -= 10</code> ചെയ്ത് പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਸ਼ਾਰਟਕੱਟ ਅਸਾਈਨਮੈਂਟ (+= ਅਤੇ -=)', goal: '<strong>ਕੰਮ:</strong> ਸਿੱਧਾ ਮੁੱਲ ਬਦਲੋ।<br>1. <code>score = 50</code> ਲਓ।<br>2. <code>score += 25</code> ਅਤੇ <code>score -= 10</code> ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      hi: { title: 'मौजूदा वेरिएबल का मान बदलना', goal: '<strong>कार्य:</strong> <code>energy = 100</code> सेट करें, प्रिंट करें। फिर <code>energy = 75</code> करके प्रिंट करें।' },
+      mr: { title: 'व्हेरिएबलचे मूल्य बदलणे', goal: '<strong>कृती:</strong> <code>energy = 100</code> सेट करा, प्रिंट करा. मग <code>energy = 75</code> करून प्रिंट करा.' },
+      ta: { title: 'மாறியின் மதிப்பை மாற்றுதல்', goal: '<strong>பணி:</strong> <code>energy = 100</code> அமைத்து அச்சிடவும். பின் <code>energy = 75</code> என மாற்றி அச்சிடவும்.' },
+      te: { title: 'వేరియబుల్ విలువను మార్చడం', goal: '<strong>టాస్క్:</strong> <code>energy = 100</code> ప్రింట్ చేయండి. <code>energy = 75</code> గా మార్చి ప్రింట్ చేయండి.' },
+      bn: { title: 'ভেরিয়েবলের মান পরিবর্তন', goal: '<strong>কাজ:</strong> <code>energy = 100</code> প্রিন্ট করুন। <code>energy = 75</code> করে আবার প্রিন্ট করুন।' },
+      gu: { title: 'વેરિયેબલની કિંમત બદલવી', goal: '<strong>કાર્ય:</strong> <code>energy = 100</code> પ્રિન્ટ કરો. <code>energy = 75</code> સેટ કરી ફરી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಮೌಲ್ಯವನ್ನು ನವೀಕರಿಸುವುದು', goal: '<strong>ಕಾರ್ಯ:</strong> <code>energy = 100</code> ಪ್ರಿಂಟ್ ಮಾಡಿ. <code>energy = 75</code> ಮಾಡಿ ಮತ್ತೆ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'വേരിയബിൾ മൂല്യം മാറ്റുക', goal: '<strong>ടാസ്ക്:</strong> <code>energy = 100</code> പ്രിന്റ് ചെയ്യുക. <code>energy = 75</code> ആക്കി വീണ്ടും പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਵੇਰੀਏਬਲ ਦਾ ਮੁੱਲ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> <code>energy = 100</code> ਪ੍ਰਿੰਟ ਕਰੋ। <code>energy = 75</code> ਕਰਕੇ ਦੁਬਾਰਾ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
     code: 'x, y, z = 10, 20, 30\nprint(x, y, z)',
     i18n: {
       en: { title: 'Multiple Assignment on One Line', goal: '<strong>Task:</strong> Assign multiple variables at once.<br>1. Write <code>x, y, z = 10, 20, 30</code>.<br>2. Print all three with <code>print(x, y, z)</code>.' },
-      hi: { title: 'एक ही लाइन में कई वेरिएबल्स', goal: '<strong>कार्य:</strong> एक साथ कई वेरिएबल्स असाइन करें।<br>1. <code>x, y, z = 10, 20, 30</code> लिखें।<br>2. <code>print(x, y, z)</code> से प्रिंट करें।' },
-      mr: { title: 'एकाच ओळीत अनेक व्हेरिएबल्स', goal: '<strong>कृती:</strong> एकाच वेळी असाइन करा.<br>1. <code>x, y, z = 10, 20, 30</code> लिहा.<br>2. <code>print(x, y, z)</code> करा.' },
-      ta: { title: 'ஒரே வரியில் பல மாறிகள்', goal: '<strong>பணி:</strong> ஒரே வரியில் மதிப்புகளை ஒதுக்கவும்.<br>1. <code>x, y, z = 10, 20, 30</code> என எழுதவும்.<br>2. அச்சிடவும்.' },
-      te: { title: 'ఒకే లైన్‌లో బహుళ వేరియబుల్స్', goal: '<strong>టాస్క్:</strong> ఒకేసారి వేరియబుల్స్ సెట్ చేయండి.<br>1. <code>x, y, z = 10, 20, 30</code> రాయండి.<br>2. ప్రింట్ చేయండి.' },
-      bn: { title: 'এক লাইনে একাধিক ভেরিয়েবল', goal: '<strong>কাজ:</strong> একসাথে মান বরাদ্দ করুন।<br>1. <code>x, y, z = 10, 20, 30</code> লিখুন।<br>2. প্রিন্ট করুন।' },
-      gu: { title: 'એક જ લાઈનમાં બહુવિધ વેરિયેબલ્સ', goal: '<strong>કાર્ય:</strong> એકસાથે કિંમતો અસાઇન કરો.<br>1. <code>x, y, z = 10, 20, 30</code> લખો.<br>2. પ્રિન્ટ કરો.' },
-      kn: { title: 'ಒಂದೇ ಸಾಲಿನಲ್ಲಿ ಹಲವು ವೇರಿಯೇಬಲ್‌ಗಳು', goal: '<strong>ಕಾರ್ಯ:</strong> ಒಟ್ಟಿಗೆ ಮೌಲ್ಯಗಳನ್ನು ನೀಡಿ.<br>1. <code>x, y, z = 10, 20, 30</code> ಬರೆಯಿರಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'ഒറ്റ വരിയിൽ ഒന്നിലധികം വേരിയബിളുകൾ', goal: '<strong>ടാസ്ക്:</strong> ഒരുമിച്ച് വിലകൾ നൽകുക.<br>1. <code>x, y, z = 10, 20, 30</code> എഴുതുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਇੱਕੋ ਲਾਈਨ ਵਿੱਚ ਕਈ ਵੇਰੀਏਬਲ', goal: '<strong>ਕੰਮ:</strong> ਇਕੱਠੇ ਮੁੱਲ ਦਿਓ।<br>1. <code>x, y, z = 10, 20, 30</code> ਲਿਖੋ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      hi: { title: 'एक ही लाइन में कई वेरिएबल्स', goal: '<strong>कार्य:</strong> <code>x, y, z = 10, 20, 30</code> लिखें और <code>print(x, y, z)</code> करें।' },
+      mr: { title: 'एकाच ओळीत अनेक व्हेरिएबल्स', goal: '<strong>कृती:</strong> <code>x, y, z = 10, 20, 30</code> लिहा आणि प्रिंट करा.' },
+      ta: { title: 'ஒரே வரியில் பல மாறிகள்', goal: '<strong>பணி:</strong> <code>x, y, z = 10, 20, 30</code> என எழுதி அச்சிடவும்.' },
+      te: { title: 'ఒకే లైన్‌లో బహుళ వేరియబుల్స్', goal: '<strong>టాస్క్:</strong> <code>x, y, z = 10, 20, 30</code> రాసి ప్రింట్ చేయండి.' },
+      bn: { title: 'এক লাইনে একাধিক ভেরিয়েবল', goal: '<strong>কাজ:</strong> <code>x, y, z = 10, 20, 30</code> লিখে প্রিন্ট করুন।' },
+      gu: { title: 'એક જ લાઈનમાં બહુવિધ વેરિયેબલ્સ', goal: '<strong>કાર્ય:</strong> <code>x, y, z = 10, 20, 30</code> લખી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಒಂದೇ ಸಾಲಿನಲ್ಲಿ ಹಲವು ವೇರಿಯೇಬಲ್‌ಗಳು', goal: '<strong>ಕಾರ್ಯ:</strong> <code>x, y, z = 10, 20, 30</code> ಬರೆದು ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ഒറ്റ വരിയിൽ ഒന്നിലധികം വേരിയബിളുകൾ', goal: '<strong>ടാസ്ക്:</strong> <code>x, y, z = 10, 20, 30</code> എഴുതി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਇੱਕੋ ਲਾਈਨ ਵਿੱਚ ਕਈ ਵੇਰੀਏਬਲ', goal: '<strong>ਕੰਮ:</strong> <code>x, y, z = 10, 20, 30</code> ਲਿਖ ਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'left = "red"\nright = "blue"\nleft, right = right, left\nprint(left, right)',
+    code: 'html_tag = "video"\nprint(html_tag)',
     i18n: {
-      en: { title: 'Swapping Values', goal: '<strong>Task:</strong> Swap two variables.<br>1. Set <code>left = "red"</code> and <code>right = "blue"</code>.<br>2. Swap them: <code>left, right = right, left</code>.<br>3. Print.' },
-      hi: { title: 'मानों की अदला-बदली (Swapping)', goal: '<strong>कार्य:</strong> दो वेरिएबल्स के मान बदलें।<br>1. <code>left = "red"</code> और <code>right = "blue"</code> सेट करें।<br>2. <code>left, right = right, left</code> लिखकर स्वैप करें और प्रिंट करें।' },
-      mr: { title: 'मूल्यांची अदलाबदल (Swapping)', goal: '<strong>कृती:</strong> मूल्यांची अदलाबदल करा.<br>1. <code>left = "red"</code> आणि <code>right = "blue"</code> सेट करा.<br>2. <code>left, right = right, left</code> करा.' },
-      ta: { title: 'மதிப்புகளை மாற்றுதல் (Swapping)', goal: '<strong>பணி:</strong> இரண்டு மாறிகளை மாற்றவும்.<br>1. <code>left = "red"</code> மற்றும் <code>right = "blue"</code> அமைக்கவும்.<br>2. இடமாற்றம் செய்து அச்சிடவும்.' },
-      te: { title: 'విలువల మార్పిడి (Swapping)', goal: '<strong>టాస్క్:</strong> రెండు విలువల స్థానాలు మార్చండి.<br>1. రంగులను సెట్ చేయండి.<br>2. మార్పిడి చేసి ప్రింట్ చేయండి.' },
-      bn: { title: 'মান অদলবদল (Swapping)', goal: '<strong>কাজ:</strong> দুটি ভেরিয়েবলের মান পরিবর্তন করুন।<br>1. মান নির্ধারণ করুন।<br>2. সোয়াপ করে প্রিন্ট করুন।' },
-      gu: { title: 'કિંમતોની અદલાબદલી (Swapping)', goal: '<strong>કાર્ય:</strong> બે કિંમતો અદલાબદલ કરો.<br>1. <code>left, right</code> સેટ કરો.<br>2. સ્વેપ કરી પ્રિન્ટ કરો.' },
-      kn: { title: 'ಮೌಲ್ಯಗಳ ಅದಲು-ಬದಲು (Swapping)', goal: '<strong>ಕಾರ್ಯ:</strong> ಎರಡು ಮೌಲ್ಯಗಳನ್ನು ಬದಲಿಸಿ.<br>1. ಬಣ್ಣಗಳನ್ನು ನಮೂದಿಸಿ.<br>2. ಅದಲು-ಬದಲು ಮಾಡಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'മൂല്യങ്ങൾ പരസ്പരം മാറ്റുക', goal: '<strong>ടാസ്ക്:</strong> സ്വാപ്പ് ചെയ്യുക.<br>1. നിറങ്ങൾ നൽകുക.<br>2. <code>left, right = right, left</code> നൽകി പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਮੁੱਲ ਬਦਲਣਾ (Swapping)', goal: '<strong>ਕੰਮ:</strong> ਦੋ ਵੇਰੀਏਬਲਾਂ ਦੀ ਅਦਲਾ-ਬਦਲੀ ਕਰੋ।<br>1. <code>left, right</code> ਸੈੱਟ ਕਰੋ।<br>2. ਸਵੈਪ ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Storing Text (Strings)', goal: '<strong>Task:</strong> Text must be enclosed in quotes.<br>1. Set <code>html_tag = "video"</code>.<br>2. Print <code>html_tag</code>.' },
+      hi: { title: 'टेक्स्ट स्टोर करना (Strings)', goal: '<strong>कार्य:</strong> <code>html_tag = "video"</code> सेट करें और प्रिंट करें।' },
+      mr: { title: 'मजकूर साठवणे (Strings)', goal: '<strong>कृती:</strong> <code>html_tag = "video"</code> सेट करा आणि प्रिंट करा.' },
+      ta: { title: 'உரையைச் சேமித்தல் (Strings)', goal: '<strong>பணி:</strong> <code>html_tag = "video"</code> அமைத்து அச்சிடவும்.' },
+      te: { title: 'టెక్స్ట్‌ను నిల్వ చేయడం (Strings)', goal: '<strong>టాస్క్:</strong> <code>html_tag = "video"</code> సెట్ చేసి ప్రింట్ చేయండి.' },
+      bn: { title: 'টেক্সট সংরক্ষণ করা (Strings)', goal: '<strong>কাজ:</strong> <code>html_tag = "video"</code> লিখে প্রিন্ট করুন।' },
+      gu: { title: 'ટેક્સ્ટ સંગ્રહ કરવો (Strings)', goal: '<strong>કાર્ય:</strong> <code>html_tag = "video"</code> સેટ કરી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಪಠ್ಯವನ್ನು ಸಂಗ್ರಹಿಸುವುದು (Strings)', goal: '<strong>ಕಾರ್ಯ:</strong> <code>html_tag = "video"</code> ಹೊಂದಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ടെക്സ്റ്റ് സൂക്ഷിക്കുക (Strings)', goal: '<strong>ടാസ്ക്:</strong> <code>html_tag = "video"</code> നൽകി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਟੈਕਸਟ ਸਟੋਰ ਕਰਨਾ (Strings)', goal: '<strong>ਕੰਮ:</strong> <code>html_tag = "video"</code> ਸੈੱਟ ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'first_name = "Ada"\nlast_name = "Lovelace"\nfull_name = first_name + " " + last_name\nprint(full_name)',
+    code: 'video_width = 800\nvideo_height = 600\nprint(video_width, video_height)',
     i18n: {
-      en: { title: 'Joining Text (String Concatenation)', goal: '<strong>Task:</strong> Glue strings with <code>+</code>.<br>1. Set <code>first_name = "Ada"</code> and <code>last_name = "Lovelace"</code>.<br>2. Combine into <code>full_name</code>.<br>3. Print.' },
-      hi: { title: 'टेक्स्ट को जोड़ना (Concatenation)', goal: '<strong>कार्य:</strong> <code>+</code> से टेक्स्ट जोड़ें।<br>1. नाम और उपनाम सेट करें।<br>2. <code>full_name</code> बनाकर प्रिंट करें।' },
-      mr: { title: 'मजकूर एकत्र जोडणे (Concatenation)', goal: '<strong>कृती:</strong> <code>+</code> वापरून मजकूर जोडा.<br>1. नाव आणि आडनाव सेट करा.<br>2. पूर्ण नाव जोडून प्रिंट करा.' },
-      ta: { title: 'உரையை இணைத்தல் (Concatenation)', goal: '<strong>பணி:</strong> <code>+</code> மூலம் உரையை இணைக்கவும்.<br>1. முதல் மற்றும் கடைசி பெயரை அமைக்கவும்.<br>2. முழு பெயரை அச்சிடவும்.' },
-      te: { title: 'టెక్స్ట్‌ను కలపడం (Concatenation)', goal: '<strong>టాస్క్:</strong> <code>+</code> తో పదాలను కలపండి.<br>1. మొదటి, చివరి పేరు ఇవ్వండి.<br>2. పూర్తి పేరు ప్రింట్ చేయండి.' },
-      bn: { title: 'টেক্সট জোড়া লাগানো (Concatenation)', goal: '<strong>কাজ:</strong> <code>+</code> দিয়ে স্ট্রিং যুক্ত করুন।<br>1. নাম সেট করুন।<br>2. পূর্ণ নাম প্রিন্ট করুন।' },
-      gu: { title: 'ટેક્સ્ટ જોડવો (Concatenation)', goal: '<strong>કાર્ય:</strong> <code>+</code> ચિહ્ન વડે નામ જોડો.<br>1. નામ સેટ કરો.<br>2. પૂરું નામ પ્રિન્ટ કરો.' },
-      kn: { title: 'ಪಠ್ಯವನ್ನು ಜೋಡಿಸುವುದು (Concatenation)', goal: '<strong>ಕಾರ್ಯ:</strong> <code>+</code> ಬಳಸಿ ಪದಗಳನ್ನು ಸೇರಿಸಿ.<br>1. ಹೆಸರುಗಳನ್ನು ನಮೂದಿಸಿ.<br>2. ಪೂರ್ಣ ಹೆಸರು ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'ടെക്സ്റ്റുകൾ കൂട്ടിച്ചേർക്കുക', goal: '<strong>ടാസ്ക്:</strong> <code>+</code> ഉപയോഗിച്ച് സ്ട്രിംഗ് ചേർക്കുക.<br>1. പേരുകൾ നൽകുക.<br>2. മുഴുവൻ പേര് പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਟੈਕਸਟ ਜੋੜਨਾ (Concatenation)', goal: '<strong>ਕੰਮ:</strong> <code>+</code> ਨਾਲ ਟੈਕਸਟ ਜੋੜੋ।<br>1. ਨਾਮ ਸੈੱਟ ਕਰੋ।<br>2. ਪੂਰਾ ਨਾਮ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Multiple Int Variables', goal: '<strong>Task:</strong> Store video dimensions.<br>1. Set <code>video_width = 800</code> and <code>video_height = 600</code>.<br>2. Print both variables.' },
+      hi: { title: 'कई इंटीजर वेरिएबल्स', goal: '<strong>कार्य:</strong> <code>video_width</code> और <code>video_height</code> सेट करके प्रिंट करें।' },
+      mr: { title: 'अनेक पूर्णांक वेरिएबल्स', goal: '<strong>कृती:</strong> <code>video_width</code> आणि <code>video_height</code> सेट करून प्रिंट करा.' },
+      ta: { title: 'பல முழு எண் மாறிகள்', goal: '<strong>பணி:</strong> <code>video_width</code> மற்றும் <code>video_height</code> அமைத்து அச்சிடவும்.' },
+      te: { title: 'బహుళ పూర్ణాంక వేరియబుల్స్', goal: '<strong>టాస్క్:</strong> <code>video_width</code>, <code>video_height</code> సెట్ చేసి ప్రింట్ చేయండి.' },
+      bn: { title: 'একাধিক পূর্ণসংখ্যা ভেরিয়েবল', goal: '<strong>কাজ:</strong> <code>video_width</code> এবং <code>video_height</code> লিখে প্রিন্ট করুন।' },
+      gu: { title: 'બહુવિધ પૂર્ણાંક વેરિયેબલ્સ', goal: '<strong>કાર્ય:</strong> <code>video_width</code> અને <code>video_height</code> સેટ કરી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಹಲವು ಪೂರ್ಣಾಂಕ ವೇರಿಯೇಬಲ್‌ಗಳು', goal: '<strong>ಕಾರ್ಯ:</strong> <code>video_width</code> ಮತ್ತು <code>video_height</code> ಹೊಂದಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ഒന്നിലധികം പൂർണ്ണസംഖ്യകൾ', goal: '<strong>ടാസ്ക്:</strong> <code>video_width</code>, <code>video_height</code> നൽകി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਕਈ ਪੂਰਨ ਅੰਕ ਵੇਰੀਏਬਲ', goal: '<strong>ਕੰਮ:</strong> <code>video_width</code> ਅਤੇ <code>video_height</code> ਸੈੱਟ ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'border = "=" * 15\nprint(border)\nprint("WELCOME")\nprint(border)',
+    code: 'has_controls = True\nautoplay = False\nprint(has_controls, autoplay)',
     i18n: {
-      en: { title: 'Repeating Text with *', goal: '<strong>Task:</strong> Multiply strings to repeat text.<br>1. Set <code>border = "=" * 15</code>.<br>2. Print <code>border</code>, <code>"WELCOME"</code>, and <code>border</code> again.' },
-      hi: { title: '* से टेक्स्ट दोहराना', goal: '<strong>कार्य:</strong> स्ट्रिंग को गुणा करके दोहराएं।<br>1. <code>border = "=" * 15</code> बनाएं।<br>2. <code>border</code>, <code>"WELCOME"</code> और <code>border</code> प्रिंट करें।' },
-      mr: { title: '* ने मजकूर पुन्हा छापणे', goal: '<strong>कृती:</strong> मजकूर गुणाकार करून पुन्हा छापा.<br>1. <code>border = "=" * 15</code> तयार करा.<br>2. बॉर्डर व संदेश प्रिंट करा.' },
-      ta: { title: '* கொண்டு உரையை மீண்டும் உருவாக்குதல்', goal: '<strong>பணி:</strong> உரையைப் பெருக்கி அச்சிடவும்.<br>1. <code>border = "=" * 15</code> அமைக்கவும்.<br>2. முறைப்படி அச்சிடவும்.' },
-      te: { title: '* తో టెక్స్ట్‌ను పునరావృతం చేయడం', goal: '<strong>టాస్క్:</strong> టెక్స్ట్‌ను గుణించి పెంచండి.<br>1. బార్డర్ వేరియబుల్ సృష్టించండి.<br>2. వరుసగా ప్రింట్ చేయండి.' },
-      bn: { title: '* দিয়ে টেক্সটের পুনরাবৃত্তি', goal: '<strong>কাজ:</strong> অক্ষর গুণ করে বড় করুন।<br>1. <code>border = "=" * 15</code> লিখুন।<br>2. বর্ডার ও টেক্সট প্রিন্ট করুন।' },
-      gu: { title: '* વડે ટેક્સ્ટનું પુનરાવર્તન', goal: '<strong>કાર્ય:</strong> અક્ષરનું પુનરાવર્તન કરો.<br>1. <code>border = "=" * 15</code> બનાવો.<br>2. પ્રિન્ટ કરો.' },
-      kn: { title: '* ಬಳಸಿ ಪಠ್ಯ ಪುನರಾವರ್ತಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ಪಠ್ಯವನ್ನು ಗುಣಿಸಿ.<br>1. ಬಾರ್ಡರ್ ರಚಿಸಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: '* ഉപയോഗിച്ച് ടെക്സ്റ്റ് ആവർത്തിക്കുക', goal: '<strong>ടാസ്ക്:</strong> ഗുണനം വഴി ടെക്സ്റ്റ് ആവർത്തിക്കുക.<br>1. ബോർഡർ ഉണ്ടാക്കുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: '* ਨਾਲ ਟੈਕਸਟ ਦੁਹਰਾਉਣਾ', goal: '<strong>ਕੰਮ:</strong> ਅੱਖਰਾਂ ਨੂੰ ਗੁਣਾ ਕਰਕੇ ਵਧਾਓ।<br>1. ਬਾਰਡਰ ਬਣਾਓ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Video Setting Booleans', goal: '<strong>Task:</strong> Set binary states for a video.<br>1. Set <code>has_controls = True</code>.<br>2. Set <code>autoplay = False</code>.<br>3. Print both.' },
+      hi: { title: 'बूलियन सेटिंग्स', goal: '<strong>कार्य:</strong> <code>has_controls = True</code> और <code>autoplay = False</code> सेट करके प्रिंट करें।' },
+      mr: { title: 'बूलियन सेटिंग्ज', goal: '<strong>कृती:</strong> <code>has_controls = True</code> आणि <code>autoplay = False</code> सेट करून प्रिंट करा.' },
+      ta: { title: 'பூலியன் அமைப்புகள்', goal: '<strong>பணி:</strong> <code>has_controls = True</code> மற்றும் <code>autoplay = False</code> அமைத்து அச்சிடவும்.' },
+      te: { title: 'బూలియన్ సెట్టింగ్‌లు', goal: '<strong>టాస్క్:</strong> <code>has_controls = True</code>, <code>autoplay = False</code> సెట్ చేసి ప్రింట్ చేయండి.' },
+      bn: { title: 'বুলিয়ান সেটিংস', goal: '<strong>কাজ:</strong> <code>has_controls = True</code> এবং <code>autoplay = False</code> লিখে প্রিন্ট করুন।' },
+      gu: { title: 'બુલિયન સેટિંગ્સ', goal: '<strong>કાર્ય:</strong> <code>has_controls = True</code> અને <code>autoplay = False</code> સેટ કરી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಬೂಲಿಯನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು', goal: '<strong>ಕಾರ್ಯ:</strong> <code>has_controls = True</code> ಮತ್ತು <code>autoplay = False</code> ಹೊಂದಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ബൂളിയൻ ക്രമീകരണങ്ങൾ', goal: '<strong>ടാസ്ക്:</strong> <code>has_controls = True</code>, <code>autoplay = False</code> നൽകി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਬੂਲੀਅਨ ਸੈਟਿੰਗਜ਼', goal: '<strong>ਕੰਮ:</strong> <code>has_controls = True</code> ਅਤੇ <code>autoplay = False</code> ਸੈੱਟ ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'password = "s3cur3P@ss"\nlength = len(password)\nprint(length)',
+    code: 'src_file = "movie.mp4"\nprint(type(src_file))',
     i18n: {
-      en: { title: 'Measuring Text Length with len()', goal: '<strong>Task:</strong> Count characters with <code>len()</code>.<br>1. Set <code>password = "s3cur3P@ss"</code>.<br>2. Measure: <code>length = len(password)</code>.<br>3. Print <code>length</code>.' },
-      hi: { title: 'len() से टेक्स्ट की लंबाई मापना', goal: '<strong>कार्य:</strong> अक्षरों की गिनती करें।<br>1. पासवर्ड सेट करें।<br>2. <code>length = len(password)</code> निकालें और प्रिंट करें।' },
-      mr: { title: 'len() ने लांबी मोजणे', goal: '<strong>कृती:</strong> अक्षरांची संख्या मोजा.<br>1. पासवर्ड सेट करा.<br>2. लांबी काढून प्रिंट करा.' },
-      ta: { title: 'len() மூலம் நீளத்தை அளவிடுதல்', goal: '<strong>பணி:</strong> எழுத்துக்களை எண்ணவும்.<br>1. கடவுச்சொல்லை அமைக்கவும்.<br>2. <code>len()</code> பயன்படுத்தி அச்சிடவும்.' },
-      te: { title: 'len() తో పొడవును కొలవడం', goal: '<strong>టాస్క్:</strong> అక్షరాల సంఖ్యను లెక్కించండి.<br>1. పాస్‌వర్డ్ సెట్ చేయండి.<br>2. పొడవు ప్రింట్ చేయండి.' },
-      bn: { title: 'len() দিয়ে দৈর্ঘ্য মাপা', goal: '<strong>কাজ:</strong> অক্ষরের সংখ্যা গণনা করুন।<br>1. পাসওয়ার্ড দিন।<br>2. দৈর্ঘ্য বের করে প্রিন্ট করুন।' },
-      gu: { title: 'len() વડે લંબાઈ માપવી', goal: '<strong>કાર્ય:</strong> અક્ષરો ગણો.<br>1. પાસવર્ડ સેટ કરો.<br>2. લંબાઈ પ્રિન્ટ કરો.' },
-      kn: { title: 'len() ಮೂಲಕ ಉದ್ದವನ್ನು ತಿಳಿಯಿರಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ಅಕ್ಷರಗಳ ಸಂಖ್ಯೆ ಎಣಿಸಿ.<br>1. ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಸಿ.<br>2. ಉದ್ದ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'len() ഉപയോഗിച്ച് നീളം കണ്ടെത്തുക', goal: '<strong>ടാസ്ക്:</strong> അക്ഷരങ്ങളുടെ എണ്ണം കണക്കാക്കുക.<br>1. പാസ്‌വേഡ് നൽകുക.<br>2. നീളം പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'len() ਨਾਲ ਲੰਬਾਈ ਮਾਪਣਾ', goal: '<strong>ਕੰਮ:</strong> ਅੱਖਰਾਂ ਦੀ ਗਿਣਤੀ ਕਰੋ।<br>1. ਪਾਸਵਰਡ ਸੈੱਟ ਕਰੋ।<br>2. ਲੰਬਾਈ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Type Checking Strings', goal: '<strong>Task:</strong> Check the data type of text.<br>1. Set <code>src_file = "movie.mp4"</code>.<br>2. Print <code>type(src_file)</code>.' },
+      hi: { title: 'स्ट्रिंग्स का प्रकार जांचना', goal: '<strong>कार्य:</strong> <code>src_file = "movie.mp4"</code> सेट करें और इसका प्रकार प्रिंट करें।' },
+      mr: { title: 'स्ट्रिंग्सचा प्रकार तपासणे', goal: '<strong>कृती:</strong> <code>src_file = "movie.mp4"</code> सेट करा आणि त्याचा प्रकार प्रिंट करा.' },
+      ta: { title: 'சரங்களின் வகையை அறிதல்', goal: '<strong>பணி:</strong> <code>src_file = "movie.mp4"</code> அமைத்து வகையை அச்சிடவும்.' },
+      te: { title: 'స్ట్రింగ్స్ రకాన్ని తనిఖీ చేయడం', goal: '<strong>టాస్క్:</strong> <code>src_file = "movie.mp4"</code> సెట్ చేసి రకాన్ని ప్రింట్ చేయండి.' },
+      bn: { title: 'স্ট্রিং এর ধরন দেখা', goal: '<strong>কাজ:</strong> <code>src_file = "movie.mp4"</code> লিখে টাইপ প্রিন্ট করুন।' },
+      gu: { title: 'સ્ટ્રિંગ્સનો પ્રકાર તપાસવો', goal: '<strong>કાર્ય:</strong> <code>src_file = "movie.mp4"</code> સેટ કરી તેનો પ્રકાર પ્રિન્ટ કરો.' },
+      kn: { title: 'ಪಠ್ಯದ ಪ್ರಕಾರ ಪರೀಕ್ಷಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> <code>src_file = "movie.mp4"</code> ಹೊಂದಿಸಿ ಪ್ರಕಾರವನ್ನು ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'സ്ട്രിംഗിന്റെ തരം പരിശോധിക്കുക', goal: '<strong>ടാസ്ക്:</strong> <code>src_file = "movie.mp4"</code> നൽകി തരം പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਸਟ੍ਰਿੰਗ ਦੀ ਕਿਸਮ ਜਾਣੋ', goal: '<strong>ਕੰਮ:</strong> <code>src_file = "movie.mp4"</code> ਸੈੱਟ ਕਰਕੇ ਕਿਸਮ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'user = "Sam"\npoints = 120\nprint(f"User {user} has {points} pts")',
+    code: 'image_shape = "circle"\nis_clickable = True\nprint(image_shape, is_clickable)',
     i18n: {
-      en: { title: 'Formatted Strings (f-strings)', goal: '<strong>Task:</strong> Insert variables with <code>f"{...}"</code>.<br>1. Set <code>user = "Sam"</code> and <code>points = 120</code>.<br>2. Print: <code>f"User {user} has {points} pts"</code>.' },
-      hi: { title: 'फॉर्मेटेड स्ट्रिंग्स (f-strings)', goal: '<strong>कार्य:</strong> f-string में वेरिएबल्स डालें।<br>1. यूज़र और पॉइंट्स सेट करें।<br>2. <code>f"User {user} has {points} pts"</code> प्रिंट करें।' },
-      mr: { title: 'फॉर्मेटेड स्ट्रिंग्स (f-strings)', goal: '<strong>कृती:</strong> मजकुरात व्हेरिएबल्स जोडा.<br>1. नाव व गुण सेट करा.<br>2. f-string ने प्रिंट करा.' },
-      ta: { title: 'வடிவமைக்கப்பட்ட சரங்கள் (f-strings)', goal: '<strong>பணி:</strong> மாறிகளை உரைக்குள் செருகவும்.<br>1. மாறிகளை அமைக்கவும்.<br>2. f-string மூலம் அச்சிடவும்.' },
-      te: { title: 'ఫార్మాట్ చేసిన స్ట్రింగ్స్ (f-strings)', goal: '<strong>టాస్క్:</strong> టెక్స్ట్‌లోకి వేరియబుల్స్ చేర్చండి.<br>1. యూజర్, పాయింట్లు ఇవ్వండి.<br>2. ప్రింట్ చేయండి.' },
-      bn: { title: 'ফরম্যাটেড স্ট্রিং (f-strings)', goal: '<strong>কাজ:</strong> লেখার ভেতরে ভেরিয়েবল বসান।<br>1. নাম ও পয়েন্ট সেট করুন।<br>2. প্রিন্ট করুন।' },
-      gu: { title: 'ફોર્મેટ કરેલી સ્ટ્રિંગ્સ (f-strings)', goal: '<strong>કાર્ય:</strong> લખાણમાં વેરિયેબલ મૂકો.<br>1. યુઝર અને પોઈન્ટ્સ સેટ કરો.<br>2. પ્રિન્ટ કરો.' },
-      kn: { title: 'ಫಾರ್ಮ್ಯಾಟ್ ಮಾಡಿದ ಪಠ್ಯ (f-strings)', goal: '<strong>ಕಾರ್ಯ:</strong> ಪಠ್ಯದೊಳಗೆ ವೇರಿಯೇಬಲ್ ಸೇರಿಸಿ.<br>1. ಹೆಸರು ಮತ್ತು ಅಂಕಗಳನ್ನು ನಮೂದಿಸಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'ഫോർമാറ്റ് ചെയ്ത സ്ട്രിംഗുകൾ (f-strings)', goal: '<strong>ടാസ്ക്:</strong> വേരിയബിളുകൾ ടെക്സ്റ്റിൽ ഉൾപ്പെടുത്തുക.<br>1. വിവരങ്ങൾ നൽകുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਫਾਰਮੈਟ ਕੀਤੀਆਂ ਸਟ੍ਰਿੰਗਾਂ (f-strings)', goal: '<strong>ਕੰਮ:</strong> ਟੈਕਸਟ ਵਿੱਚ ਵੇਰੀਏਬਲ ਜੋੜੋ।<br>1. ਯੂਜ਼ਰ ਅਤੇ ਪੁਆਇੰਟ ਸੈੱਟ ਕਰੋ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Mixed Variables', goal: '<strong>Task:</strong> Combine different types.<br>1. Set <code>image_shape = "circle"</code> (string).<br>2. Set <code>is_clickable = True</code> (boolean).<br>3. Print them.' },
+      hi: { title: 'मिश्रित वेरिएबल्स', goal: '<strong>कार्य:</strong> एक स्ट्रिंग और एक बूलियन सेट करके प्रिंट करें।' },
+      mr: { title: 'मिश्रित वेरिएबल्स', goal: '<strong>कृती:</strong> एक स्ट्रिंग आणि एक बूलियन सेट करून प्रिंट करा.' },
+      ta: { title: 'கலப்பு மாறிகள்', goal: '<strong>பணி:</strong> ஒரு சரம் மற்றும் ஒரு பூலியனை அமைத்து அச்சிடவும்.' },
+      te: { title: 'మిశ్రమ వేరియబుల్స్', goal: '<strong>టాస్క్:</strong> ఒక స్ట్రింగ్, ఒక బూలియన్ సెట్ చేసి ప్రింట్ చేయండి.' },
+      bn: { title: 'মিশ্র ভেরিয়েবল', goal: '<strong>কাজ:</strong> একটি স্ট্রিং এবং একটি বুলিয়ান সেট করে প্রিন্ট করুন।' },
+      gu: { title: 'મિશ્ર વેરિયેબલ્સ', goal: '<strong>કાર્ય:</strong> એક સ્ટ્રિંગ અને એક બુલિયન સેટ કરી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಮಿಶ್ರ ವೇರಿಯೇಬಲ್‌ಗಳು', goal: '<strong>ಕಾರ್ಯ:</strong> ಒಂದು ಪಠ್ಯ ಮತ್ತು ಒಂದು ಬೂಲಿಯನ್ ಹೊಂದಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'മിക്സഡ് വേരിയബിളുകൾ', goal: '<strong>ടാസ്ക്:</strong> ഒരു സ്ട്രിംഗും ഒരു ബൂളിയനും നൽകി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਮਿਸ਼ਰਤ ਵੇਰੀਏਬਲ', goal: '<strong>ਕੰਮ:</strong> ਇੱਕ ਸਟ੍ਰਿੰਗ ਅਤੇ ਇੱਕ ਬੂਲੀਅਨ ਸੈੱਟ ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'qty = 4\ncost = 15\nprint(f"Total: ${qty * cost}")',
+    code: 'coords = None\nprint(coords)\nprint(type(coords))',
     i18n: {
-      en: { title: 'Math Inside f-strings', goal: '<strong>Task:</strong> Do math directly inside braces.<br>1. Set <code>qty = 4</code> and <code>cost = 15</code>.<br>2. Print: <code>f"Total: ${qty * cost}"</code>.' },
-      hi: { title: 'f-strings के अंदर गणित', goal: '<strong>कार्य:</strong> सीधे { } में गणना करें।<br>1. <code>qty = 4</code> और <code>cost = 15</code> सेट करें।<br>2. <code>f"Total: ${qty * cost}"</code> प्रिंट करें।' },
-      mr: { title: 'f-strings मध्ये थेट गणित', goal: '<strong>कृती:</strong> कंसात थेट गुणाकार करा.<br>1. प्रमाण आणि किंमत सेट करा.<br>2. एकूण रक्कम प्रिंट करा.' },
-      ta: { title: 'f-strings உள்ளே கணிதம்', goal: '<strong>பணி:</strong> அடைப்புக்குறிக்குள் கணக்கிடவும்.<br>1. மாறிகளை அமைக்கவும்.<br>2. மொத்தத்தை அச்சிடவும்.' },
-      te: { title: 'f-strings లోపల గణితం', goal: '<strong>టాస్క్:</strong> బ్రాకెట్లలోనే లెక్కలు చేయండి.<br>1. పరిమాణం, ధర ఇవ్వండి.<br>2. ప్రింట్ చేయండి.' },
-      bn: { title: 'f-strings এর ভেতর হিসাব', goal: '<strong>কাজ:</strong> বন্ধনীর ভেতরে গুণ করুন।<br>1. সংখ্যা ও মূল্য দিন।<br>2. মোট প্রিন্ট করুন।' },
-      gu: { title: 'f-strings ની અંદર ગણતરી', goal: '<strong>કાર્ય:</strong> કૌંસમાં સીધી ગણતરી કરો.<br>1. જથ્થો અને ભાવ સેટ કરો.<br>2. પ્રિન્ટ કરો.' },
-      kn: { title: 'f-strings ಒಳಗೆ ಲೆಕ್ಕಾಚಾರ', goal: '<strong>ಕಾರ್ಯ:</strong> ಬ್ರಾಕೆಟ್‌ಗಳೊಳಗೆ ಲೆಕ್ಕ ಮಾಡಿ.<br>1. ಪ್ರಮಾಣ ಮತ್ತು ಬೆಲೆ ನಮೂದಿಸಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'f-strings ഉള്ളിൽ കണക്കുകൂട്ടൽ', goal: '<strong>ടാസ്ക്:</strong> ബ്രാക്കറ്റിൽ കണക്കുകൂട്ടുക.<br>1. അളവും വിലയും നൽകുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'f-strings ਦੇ ਅੰਦਰ ਗਣਿਤ', goal: '<strong>ਕੰਮ:</strong> ਬਰੈਕਟਾਂ ਦੇ ਅੰਦਰ ਹਿਸਾਬ ਕਰੋ।<br>1. ਮਾਤਰਾ ਅਤੇ ਮੁੱਲ ਸੈੱਟ ਕਰੋ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Empty Values with None', goal: '<strong>Task:</strong> Represent an absence of value.<br>1. Set <code>coords = None</code> (Notice the capital N).<br>2. Print <code>coords</code> and <code>type(coords)</code>.' },
+      hi: { title: 'None के साथ खाली मान', goal: '<strong>कार्य:</strong> <code>coords = None</code> सेट करें और इसका प्रकार प्रिंट करें।' },
+      mr: { title: 'None सह रिक्त मूल्य', goal: '<strong>कृती:</strong> <code>coords = None</code> सेट करा आणि त्याचा प्रकार प्रिंट करा.' },
+      ta: { title: 'None கொண்டு வெற்று மதிப்பு', goal: '<strong>பணி:</strong> <code>coords = None</code> அமைத்து வகையை அச்சிடவும்.' },
+      te: { title: 'None తో ఖాళీ విలువ', goal: '<strong>టాస్క్:</strong> <code>coords = None</code> సెట్ చేసి రకాన్ని ప్రింట్ చేయండి.' },
+      bn: { title: 'None দিয়ে ফাঁকা মান', goal: '<strong>কাজ:</strong> <code>coords = None</code> লিখে টাইপ প্রিন্ট করুন।' },
+      gu: { title: 'None સાથે ખાલી મૂલ્ય', goal: '<strong>કાર્ય:</strong> <code>coords = None</code> સેટ કરી તેનો પ્રકાર પ્રિન્ટ કરો.' },
+      kn: { title: 'None ಮೂಲಕ ಖಾಲಿ ಮೌಲ್ಯ', goal: '<strong>ಕಾರ್ಯ:</strong> <code>coords = None</code> ಹೊಂದಿಸಿ ಪ್ರಕಾರವನ್ನು ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'None ഉപയോഗിച്ച് ശൂന്യമായ മൂല്യം', goal: '<strong>ടാസ്ക്:</strong> <code>coords = None</code> നൽകി തരം പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'None ਨਾਲ ਖਾਲੀ ਮੁੱਲ', goal: '<strong>ਕੰਮ:</strong> <code>coords = None</code> ਸੈੱਟ ਕਰਕੇ ਕਿਸਮ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'total_items = 23\nbox_capacity = 4\nfull_boxes = total_items // box_capacity\nprint(full_boxes)',
+    code: 'tag_type = "video"\nprint(tag_type)\ntag_type = "source"\nprint(tag_type)',
     i18n: {
-      en: { title: 'Floor Division (//)', goal: '<strong>Task:</strong> Keep only the whole quotient.<br>1. Set <code>total_items = 23</code> and <code>box_capacity = 4</code>.<br>2. Compute: <code>full_boxes = total_items // box_capacity</code>.<br>3. Print.' },
-      hi: { title: 'फ्लोर डिवीजन (//)', goal: '<strong>कार्य:</strong> दशमलव हटाकर पूर्ण भागफल निकालें।<br>1. वस्तुएं और क्षमता सेट करें।<br>2. <code>//</code> से भाग दें और प्रिंट करें।' },
-      mr: { title: 'पूर्णांक भागाकार (//)', goal: '<strong>कृती:</strong> फक्त पूर्ण भागाकार मिळवा.<br>1. वस्तू व क्षमता सेट करा.<br>2. <code>//</code> ने भागाकार करून प्रिंट करा.' },
-      ta: { title: 'முழு எண் வகுத்தல் (//)', goal: '<strong>பணி:</strong> தசமத்தை விடுத்து முழு ஈவை மட்டும் பெறவும்.<br>1. மாறிகளை அமைக்கவும்.<br>2. <code>//</code> செய்து அச்சிடவும்.' },
-      te: { title: 'ఫ్లోర్ డివిజన్ (//)', goal: '<strong>టాస్క్:</strong> కేవలం పూర్ణాంక భాగాన్ని పొందండి.<br>1. విలువలు సెట్ చేయండి.<br>2. <code>//</code> తో భాగించి ప్రింట్ చేయండి.' },
-      bn: { title: 'ফ্লোর ডিভিশন (//)', goal: '<strong>কাজ:</strong> শুধু পূর্ণসংখ্যা ভাগফল রাখুন।<br>1. সংখ্যা ও ধারণক্ষমতা দিন।<br>2. <code>//</code> দিয়ে হিসাব করুন।' },
-      gu: { title: 'પૂર્ણાંક ભાગાકાર (//)', goal: '<strong>કાર્ય:</strong> દશાંશ વગરનો ભાગાકાર કરો.<br>1. કિંમતો સેટ કરો.<br>2. <code>//</code> વાપરી પ્રિન્ટ કરો.' },
-      kn: { title: 'ಪೂರ್ಣಾಂಕ ಭಾಗಾಕಾರ (//)', goal: '<strong>ಕಾರ್ಯ:</strong> ಕೇವಲ ಪೂರ್ಣಾಂಕ ಭಾಗಲಬ್ಧ ಪಡೆಯಿರಿ.<br>1. ಸಂಖ್ಯೆಗಳನ್ನು ನಮೂದಿಸಿ.<br>2. <code>//</code> ಬಳಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'ഫ്ലോർ ഡിവിഷൻ (//)', goal: '<strong>ടാസ്ക്:</strong> പൂർണ്ണസംഖ്യാ ഹരണം നടത്തുക.<br>1. വേരിയബിളുകൾ നൽകുക.<br>2. ഹരിച്ച് പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਫਲੋਰ ਡਿਵੀਜ਼ਨ (//)', goal: '<strong>ਕੰਮ:</strong> ਪੂਰਾ ਭਾਗਫਲ ਪ੍ਰਾਪਤ ਕਰੋ।<br>1. ਵਸਤੂਆਂ ਅਤੇ ਸਮਰੱਥਾ ਸੈੱਟ ਕਰੋ।<br>2. <code>//</code> ਨਾਲ ਹੱਲ ਕਰੋ।' }
+      en: { title: 'String Reassignment', goal: '<strong>Task:</strong> Change a string variable.<br>1. Set <code>tag_type = "video"</code> and print.<br>2. Reassign <code>tag_type = "source"</code> and print.' },
+      hi: { title: 'स्ट्रिंग को दोबारा असाइन करना', goal: '<strong>कार्य:</strong> <code>tag_type</code> को "video" से "source" में बदलें और दोनों बार प्रिंट करें।' },
+      mr: { title: 'स्ट्रिंग पुन्हा असाइन करणे', goal: '<strong>कृती:</strong> <code>tag_type</code> चे मूल्य बदला आणि दोन्ही वेळा प्रिंट करा.' },
+      ta: { title: 'சரத்தை மாற்றுதல்', goal: '<strong>பணி:</strong> <code>tag_type</code> மதிப்பை மாற்றி இருமுறையும் அச்சிடவும்.' },
+      te: { title: 'స్ట్రింగ్ మార్చడం', goal: '<strong>టాస్క్:</strong> <code>tag_type</code> ని "video" నుండి "source" కి మార్చి ప్రింట్ చేయండి.' },
+      bn: { title: 'স্ট্রিং পরিবর্তন করা', goal: '<strong>কাজ:</strong> <code>tag_type</code> এর মান পরিবর্তন করে দুইবার প্রিন্ট করুন।' },
+      gu: { title: 'સ્ટ્રિંગ ફરીથી અસાઇન કરવી', goal: '<strong>કાર્ય:</strong> <code>tag_type</code> ની કિંમત બદલી બંને વખત પ્રિન્ટ કરો.' },
+      kn: { title: 'ಪಠ್ಯವನ್ನು ಬದಲಾಯಿಸುವುದು', goal: '<strong>ಕಾರ್ಯ:</strong> <code>tag_type</code> ಮೌಲ್ಯವನ್ನು ಬದಲಾಯಿಸಿ ಎರಡು ಬಾರಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'സ്ട്രിംഗ് മാറ്റുക', goal: '<strong>ടാസ്ക്:</strong> <code>tag_type</code> ന്റെ മൂല്യം മാറ്റി രണ്ട് തവണയും പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਸਟ੍ਰਿੰਗ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> <code>tag_type</code> ਦਾ ਮੁੱਲ ਬਦਲ ਕੇ ਦੋਵੇਂ ਵਾਰ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'items = 27\nbaskets = 5\nleftover = items % baskets\nprint(leftover)',
+    code: 'a = 10\nb = a\nprint(b)',
     i18n: {
-      en: { title: 'Modulo Remainder (%)', goal: '<strong>Task:</strong> Find the remainder of division.<br>1. Set <code>items = 27</code> and <code>baskets = 5</code>.<br>2. Compute: <code>leftover = items % baskets</code>.<br>3. Print.' },
-      hi: { title: 'मॉड्यूलस शेषफल (%)', goal: '<strong>कार्य:</strong> विभाजन के बाद शेषफल ज्ञात करें।<br>1. <code>items = 27</code> और <code>baskets = 5</code> लें।<br>2. <code>%</code> से शेषफल निकालें।' },
-      mr: { title: 'बाकी शोधणे (%)', goal: '<strong>कृती:</strong> भागाकाराची बाकी शोधा.<br>1. वस्तू आणि पेट्या सेट करा.<br>2. <code>%</code> ने बाकी काढून प्रिंट करा.' },
-      ta: { title: 'மீதி காணுதல் (%)', goal: '<strong>பணி:</strong> வகுத்தலின் மீதியைக் கண்டறியவும்.<br>1. மாறிகளை அமைக்கவும்.<br>2. <code>%</code> பயன்படுத்தி அச்சிடவும்.' },
-      te: { title: 'శేషం కనుగొనడం (%)', goal: '<strong>టాస్క్:</strong> భాగహార శేషాన్ని లెక్కించండి.<br>1. విలువలు ఇవ్వండి.<br>2. <code>%</code> తో శేషం ప్రింట్ చేయండి.' },
-      bn: { title: 'ভাগশেষ নির্ণয় (%)', goal: '<strong>কাজ:</strong> ভাগের অবশিষ্ট অংশ বের করুন।<br>1. সংখ্যা ও পাত্র দিন।<br>2. <code>%</code> দিয়ে প্রিন্ট করুন।' },
-      gu: { title: 'શેષ શોધવી (%)', goal: '<strong>કાર્ય:</strong> ભાગાકાર પછીની શેષ મેળવો.<br>1. કિંમતો સેટ કરો.<br>2. <code>%</code> વાપરી પ્રિન્ટ કરો.' },
-      kn: { title: 'ಶೇಷವನ್ನು ಕಂಡುಹಿಡಿಯುವುದು (%)', goal: '<strong>ಕಾರ್ಯ:</strong> ಭಾಗಾಕಾರದ ಶೇಷವನ್ನು ಪಡೆಯಿರಿ.<br>1. ಸಂಖ್ಯೆಗಳನ್ನು ನಮೂದಿಸಿ.<br>2. <code>%</code> ಬಳಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'ശിഷ്ടം കണ്ടെത്തുക (%)', goal: '<strong>ടാസ്ക്:</strong> ഹരണത്തിന് ശേഷമുള്ള ശിഷ്ടം കണ്ടെത്തുക.<br>1. സംഖ്യകൾ നൽകുക.<br>2. <code>%</code> ഉപയോഗിക്കുക.' },
-      pa: { title: 'ਬਾਕੀ ਲੱਭਣਾ (%)', goal: '<strong>ਕੰਮ:</strong> ਭਾਗ ਕਰਨ ਤੋਂ ਬਾਅਦ ਬਾਕੀ ਬਚਿਆ ਮੁੱਲ ਲੱਭੋ।<br>1. ਵਸਤੂਆਂ ਸੈੱਟ ਕਰੋ।<br>2. <code>%</code> ਵਰਤ ਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Copying Variables', goal: '<strong>Task:</strong> Pass a value from one variable to another.<br>1. Set <code>a = 10</code>.<br>2. Set <code>b = a</code>.<br>3. Print <code>b</code>.' },
+      hi: { title: 'वेरिएबल्स कॉपी करना', goal: '<strong>कार्य:</strong> <code>a = 10</code> सेट करें, फिर <code>b = a</code> करें और प्रिंट करें।' },
+      mr: { title: 'वेरिएबल्स कॉपी करणे', goal: '<strong>कृती:</strong> <code>a = 10</code> सेट करा, मग <code>b = a</code> करा आणि प्रिंट करा.' },
+      ta: { title: 'மாறிகளை நகலெடுத்தல்', goal: '<strong>பணி:</strong> <code>a = 10</code> அமைத்து, <code>b = a</code> செய்து அச்சிடவும்.' },
+      te: { title: 'వేరియబుల్స్ కాపీ చేయడం', goal: '<strong>టాస్క్:</strong> <code>a = 10</code> సెట్ చేసి, <code>b = a</code> అని రాసి ప్రింట్ చేయండి.' },
+      bn: { title: 'ভেরিয়েবল কপি করা', goal: '<strong>কাজ:</strong> <code>a = 10</code> সেট করে, <code>b = a</code> লিখুন এবং প্রিন্ট করুন।' },
+      gu: { title: 'વેરિયેબલ્સ કોપી કરવા', goal: '<strong>કાર્ય:</strong> <code>a = 10</code> સેટ કરો, પછી <code>b = a</code> કરી પ્રિન્ટ કરો.' },
+      kn: { title: 'ವೇರಿಯೇಬಲ್ ನಕಲಿಸುವುದು', goal: '<strong>ಕಾರ್ಯ:</strong> <code>a = 10</code> ಹೊಂದಿಸಿ, ನಂತರ <code>b = a</code> ಮಾಡಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'വേരിയബിളുകൾ പകർത്തുക', goal: '<strong>ടാസ്ക്:</strong> <code>a = 10</code> നൽകി, <code>b = a</code> ആക്കി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਵੇਰੀਏਬਲ ਕਾਪੀ ਕਰਨਾ', goal: '<strong>ਕੰਮ:</strong> <code>a = 10</code> ਸੈੱਟ ਕਰੋ, ਫਿਰ <code>b = a</code> ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'num = 48\nis_even = (num % 2 == 0)\nprint(is_even)',
+    code: 'x, y = 50, 100\nx, y = y, x\nprint(x, y)',
     i18n: {
-      en: { title: 'Checking Even vs. Odd', goal: '<strong>Task:</strong> Check if a number is even.<br>1. Set <code>num = 48</code>.<br>2. Evaluate: <code>is_even = (num % 2 == 0)</code>.<br>3. Print <code>is_even</code>.' },
-      hi: { title: 'सम (Even) या विषम (Odd) की जांच', goal: '<strong>कार्य:</strong> जांचें कि संख्या सम है या नहीं।<br>1. <code>num = 48</code> सेट करें।<br>2. <code>is_even = (num % 2 == 0)</code> जांचें और प्रिंट करें।' },
-      mr: { title: 'सम किंवा विषम तपासणे', goal: '<strong>कृती:</strong> संख्या सम आहे का तपासा.<br>1. <code>num = 48</code> सेट करा.<br>2. <code>is_even</code> काढून प्रिंट करा.' },
-      ta: { title: 'இரட்டைப்படை எண்ணை அறிதல்', goal: '<strong>பணி:</strong> இரட்டைப்படையா எனச் சரிபார்க்கவும்.<br>1. <code>num = 48</code> அமைக்கவும்.<br>2. <code>% 2 == 0</code> சோதிக்கவும்.' },
-      te: { title: 'సరి లేదా బేసి సంఖ్యను తనిఖీ చేయడం', goal: '<strong>టాస్క్:</strong> సరి సంఖ్య అవునో కాదో చూడండి.<br>1. <code>num = 48</code> ఇవ్వండి.<br>2. ఫలితం ప్రింట్ చేయండి.' },
-      bn: { title: 'জোড় বা বিজোড় পরীক্ষা', goal: '<strong>কাজ:</strong> সংখ্যাটি জোড় কিনা দেখুন।<br>1. <code>num = 48</code> লিখুন।<br>2. <code>is_even</code> নির্ণয় করে প্রিন্ট করুন।' },
-      gu: { title: 'બેકી સંખ્યા તપાસવી', goal: '<strong>કાર્ય:</strong> સંખ્યા બેકી છે કે નહીં તે ચકાસો.<br>1. <code>num = 48</code> લો.<br>2. ચકાસીને પ્રિન્ટ કરો.' },
-      kn: { title: 'ಸಮ ಸಂಖ್ಯೆ ಪರೀಕ್ಷೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಸಮ ಸಂಖ್ಯೆಯೇ ಎಂದು ತಿಳಿಯಿರಿ.<br>1. <code>num = 48</code> ಹೊಂದಿಸಿ.<br>2. ಪರೀಕ್ಷಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'ഇരട്ട സംഖ്യ പരിശോധിക്കുക', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യ ഇരട്ടയാണോ എന്ന് നോക്കുക.<br>1. <code>num = 48</code> നൽകുക.<br>2. പരിശോധിച്ച് പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਜਿਸਤ ਜਾਂ ਟਾਂਕ ਦੀ ਜਾਂਚ', goal: '<strong>ਕੰਮ:</strong> ਚੈੱਕ ਕਰੋ ਕਿ ਨੰਬਰ ਜਿਸਤ ਹੈ ਜਾਂ ਨਹੀਂ।<br>1. <code>num = 48</code> ਲਓ।<br>2. ਨਤੀਜਾ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Swapping Values', goal: '<strong>Task:</strong> Exchange values without a temp variable.<br>1. Multiple assign: <code>x, y = 50, 100</code>.<br>2. Swap: <code>x, y = y, x</code>.<br>3. Print both.' },
+      hi: { title: 'मानों की अदला-बदली (Swapping)', goal: '<strong>कार्य:</strong> <code>x, y = 50, 100</code> सेट करें, <code>x, y = y, x</code> से बदलें और प्रिंट करें।' },
+      mr: { title: 'मूल्यांची अदलाबदल (Swapping)', goal: '<strong>कृती:</strong> <code>x, y = 50, 100</code> सेट करा, <code>x, y = y, x</code> ने बदला आणि प्रिंट करा.' },
+      ta: { title: 'மதிப்புகளை மாற்றுதல் (Swapping)', goal: '<strong>பணி:</strong> <code>x, y = 50, 100</code> அமைத்து, <code>x, y = y, x</code> மூலம் மாற்றி அச்சிடவும்.' },
+      te: { title: 'విలువల మార్పిడి (Swapping)', goal: '<strong>టాస్క్:</strong> <code>x, y = 50, 100</code> సెట్ చేసి, మార్పిడి చేసి ప్రింట్ చేయండి.' },
+      bn: { title: 'মান অদলবদল (Swapping)', goal: '<strong>কাজ:</strong> <code>x, y = 50, 100</code> সেট করে, অদলবদল করে প্রিন্ট করুন।' },
+      gu: { title: 'કિંમતોની અદલાબદલી (Swapping)', goal: '<strong>કાર્ય:</strong> <code>x, y = 50, 100</code> સેટ કરો, <code>x, y = y, x</code> થી બદલી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಮೌಲ್ಯಗಳ ಅದಲು-ಬದಲು (Swapping)', goal: '<strong>ಕಾರ್ಯ:</strong> <code>x, y = 50, 100</code> ಹೊಂದಿಸಿ, ಅದಲು-ಬದಲು ಮಾಡಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'മൂല്യങ്ങൾ പരസ്പരം മാറ്റുക', goal: '<strong>ടാസ്ക്:</strong> <code>x, y = 50, 100</code> നൽകി, പരസ്പരം മാറ്റി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਮੁੱਲ ਬਦਲਣਾ (Swapping)', goal: '<strong>ਕੰਮ:</strong> <code>x, y = 50, 100</code> ਸੈੱਟ ਕਰੋ, ਸਵੈਪ ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'base = 2\nexp = 8\nresult = base ** exp\nprint(result)',
+    code: 'x_pos = -25\nprint(x_pos)',
     i18n: {
-      en: { title: 'Exponents and Powers (**)', goal: '<strong>Task:</strong> Raise numbers to a power.<br>1. Set <code>base = 2</code> and <code>exp = 8</code>.<br>2. Compute: <code>result = base ** exp</code>.<br>3. Print <code>result</code>.' },
-      hi: { title: 'घातांक और घात (**)', goal: '<strong>कार्य:</strong> घात (Power) की गणना करें।<br>1. <code>base = 2</code> और <code>exp = 8</code> सेट करें।<br>2. <code>result = base ** exp</code> निकालें और प्रिंट करें।' },
-      mr: { title: 'घातांक आणि वर्ग (**)', goal: '<strong>कृती:</strong> घातांक काढा.<br>1. पाया आणि घात सेट करा.<br>2. <code>**</code> वापरून निकाल प्रिंट करा.' },
-      ta: { title: 'அடுக்குக் குறிகள் (**)', goal: '<strong>பணி:</strong> அடுக்கைக் கணக்கிடவும்.<br>1. <code>base = 2</code> மற்றும் <code>exp = 8</code> அமைக்கவும்.<br>2. <code>**</code> மூலம் அச்சிடவும்.' },
-      te: { title: 'ఘాతాంకాలు (**)', goal: '<strong>టాస్క్:</strong> పవర్ లెక్కించండి.<br>1. బేస్, ఘాతం ఇవ్వండి.<br>2. <code>**</code> తో ఫలితం ప్రింట్ చేయండి.' },
-      bn: { title: 'পাওয়ার ও ঘাত (**)', goal: '<strong>কাজ:</strong> সূচকের হিসাব করুন।<br>1. বেস ও পাওয়ার দিন।<br>2. <code>**</code> দিয়ে প্রিন্ট করুন।' },
-      gu: { title: 'ઘાત અને ઘાતાંક (**)', goal: '<strong>કાર્ય:</strong> ઘાતની ગણતરી કરો.<br>1. બેઝ અને ઘાત સેટ કરો.<br>2. <code>**</code> વાપરી પ્રિન્ટ કરો.' },
-      kn: { title: 'ಘಾತಾಂಕಗಳು (**)', goal: '<strong>ಕಾರ್ಯ:</strong> ಘಾತದ ಲೆಕ್ಕಾಚಾರ ಮಾಡಿ.<br>1. ಸಂಖ್ಯೆಗಳನ್ನು ನಮೂದಿಸಿ.<br>2. <code>**</code> ಬಳಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'ഘാതം കണക്കാക്കുക (**)', goal: '<strong>ടാസ്ക്:</strong> പവർ കണ്ടെത്തുക.<br>1. സംഖ്യകൾ നൽകുക.<br>2. <code>**</code> ഉപയോഗിച്ച് പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਘਾਤ ਅਤੇ ਪਾਵਰ (**)', goal: '<strong>ਕੰਮ:</strong> ਪਾਵਰ ਦੀ ਗਣਨਾ ਕਰੋ।<br>1. ਬੇਸ ਅਤੇ ਘਾਤ ਸੈੱਟ ਕਰੋ।<br>2. <code>**</code> ਨਾਲ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Negative Integers', goal: '<strong>Task:</strong> Variables can hold negative numbers.<br>1. Set <code>x_pos = -25</code>.<br>2. Print <code>x_pos</code>.' },
+      hi: { title: 'ऋणात्मक पूर्णांक (Negative Integers)', goal: '<strong>कार्य:</strong> <code>x_pos = -25</code> सेट करें और प्रिंट करें।' },
+      mr: { title: 'ऋण पूर्णांक', goal: '<strong>कृती:</strong> <code>x_pos = -25</code> सेट करा आणि प्रिंट करा.' },
+      ta: { title: 'எதிர்மறை முழு எண்கள்', goal: '<strong>பணி:</strong> <code>x_pos = -25</code> அமைத்து அச்சிடவும்.' },
+      te: { title: 'రుణ పూర్ణాంకాలు', goal: '<strong>టాస్క్:</strong> <code>x_pos = -25</code> సెట్ చేసి ప్రింట్ చేయండి.' },
+      bn: { title: 'ঋণাত্মক পূর্ণসংখ্যা', goal: '<strong>কাজ:</strong> <code>x_pos = -25</code> লিখে প্রিন্ট করুন।' },
+      gu: { title: 'ઋણ પૂર્ણાંકો', goal: '<strong>કાર્ય:</strong> <code>x_pos = -25</code> સેટ કરી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಋಣ ಪೂರ್ಣಾಂಕಗಳು', goal: '<strong>ಕಾರ್ಯ:</strong> <code>x_pos = -25</code> ಹೊಂದಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'നെഗറ്റീവ് പൂർണ്ണസംഖ്യകൾ', goal: '<strong>ടാസ്ക്:</strong> <code>x_pos = -25</code> നൽകി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਨੈਗੇਟਿਵ ਪੂਰਨ ਅੰਕ', goal: '<strong>ਕੰਮ:</strong> <code>x_pos = -25</code> ਸੈੱਟ ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 's1 = 80\ns2 = 90\ns3 = 100\naverage = (s1 + s2 + s3) / 3\nprint(average)',
+    code: 'zoom_level = -1.5\nprint(zoom_level)',
     i18n: {
-      en: { title: 'Order of Operations & Parentheses', goal: '<strong>Task:</strong> Group arithmetic with parentheses.<br>1. Set scores: 80, 90, 100.<br>2. Compute: <code>average = (s1 + s2 + s3) / 3</code>.<br>3. Print <code>average</code>.' },
-      hi: { title: 'कोष्ठक और गणना का क्रम', goal: '<strong>कार्य:</strong> कोष्ठक से गणना का क्रम तय करें।<br>1. तीन स्कोर सेट करें।<br>2. <code>average</code> निकालें और प्रिंट करें।' },
-      mr: { title: 'कंस आणि गणनेचा क्रम', goal: '<strong>कृती:</strong> कंस वापरून सरासरी काढा.<br>1. तीन गुण सेट करा.<br>2. <code>average</code> काढून प्रिंट करा.' },
-      ta: { title: 'செயல்பாடுகளின் வரிசை', goal: '<strong>பணி:</strong> அடைப்புக்குறிகளைப் பயன்படுத்தவும்.<br>1. மூன்று மதிப்பெண்களை அமைக்கவும்.<br>2. சராசரியை அச்சிடவும்.' },
-      te: { title: 'గణిత ప్రాధాన్యతలు & బ్రాకెట్లు', goal: '<strong>టాస్క్:</strong> బ్రాకెట్లతో సగటు లెక్కించండి.<br>1. మూడు మార్కులు ఇవ్వండి.<br>2. సగటు ప్రింట్ చేయండి.' },
-      bn: { title: 'বন্ধনী ও হিসাবের ক্রম', goal: '<strong>কাজ:</strong> বন্ধনী ব্যবহার করে গড় বের করুন।<br>1. ৩টি স্কোর দিন।<br>2. <code>average</code> বের করে প্রিন্ট করুন।' },
-      gu: { title: 'કૌંસ અને ગણતરીનો ક્રમ', goal: '<strong>કાર્ય:</strong> કૌંસ વાપરી સરેરાશ શોધો.<br>1. ત્રણ સ્કોર સેટ કરો.<br>2. સરેરાશ પ્રિન્ટ કરો.' },
-      kn: { title: 'ಬ್ರಾಕೆಟ್‌ಗಳ ಆದ್ಯತೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಸರಾಸರಿ ಲೆಕ್ಕಾಚಾರ ಮಾಡಿ.<br>1. ಮೂರು ಅಂಕಗಳನ್ನು ನಮೂದಿಸಿ.<br>2. ಸರಾಸರಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'ബ്രാക്കറ്റുകളും മുൻഗണനയും', goal: '<strong>ടാസ്ക്:</strong> ശരാശരി കണക്കാക്കുക.<br>1. മൂന്ന് സ്കോറുകൾ നൽകുക.<br>2. ശരാശരി പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਬਰੈਕਟਾਂ ਅਤੇ ਤਰਤੀਬ', goal: '<strong>ਕੰਮ:</strong> ਬਰੈਕਟਾਂ ਨਾਲ ਔਸਤ ਕੱਢੋ।<br>1. ਤਿੰਨ ਸਕੋਰ ਲਓ।<br>2. ਔਸਤ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Negative Floats', goal: '<strong>Task:</strong> Decimal variables can also be negative.<br>1. Set <code>zoom_level = -1.5</code>.<br>2. Print <code>zoom_level</code>.' },
+      hi: { title: 'ऋणात्मक फ्लोट्स', goal: '<strong>कार्य:</strong> <code>zoom_level = -1.5</code> सेट करें और प्रिंट करें।' },
+      mr: { title: 'ऋण फ्लोट्स', goal: '<strong>कृती:</strong> <code>zoom_level = -1.5</code> सेट करा आणि प्रिंट करा.' },
+      ta: { title: 'எதிர்மறை தசம எண்கள்', goal: '<strong>பணி:</strong> <code>zoom_level = -1.5</code> அமைத்து அச்சிடவும்.' },
+      te: { title: 'రుణ దశాంఖాలు', goal: '<strong>టాస్క్:</strong> <code>zoom_level = -1.5</code> సెట్ చేసి ప్రింట్ చేయండి.' },
+      bn: { title: 'ঋণাত্মক দশমিক', goal: '<strong>কাজ:</strong> <code>zoom_level = -1.5</code> লিখে প্রিন্ট করুন।' },
+      gu: { title: 'ઋણ દશાંશ', goal: '<strong>કાર્ય:</strong> <code>zoom_level = -1.5</code> સેટ કરી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಋಣ ದಶಮಾಂಶಗಳು', goal: '<strong>ಕಾರ್ಯ:</strong> <code>zoom_level = -1.5</code> ಹೊಂದಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'നെഗറ്റീവ് ദശാംശങ്ങൾ', goal: '<strong>ടാസ്ക്:</strong> <code>zoom_level = -1.5</code> നൽകി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਨੈਗੇਟਿਵ ਫਲੋਟਸ', goal: '<strong>ਕੰਮ:</strong> <code>zoom_level = -1.5</code> ਸੈੱਟ ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'qty = int("25")\nrate = float("19.5")\ntotal = qty * rate\nprint(total)',
+    code: 'print(type(-100))',
     i18n: {
-      en: { title: 'Converting Strings to Numbers', goal: '<strong>Task:</strong> Parse text into numbers.<br>1. <code>qty = int("25")</code>.<br>2. <code>rate = float("19.5")</code>.<br>3. Print <code>qty * rate</code>.' },
-      hi: { title: 'टेक्स्ट को संख्या में बदलना', goal: '<strong>कार्य:</strong> <code>int()</code> और <code>float()</code> से टेक्स्ट बदलें।<br>1. <code>qty = int("25")</code> करें।<br>2. <code>rate = float("19.5")</code> करें और गुणनफल प्रिंट करें।' },
-      mr: { title: 'मजकूराचे संख्येत रूपांतर', goal: '<strong>कृती:</strong> मजकूर संख्येत बदला.<br>1. <code>int()</code> आणि <code>float()</code> वापरा.<br>2. गुणाकार प्रिंट करा.' },
-      ta: { title: 'உரையை எண்ணாக மாற்றுதல்', goal: '<strong>பணி:</strong> உரையை எண்களாக மாற்றவும்.<br>1. <code>int()</code> மற்றும் <code>float()</code> பயன்படுத்தவும்.<br>2. பெருக்கி அச்சிடவும்.' },
-      te: { title: 'టెక్స్ట్‌ను సంఖ్యలుగా మార్చడం', goal: '<strong>టాస్క్:</strong> <code>int()</code>, <code>float()</code> తో మార్చండి.<br>1. విలువలు మార్చండి.<br>2. గుణకారం ప్రింట్ చేయండి.' },
-      bn: { title: 'টেক্সটকে সংখ্যায় রূপান্তর', goal: '<strong>কাজ:</strong> সংখ্যায় কনভার্ট করুন।<br>1. <code>int()</code> ও <code>float()</code> ব্যবহার করুন।<br>2. গুণ করে প্রিন্ট করুন।' },
-      gu: { title: 'ટેક્સ્ટનું સંખ્યામાં રૂપાંતર', goal: '<strong>કાર્ય:</strong> સ્ટ્રિંગને નંબરમાં ફેરવો.<br>1. <code>int()</code> અને <code>float()</code> વાપરો.<br>2. પ્રિન્ટ કરો.' },
-      kn: { title: 'ಪಠ್ಯವನ್ನು ಸಂಖ್ಯೆಯಾಗಿ ಪರಿವರ್ತಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ಪಠ್ಯವನ್ನು ಸಂಖ್ಯೆಯನ್ನಾಗಿ ಮಾಡಿ.<br>1. <code>int()</code> ಮತ್ತು <code>float()</code> ಬಳಸಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'ടെക്സ്റ്റ് സംഖ്യയാക്കി മാറ്റുക', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യകളാക്കി മാറ്റുക.<br>1. <code>int()</code>, <code>float()</code> നൽകുക.<br>2. ഗുണിച്ച് പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਟੈਕਸਟ ਨੂੰ ਨੰਬਰਾਂ ਵਿੱਚ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> ਟੈਕਸਟ ਨੂੰ ਨੰਬਰ ਬਣਾਓ।<br>1. <code>int()</code> ਅਤੇ <code>float()</code> ਵਰਤੋ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Type of Negative Numbers', goal: '<strong>Task:</strong> Verify the data type of a negative number.<br>1. <code>print(type(-100))</code>.' },
+      hi: { title: 'ऋणात्मक संख्या का प्रकार', goal: '<strong>कार्य:</strong> <code>print(type(-100))</code> से प्रकार जांचें।' },
+      mr: { title: 'ऋण संख्येचा प्रकार', goal: '<strong>कृती:</strong> <code>print(type(-100))</code> वापरून प्रकार तपासा.' },
+      ta: { title: 'எதிர்மறை எண்ணின் வகை', goal: '<strong>பணி:</strong> <code>print(type(-100))</code> என அச்சிடவும்.' },
+      te: { title: 'రుణ సంఖ్య రకం', goal: '<strong>టాస్క్:</strong> <code>print(type(-100))</code> ఉపయోగించి రకాన్ని చూడండి.' },
+      bn: { title: 'ঋণাত্মক সংখ্যার ধরন', goal: '<strong>কাজ:</strong> <code>print(type(-100))</code> দিয়ে টাইপ দেখুন।' },
+      gu: { title: 'ઋણ સંખ્યાનો પ્રકાર', goal: '<strong>કાર્ય:</strong> <code>print(type(-100))</code> વાપરી પ્રકાર ચકાસો.' },
+      kn: { title: 'ಋಣ ಸಂಖ್ಯೆಯ ಪ್ರಕಾರ', goal: '<strong>ಕಾರ್ಯ:</strong> <code>print(type(-100))</code> ಬಳಸಿ ಪ್ರಕಾರ ತಿಳಿಯಿರಿ.' },
+      ml: { title: 'നെഗറ്റീവ് സംഖ്യയുടെ തരം', goal: '<strong>ടാസ്ക്:</strong> <code>print(type(-100))</code> നൽകി തരം കാണുക.' },
+      pa: { title: 'ਨੈਗੇਟਿਵ ਨੰਬਰ ਦੀ ਕਿਸਮ', goal: '<strong>ਕੰਮ:</strong> <code>print(type(-100))</code> ਨਾਲ ਕਿਸਮ ਜਾਣੋ।' }
     }
   },
   {
-    code: 'rank = 1\nlabel = "Rank: #" + str(rank)\nprint(label)',
+    code: 'print(type(None))',
     i18n: {
-      en: { title: 'Converting Numbers to Strings', goal: '<strong>Task:</strong> Turn a number into text.<br>1. Set <code>rank = 1</code>.<br>2. Concatenate: <code>label = "Rank: #" + str(rank)</code>.<br>3. Print <code>label</code>.' },
-      hi: { title: 'संख्या को टेक्स्ट में बदलना', goal: '<strong>कार्य:</strong> <code>str()</code> से संख्या को टेक्स्ट में बदलें।<br>1. <code>rank = 1</code> सेट करें।<br>2. <code>label</code> बनाकर प्रिंट करें।' },
-      mr: { title: 'संख्येचे मजकुरात रूपांतर', goal: '<strong>कृती:</strong> <code>str()</code> वापरून संख्या जोडा.<br>1. <code>rank = 1</code> सेट करा.<br>2. लेबल प्रिंट करा.' },
-      ta: { title: 'எண்களை உரையாக மாற்றுதல்', goal: '<strong>பணி:</strong> <code>str()</code> மூலம் உரையாக மாற்றவும்.<br>1. <code>rank = 1</code> அமைக்கவும்.<br>2. அச்சிடவும்.' },
-      te: { title: 'సంఖ్యను టెక్స్ట్‌గా మార్చడం', goal: '<strong>టాస్క్:</strong> <code>str()</code> ఉపయోగించండి.<br>1. ర్యాంక్ సెట్ చేయండి.<br>2. లేబుల్ ప్రింట్ చేయండి.' },
-      bn: { title: 'সংখ্যাকে টেক্সটে রূপান্তর', goal: '<strong>কাজ:</strong> <code>str()</code> দিয়ে স্ট্রিং বানান।<br>1. র‍্যাংক দিন।<br>2. প্রিন্ট করুন।' },
-      gu: { title: 'સંખ્યાને ટેક્સ્ટમાં ફેરવવી', goal: '<strong>કાર્ય:</strong> <code>str()</code> વાપરી જોડો.<br>1. રેન્ક સેટ કરો.<br>2. લેબલ પ્રિન્ટ કરો.' },
-      kn: { title: 'ಸಂಖ್ಯೆಯನ್ನು ಪಠ್ಯವಾಗಿ ಪರಿವರ್ತಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> <code>str()</code> ಬಳಸಿ ಜೋಡಿಸಿ.<br>1. ರ‍್ಯಾಂಕ್ ನಮೂದಿಸಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'സംഖ്യയെ ടെക്സ്റ്റാക്കി മാറ്റുക', goal: '<strong>ടാസ്ക്:</strong> <code>str()</code> ഉപയോഗിക്കുക.<br>1. റാങ്ക് നൽകുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਨੰਬਰ ਨੂੰ ਟੈਕਸਟ ਵਿੱਚ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> <code>str()</code> ਨਾਲ ਟੈਕਸਟ ਬਣਾਓ।<br>1. ਰੈਂਕ ਸੈੱਟ ਕਰੋ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Type of None', goal: '<strong>Task:</strong> Discover what Python calls a None value.<br>1. <code>print(type(None))</code>.' },
+      hi: { title: 'None का प्रकार', goal: '<strong>कार्य:</strong> <code>print(type(None))</code> से None का प्रकार जांचें।' },
+      mr: { title: 'None चा प्रकार', goal: '<strong>कृती:</strong> <code>print(type(None))</code> वापरून प्रकार तपासा.' },
+      ta: { title: 'None இன் வகை', goal: '<strong>பணி:</strong> <code>print(type(None))</code> என அச்சிடவும்.' },
+      te: { title: 'None రకం', goal: '<strong>టాస్క్:</strong> <code>print(type(None))</code> ఉపయోగించి రకాన్ని చూడండి.' },
+      bn: { title: 'None এর ধরন', goal: '<strong>কাজ:</strong> <code>print(type(None))</code> দিয়ে টাইপ দেখুন।' },
+      gu: { title: 'None નો પ્રકાર', goal: '<strong>કાર્ય:</strong> <code>print(type(None))</code> વાપરી પ્રકાર ચકાસો.' },
+      kn: { title: 'None ಪ್ರಕಾರ', goal: '<strong>ಕಾರ್ಯ:</strong> <code>print(type(None))</code> ಬಳಸಿ ಪ್ರಕಾರ ತಿಳಿಯಿರಿ.' },
+      ml: { title: 'None ന്റെ തരം', goal: '<strong>ടാസ്ക്:</strong> <code>print(type(None))</code> നൽകി തരം കാണുക.' },
+      pa: { title: 'None ਦੀ ਕਿਸਮ', goal: '<strong>ਕੰਮ:</strong> <code>print(type(None))</code> ਨਾਲ ਕਿਸਮ ਜਾਣੋ।' }
     }
   },
   {
-    code: 'winner = None\nprint(winner)\nprint(winner == None)',
+    code: 'width = 800\nheight = 600\nprint(width, height)',
     i18n: {
-      en: { title: 'Empty Values with None', goal: '<strong>Task:</strong> Represent missing values.<br>1. Set <code>winner = None</code>.<br>2. Print <code>winner</code>.<br>3. Print whether <code>winner == None</code>.' },
-      hi: { title: 'None के साथ खाली मान', goal: '<strong>कार्य:</strong> खाली मान के लिए <code>None</code> का उपयोग करें।<br>1. <code>winner = None</code> सेट करें।<br>2. <code>winner</code> और तुलना प्रिंट करें।' },
-      mr: { title: 'None सह रिक्त मूल्य', goal: '<strong>कृती:</strong> रिकाम्या मूल्यासाठी <code>None</code> वापरा.<br>1. <code>winner = None</code> सेट करा.<br>2. तुलना प्रिंट करा.' },
-      ta: { title: 'None கொண்டு வெற்று மதிப்பு', goal: '<strong>பணி:</strong> மதிப்பு இல்லாமையைக் குறிக்கவும்.<br>1. <code>winner = None</code> அமைக்கவும்.<br>2. அச்சிடவும்.' },
-      te: { title: 'None తో ఖాళీ విలువ', goal: '<strong>టాస్క్:</strong> ఖాళీ విలువ కోసం <code>None</code> వాడండి.<br>1. వేరియబుల్ సెట్ చేయండి.<br>2. ప్రింట్ చేయండి.' },
-      bn: { title: 'None দিয়ে ফাঁকা মান', goal: '<strong>কাজ:</strong> খালি মান বোঝাতে <code>None</code> লিখুন।<br>1. <code>winner = None</code> লিখুন।<br>2. প্রিন্ট করুন।' },
-      gu: { title: 'None સાથે ખાલી મૂલ્ય', goal: '<strong>કાર્ય:</strong> ખાલી કિંમત માટે <code>None</code> વાપરો.<br>1. <code>winner = None</code> સેટ કરો.<br>2. પ્રિન્ટ કરો.' },
-      kn: { title: 'None ಮೂಲಕ ಖಾಲಿ ಮೌಲ್ಯ', goal: '<strong>ಕಾರ್ಯ:</strong> ಖಾಲಿ ಮೌಲ್ಯವನ್ನು ನಮೂದಿಸಿ.<br>1. <code>winner = None</code> ಹೊಂದಿಸಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'None ഉപയോഗിച്ച് ശൂന്യമായ മൂല്യം', goal: '<strong>ടാസ്ക്:</strong> മൂല്യമില്ലായ്മ രേഖപ്പെടുത്തുക.<br>1. <code>winner = None</code> നൽകുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'None ਨਾਲ ਖਾਲੀ ਮੁੱਲ', goal: '<strong>ਕੰਮ:</strong> ਖਾਲੀ ਮੁੱਲ ਲਈ <code>None</code> ਵਰਤੋ।<br>1. <code>winner = None</code> ਸੈੱਟ ਕਰੋ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Printing Multiple Variables', goal: '<strong>Task:</strong> Output several variables at once.<br>1. Set <code>width = 800</code> and <code>height = 600</code>.<br>2. Use <code>print(width, height)</code>.' },
+      hi: { title: 'कई वेरिएबल्स प्रिंट करना', goal: '<strong>कार्य:</strong> <code>width</code> और <code>height</code> सेट करके एक साथ प्रिंट करें।' },
+      mr: { title: 'अनेक वेरिएबल्स प्रिंट करणे', goal: '<strong>कृती:</strong> <code>width</code> आणि <code>height</code> सेट करून एकत्र प्रिंट करा.' },
+      ta: { title: 'பல மாறிகளை அச்சிடுதல்', goal: '<strong>பணி:</strong> <code>width</code> மற்றும் <code>height</code> அமைத்து ஒன்றாக அச்சிடவும்.' },
+      te: { title: 'బహుళ వేరియబుల్స్ ప్రింట్ చేయడం', goal: '<strong>టాస్క్:</strong> <code>width</code>, <code>height</code> సెట్ చేసి ఒకేసారి ప్రింట్ చేయండి.' },
+      bn: { title: 'একাধিক ভেরিয়েবল প্রিন্ট করা', goal: '<strong>কাজ:</strong> <code>width</code> এবং <code>height</code> লিখে একসাথে প্রিন্ট করুন।' },
+      gu: { title: 'બહુવિધ વેરિયેબલ્સ પ્રિન્ટ કરવા', goal: '<strong>કાર્ય:</strong> <code>width</code> અને <code>height</code> સેટ કરી એકસાથે પ્રિન્ટ કરો.' },
+      kn: { title: 'ಹಲವು ವೇರಿಯೇಬಲ್‌ಗಳನ್ನು ಪ್ರಿಂಟ್ ಮಾಡುವುದು', goal: '<strong>ಕಾರ್ಯ:</strong> <code>width</code> ಮತ್ತು <code>height</code> ಹೊಂದಿಸಿ ಒಟ್ಟಿಗೆ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ഒന്നിലധികം വേരിയബിളുകൾ പ്രിന്റ് ചെയ്യുക', goal: '<strong>ടാസ്ക്:</strong> <code>width</code>, <code>height</code> നൽകി ഒരുമിച്ച് പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਕਈ ਵੇਰੀਏਬਲ ਪ੍ਰਿੰਟ ਕਰਨਾ', goal: '<strong>ਕੰਮ:</strong> <code>width</code> ਅਤੇ <code>height</code> ਸੈੱਟ ਕਰਕੇ ਇਕੱਠੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'balance = 50.0\ncost = 45.0\ncan_buy = balance >= cost\nprint(can_buy)',
+    code: 'width, height = 800, 600\nwidth, height = 1920, 1080\nprint(width, height)',
     i18n: {
-      en: { title: 'Numeric Comparisons (>=, <=, !=)', goal: '<strong>Task:</strong> Compare numbers.<br>1. Set <code>balance = 50.0</code> and <code>cost = 45.0</code>.<br>2. Check: <code>can_buy = balance >= cost</code>.<br>3. Print <code>can_buy</code>.' },
-      hi: { title: 'संख्यात्मक तुलना (>=, <=, !=)', goal: '<strong>कार्य:</strong> दो संख्याओं की तुलना करें।<br>1. बैलेंस और लागत सेट करें।<br>2. <code>can_buy</code> निकालें और प्रिंट करें।' },
-      mr: { title: 'संख्यांची तुलना (>=, <=, !=)', goal: '<strong>कृती:</strong> संख्यांची तुलना करा.<br>1. शिल्लक आणि खर्च सेट करा.<br>2. अट तपासा आणि प्रिंट करा.' },
-      ta: { title: 'எண் ஒப்பீடுகள்', goal: '<strong>பணி:</strong> எண்களை ஒப்பிடவும்.<br>1. இருப்பு மற்றும் செலவை அமைக்கவும்.<br>2. <code>>=</code> சரிபார்த்து அச்சிடவும்.' },
-      te: { title: 'సంఖ్యా పోలికలు', goal: '<strong>టాస్క్:</strong> సంఖ్యలను పోల్చండి.<br>1. బ్యాలెన్స్, ఖర్చు ఇవ్వండి.<br>2. ఫలితం ప్రింట్ చేయండి.' },
-      bn: { title: 'সংখ্যার তুলনা', goal: '<strong>কাজ:</strong> সংখ্যা তুলনা করুন।<br>1. ব্যালেন্স ও খরচ দিন।<br>2. শর্ত মিলিয়ে প্রিন্ট করুন।' },
-      gu: { title: 'સંખ્યાઓની સરખામણી', goal: '<strong>કાર્ય:</strong> કિંમતો સરખાવો.<br>1. બેલેન્સ અને ખર્ચ સેટ કરો.<br>2. ચકાસીને પ્રિન્ટ કરો.' },
-      kn: { title: 'ಸಂಖ್ಯೆಗಳ ಹೋಲಿಕೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಸಂಖ್ಯೆಗಳನ್ನು ಹೋಲಿಸಿ.<br>1. ಬಾಕಿ ಮತ್ತು ವೆಚ್ಚ ನಮೂದಿಸಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'സംഖ്യകൾ താരതമ്യം ചെയ്യുക', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യകൾ താരതമ്യം ചെയ്യുക.<br>1. തുക നൽകുക.<br>2. പരിശോധിച്ച് പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਨੰਬਰਾਂ ਦੀ ਤੁਲਨਾ', goal: '<strong>ਕੰਮ:</strong> ਨੰਬਰਾਂ ਦੀ ਤੁਲਨਾ ਕਰੋ।<br>1. ਬੈਲੇਂਸ ਅਤੇ ਖਰਚਾ ਲਓ।<br>2. ਨਤੀਜਾ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Overwriting Multiple Variables', goal: '<strong>Task:</strong> Reassign multiple variables on one line.<br>1. Set to 800, 600.<br>2. Overwrite to 1920, 1080.<br>3. Print.' },
+      hi: { title: 'कई वेरिएबल्स को दोबारा असाइन करना', goal: '<strong>कार्य:</strong> मानों को 1920 और 1080 में बदलें और प्रिंट करें।' },
+      mr: { title: 'अनेक वेरिएबल्स पुन्हा असाइन करणे', goal: '<strong>कृती:</strong> मूल्ये 1920 आणि 1080 मध्ये बदला आणि प्रिंट करा.' },
+      ta: { title: 'பல மாறிகளை மாற்றுதல்', goal: '<strong>பணி:</strong> மதிப்புகளை 1920 மற்றும் 1080 என மாற்றி அச்சிடவும்.' },
+      te: { title: 'బహుళ వేరియబుల్స్ మార్చడం', goal: '<strong>టాస్క్:</strong> విలువలను 1920, 1080 కి మార్చి ప్రింట్ చేయండి.' },
+      bn: { title: 'একাধিক ভেরিয়েবল পরিবর্তন করা', goal: '<strong>কাজ:</strong> মান ১৯২০ এবং ১০৮০ তে পরিবর্তন করে প্রিন্ট করুন।' },
+      gu: { title: 'બહુવિધ વેરિયેબલ્સ ફરીથી અસાઇન કરવા', goal: '<strong>કાર્ય:</strong> કિંમતો 1920 અને 1080 માં બદલી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಹಲವು ವೇರಿಯೇಬಲ್‌ಗಳನ್ನು ಬದಲಾಯಿಸುವುದು', goal: '<strong>ಕಾರ್ಯ:</strong> ಮೌಲ್ಯಗಳನ್ನು 1920 ಮತ್ತು 1080 ಕ್ಕೆ ಬದಲಾಯಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ഒന്നിലധികം വേരിയബിളുകൾ മാറ്റുക', goal: '<strong>ടാസ്ക്:</strong> മൂല്യങ്ങൾ 1920, 1080 ആക്കി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਕਈ ਵੇਰੀਏਬਲ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> ਮੁੱਲਾਂ ਨੂੰ 1920 ਅਤੇ 1080 ਵਿੱਚ ਬਦਲ ਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'a = "apple"\nb = "banana"\nprint(a < b)\nprint("Cat" == "cat")',
+    code: 'a = 1\nb = a\nc = b\nprint(c)',
     i18n: {
-      en: { title: 'Alphabetical String Comparisons', goal: '<strong>Task:</strong> Compare text alphabetically.<br>1. Set <code>a = "apple"</code> and <code>b = "banana"</code>.<br>2. Print <code>a < b</code>.<br>3. Print <code>"Cat" == "cat"</code>.' },
-      hi: { title: 'वर्णमाला के अनुसार तुलना', goal: '<strong>कार्य:</strong> वर्णमाला के क्रम में तुलना करें।<br>1. दो शब्द सेट करें।<br>2. <code>a < b</code> और केस संवेदनशीलता प्रिंट करें।' },
-      mr: { title: 'अक्षरांनुसार तुलना करणे', goal: '<strong>कृती:</strong> वर्णक्रमानुसार तुलना करा.<br>1. दोन शब्द सेट करा.<br>2. निकाल प्रिंट करा.' },
-      ta: { title: 'அகரவரிசை ஒப்பீடு', goal: '<strong>பணி:</strong> எழுத்துக்களின் வரிசையை ஒப்பிடவும்.<br>1. இரண்டு சொற்களை அமைக்கவும்.<br>2. அச்சிடவும்.' },
-      te: { title: 'వర్ణమాల క్రమంలో పోలిక', goal: '<strong>టాస్క్:</strong> పదాలను పోల్చండి.<br>1. రెండు పదాలు ఇవ్వండి.<br>2. ఫలితం ప్రింట్ చేయండి.' },
-      bn: { title: 'বর্ণমালার ক্রমানুসারে তুলনা', goal: '<strong>কাজ:</strong> টেক্সট তুলনা করুন।<br>1. দুটি শব্দ দিন।<br>2. প্রিন্ট করুন।' },
-      gu: { title: 'કક્કાવારી મુજબ સરખામણી', goal: '<strong>કાર્ય:</strong> અક્ષરો મુજબ સરખાવો.<br>1. બે શબ્દો સેટ કરો.<br>2. પ્રિન્ટ કરો.' },
-      kn: { title: 'ವರ್ಣಮಾಲೆಯ ಹೋಲಿಕೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಅಕ್ಷರಮಾಲೆಯಂತೆ ಹೋಲಿಸಿ.<br>1. ಎರಡು ಪದಗಳನ್ನು ನೀಡಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'അക്ഷരമാലാക്രമത്തിൽ താരതമ്യം', goal: '<strong>ടാസ്ക്:</strong> ടെക്സ്റ്റ് താരതമ്യം ചെയ്യുക.<br>1. രണ്ട് വാക്കുകൾ നൽകുക.<br>2. ಪ್ರിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਵਰਣਮਾਲਾ ਅਨੁਸਾਰ ਤੁਲਨਾ', goal: '<strong>ਕੰਮ:</strong> ਵਰਣਮਾਲਾ ਅਨੁਸਾਰ ਤੁਲਨਾ ਕਰੋ।<br>1. ਦੋ ਸ਼ਬਦ ਲਓ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Chain Variable Copying', goal: '<strong>Task:</strong> Pass values down a chain.<br>1. <code>a = 1</code><br>2. <code>b = a</code><br>3. <code>c = b</code><br>4. Print <code>c</code>.' },
+      hi: { title: 'चेन वेरिएबल कॉपी करना', goal: '<strong>कार्य:</strong> एक के बाद एक वेरिएबल्स कॉपी करें और अंतिम वेरिएबल प्रिंट करें।' },
+      mr: { title: 'चेन वेरिएबल कॉपी करणे', goal: '<strong>कृती:</strong> एकामागून एक वेरिएबल्स कॉपी करा आणि शेवटचा प्रिंट करा.' },
+      ta: { title: 'சங்கிலி மாறி நகலெடுத்தல்', goal: '<strong>பணி:</strong> அடுத்தடுத்து மாறிகளை நகலெடுத்து கடைசியை அச்சிடவும்.' },
+      te: { title: 'చైన్ వేరియబుల్ కాపీ చేయడం', goal: '<strong>టాస్క్:</strong> ఒకదాని తర్వాత ఒకటి కాపీ చేసి చివరిది ప్రింట్ చేయండి.' },
+      bn: { title: 'চেইন ভেরিয়েবল কপি করা', goal: '<strong>কাজ:</strong> একটার পর একটা কপি করে শেষেরটি প্রিন্ট করুন।' },
+      gu: { title: 'ચેઈન વેરિયેબલ કોપી કરવા', goal: '<strong>કાર્ય:</strong> એક પછી એક કોપી કરી છેલ્લો પ્રિન્ટ કરો.' },
+      kn: { title: 'ಸರಪಳಿ ವೇರಿಯೇಬಲ್ ನಕಲಿಸುವುದು', goal: '<strong>ಕಾರ್ಯ:</strong> ಒಂದಾದ ಮೇಲೊಂದರಂತೆ ನಕಲಿಸಿ ಕೊನೆಯದನ್ನು ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ചെയിൻ വേരിയബിൾ പകർത്തുക', goal: '<strong>ടാസ്ക്:</strong> ഒന്നിനുപുറകെ ഒന്നായി പകർത്തി അവസാനത്തേത് പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਚੇਨ ਵੇਰੀਏਬਲ ਕਾਪੀ ਕਰਨਾ', goal: '<strong>ਕੰਮ:</strong> ਇੱਕ ਤੋਂ ਬਾਅਦ ਇੱਕ ਕਾਪੀ ਕਰਕੇ ਆਖਰੀ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'age = 20\nhas_ticket = True\ncan_enter = (age >= 18) and has_ticket\nprint(can_enter)',
+    code: 'Name = "video"\nname = "audio"\nprint(Name, name)',
     i18n: {
-      en: { title: 'Logical AND (Both Must Be True)', goal: '<strong>Task:</strong> Combine with <code>and</code>.<br>1. Set <code>age = 20</code> and <code>has_ticket = True</code>.<br>2. Check: <code>can_enter = (age >= 18) and has_ticket</code>.<br>3. Print.' },
-      hi: { title: 'लॉजिकल AND (दोनों सही हों)', goal: '<strong>कार्य:</strong> <code>and</code> से दोनों शर्तें जोड़ें।<br>1. आयु और टिकट सेट करें।<br>2. <code>can_enter</code> निकालें और प्रिंट करें।' },
-      mr: { title: 'लॉजिकल AND (दोन्ही खरे हवेत)', goal: '<strong>कृती:</strong> <code>and</code> वापरून अटी जोडा.<br>1. वय आणि तिकीट सेट करा.<br>2. अट तपासा आणि प्रिंट करा.' },
-      ta: { title: 'Logical AND (இரண்டும் மெய்)', goal: '<strong>பணி:</strong> <code>and</code> கொண்டு இணைக்கவும்.<br>1. வயது மற்றும் டிக்கெட்டை அமைக்கவும்.<br>2. அச்சிடவும்.' },
-      te: { title: 'లాజికల్ AND (రెండూ నిజం కావాలి)', goal: '<strong>టాస్క్:</strong> <code>and</code> తో షరతులు కలపండి.<br>1. వయస్సు, టికెట్ ఇవ్వండి.<br>2. ప్రింట్ చేయండి.' },
-      bn: { title: 'লজিক্যাল AND (দুটোই সত্য)', goal: '<strong>কাজ:</strong> <code>and</code> দিয়ে শর্ত জুড়ুন।<br>1. বয়স ও টিকিট দিন।<br>2. প্রিন্ট করুন।' },
-      gu: { title: 'લોજિકલ AND (બંને સાચા હોવા જોઈએ)', goal: '<strong>કાર્ય:</strong> <code>and</code> વડે શરતો જોડો.<br>1. ઉંમર અને ટિકિટ સેટ કરો.<br>2. પ્રિન્ટ કરો.' },
-      kn: { title: 'Logical AND (ಎರಡೂ ಸರಿಯಾಗಿರಬೇಕು)', goal: '<strong>ಕಾರ್ಯ:</strong> <code>and</code> ಬಳಸಿ ಷರತ್ತು ಜೋಡಿಸಿ.<br>1. ವಯಸ್ಸು ಮತ್ತು ಟಿಕೆಟ್ ನಮೂದಿಸಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'Logical AND (രണ്ടും ശരിയാവണം)', goal: '<strong>ടാസ്ക്:</strong> <code>and</code> ഉപയോഗിക്കുക.<br>1. പ്രായവും ടിക്കറ്റും നൽകുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'Logical AND (ਦੋਵੇਂ ਸੱਚ ਹੋਣ)', goal: '<strong>ਕੰਮ:</strong> <code>and</code> ਨਾਲ ਸ਼ਰਤਾਂ ਜੋੜੋ।<br>1. ਉਮਰ ਅਤੇ ਟਿਕਟ ਲਓ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Case Sensitivity', goal: '<strong>Task:</strong> Capitalization creates different variables.<br>1. Set <code>Name = "video"</code>.<br>2. Set <code>name = "audio"</code>.<br>3. Print both.' },
+      hi: { title: 'केस सेंसिटिविटी', goal: '<strong>कार्य:</strong> कैपिटल और स्मॉल लेटर्स अलग-अलग वेरिएबल्स बनाते हैं। दोनों प्रिंट करें।' },
+      mr: { title: 'केस सेन्सिटिव्हिटी', goal: '<strong>कृती:</strong> कॅपिटल आणि स्मॉल अक्षरे वेगळे वेरिएबल्स बनवतात. दोन्ही प्रिंट करा.' },
+      ta: { title: 'எழுத்து உணர்திறன்', goal: '<strong>பணி:</strong> பெரிய மற்றும் சிறிய எழுத்துக்கள் வேறுபட்டவை. இரண்டையும் அச்சிடவும்.' },
+      te: { title: 'కేస్ సెన్సిటివిటీ', goal: '<strong>టాస్క్:</strong> క్యాపిటల్, స్మాల్ లెటర్స్ వేరు. రెండింటినీ ప్రింట్ చేయండి.' },
+      bn: { title: 'কেস সেন্সিটিভিটি', goal: '<strong>কাজ:</strong> বড় এবং ছোট হাতের অক্ষর আলাদা। দুটিই প্রিন্ট করুন।' },
+      gu: { title: 'કેસ સેન્સિટિવિટી', goal: '<strong>કાર્ય:</strong> કેપિટલ અને સ્મોલ અક્ષરો અલગ વેરિયેબલ્સ બનાવે છે. બંને પ્રિન્ટ કરો.' },
+      kn: { title: 'ಕೇಸ್ ಸೆನ್ಸಿಟಿವಿಟಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ದೊಡ್ಡ ಮತ್ತು ಸಣ್ಣ ಅಕ್ಷರಗಳು ಬೇರೆ. ಎರಡನ್ನೂ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'കേസ് സെൻസിറ്റിവിറ്റി', goal: '<strong>ടാസ്ക്:</strong> വലിയ ചെറിയ അക്ഷരങ്ങൾ വ്യത്യസ്തമാണ്. രണ്ടും പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਕੇਸ ਸੈਂਸੀਟੀਵਿਟੀ', goal: '<strong>ਕੰਮ:</strong> ਵੱਡੇ ਅਤੇ ਛੋਟੇ ਅੱਖਰ ਵੱਖਰੇ ਵੇਰੀਏਬਲ ਬਣਾਉਂਦੇ ਹਨ। ਦੋਵੇਂ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'is_admin = False\nhas_pass = True\naccess = is_admin or has_pass\nprint(access)',
+    code: 'alt_text = \'Play\'\nprint(alt_text)',
     i18n: {
-      en: { title: 'Logical OR (Either Can Be True)', goal: '<strong>Task:</strong> Use <code>or</code>.<br>1. Set <code>is_admin = False</code> and <code>has_pass = True</code>.<br>2. Check: <code>access = is_admin or has_pass</code>.<br>3. Print.' },
-      hi: { title: 'लॉजिकल OR (कोई भी एक सही हो)', goal: '<strong>कार्य:</strong> <code>or</code> से कम से कम एक शर्त जांचें।<br>1. वैरिएबल्स सेट करें।<br>2. <code>access</code> निकालें और प्रिंट करें।' },
-      mr: { title: 'लॉजिकल OR (एक तरी खरे हवे)', goal: '<strong>कृती:</strong> <code>or</code> वापरून अट तपासा.<br>1. व्हेरिएबल्स सेट करा.<br>2. ऍक्सेस प्रिंट करा.' },
-      ta: { title: 'Logical OR (ஏதேனும் ஒன்று மெய்)', goal: '<strong>பணி:</strong> <code>or</code> ஐப் பயன்படுத்தவும்.<br>1. மாறிகளை அமைக்கவும்.<br>2. அச்சிடவும்.' },
-      te: { title: 'లాజికల్ OR (ఏదైనా ఒకటి నిజం)', goal: '<strong>టాస్క్:</strong> <code>or</code> ఉపయోగించండి.<br>1. వేరియబుల్స్ ఇవ్వండి.<br>2. ప్రింట్ చేయండి.' },
-      bn: { title: 'লজিক্যাল OR (যেকোনো একটি সত্য)', goal: '<strong>কাজ:</strong> <code>or</code> ব্যবহার করুন।<br>1. মান দিন।<br>2. প্রিন্ট করুন।' },
-      gu: { title: 'લોજિકલ OR (કોઈપણ એક સાચું)', goal: '<strong>કાર્ય:</strong> <code>or</code> વાપરો.<br>1. વેરિયેબલ્સ સેટ કરો.<br>2. પ્રિન્ટ કરો.' },
-      kn: { title: 'Logical OR (ಯಾವುದಾದರೂ ಒಂದು ಸರಿ)', goal: '<strong>ಕಾರ್ಯ:</strong> <code>or</code> ಬಳಸಿ.<br>1. ಷರತ್ತು ನೀಡಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'Logical OR (ഏതെങ്കിലും ഒന്ന് ശരി)', goal: '<strong>ടാസ്ക്:</strong> <code>or</code> ഉപയോഗിക്കുക.<br>1. വിവരങ്ങൾ നൽകുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'Logical OR (ਕੋਈ ਇੱਕ ਸੱਚ ਹੋਵੇ)', goal: '<strong>ਕੰਮ:</strong> <code>or</code> ਵਰਤੋ।<br>1. ਵੇਰੀਏਬਲ ਲਓ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Strings with Single Quotes', goal: '<strong>Task:</strong> Strings can use single quotes.<br>1. Set <code>alt_text = \'Play\'</code>.<br>2. Print it.' },
+      hi: { title: 'सिंगल कोट्स में स्ट्रिंग्स', goal: '<strong>कार्य:</strong> <code>alt_text = \'Play\'</code> सेट करके प्रिंट करें।' },
+      mr: { title: 'सिंगल कोट्समधील स्ट्रिंग्स', goal: '<strong>कृती:</strong> <code>alt_text = \'Play\'</code> सेट करून प्रिंट करा.' },
+      ta: { title: 'ஒற்றை மேற்கோள்களில் சரங்கள்', goal: '<strong>பணி:</strong> <code>alt_text = \'Play\'</code> அமைத்து அச்சிடவும்.' },
+      te: { title: 'సింగిల్ కోట్స్‌లో స్ట్రింగ్స్', goal: '<strong>టాస్క్:</strong> <code>alt_text = \'Play\'</code> సెట్ చేసి ప్రింట్ చేయండి.' },
+      bn: { title: 'সিঙ্গেল কোট দিয়ে স্ট্রিং', goal: '<strong>কাজ:</strong> <code>alt_text = \'Play\'</code> লিখে প্রিন্ট করুন।' },
+      gu: { title: 'સિંગલ કોટ્સમાં સ્ટ્રિંગ્સ', goal: '<strong>કાર્ય:</strong> <code>alt_text = \'Play\'</code> સેટ કરી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಸಿಂಗಲ್ ಕೋಟ್ಸ್‌ನಲ್ಲಿ ಪಠ್ಯ', goal: '<strong>ಕಾರ್ಯ:</strong> <code>alt_text = \'Play\'</code> ಹೊಂದಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'സിംഗിൾ കോട്ട്സിലെ സ്ട്രിംഗുകൾ', goal: '<strong>ടാസ്ക്:</strong> <code>alt_text = \'Play\'</code> നൽകി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਸਿੰਗਲ ਕੋਟਸ ਵਿੱਚ ਸਟ੍ਰਿੰਗਜ਼', goal: '<strong>ਕੰਮ:</strong> <code>alt_text = \'Play\'</code> ਸੈੱਟ ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'is_locked = True\nis_open = not is_locked\nprint(is_open)',
+    code: 'is_playing = True\nprint(is_playing)\nis_playing = False\nprint(is_playing)',
     i18n: {
-      en: { title: 'Logical NOT (Inverting Booleans)', goal: '<strong>Task:</strong> Invert boolean values.<br>1. Set <code>is_locked = True</code>.<br>2. Invert: <code>is_open = not is_locked</code>.<br>3. Print <code>is_open</code>.' },
-      hi: { title: 'लॉजिकल NOT (उलट मान)', goal: '<strong>कार्य:</strong> बूलियन मान को उल्टा करें।<br>1. <code>is_locked = True</code> सेट करें।<br>2. <code>is_open = not is_locked</code> करके प्रिंट करें।' },
-      mr: { title: 'लॉजिकल NOT (उलट करणे)', goal: '<strong>कृती:</strong> <code>not</code> ने मूल्य उलटे करा.<br>1. <code>is_locked = True</code> सेट करा.<br>2. उलट मूल्य प्रिंट करा.' },
-      ta: { title: 'Logical NOT (எதிர்நிலை)', goal: '<strong>பணி:</strong> மதிப்பைத் தலைகீழாக மாற்றவும்.<br>1. <code>is_locked = True</code> அமைக்கவும்.<br>2. <code>not</code> செய்து அச்சிடவும்.' },
-      te: { title: 'లాజికల్ NOT (వ్యతిరేక విలువ)', goal: '<strong>టాస్క్:</strong> బూలియన్ విలువను తిప్పండి.<br>1. <code>is_locked = True</code> ఇవ్వండి.<br>2. వ్యతిరేకం ప్రింట్ చేయండి.' },
-      bn: { title: 'লজিক্যাল NOT (বিপরীত মান)', goal: '<strong>কাজ:</strong> <code>not</code> দিয়ে মান উল্টে দিন।<br>1. মান দিন।<br>2. প্রিন্ট করুন।' },
-      gu: { title: 'લોજિકલ NOT (મૂલ્ય ઉલટાવવું)', goal: '<strong>કાર્ય:</strong> બુલિયન કિંમત ઉલટો.<br>1. <code>is_locked = True</code> લો.<br>2. <code>not</code> વાપરી પ્રિન્ટ કરો.' },
-      kn: { title: 'Logical NOT (ವಿರುದ್ಧ ಮೌಲ್ಯ)', goal: '<strong>ಕಾರ್ಯ:</strong> ಮೌಲ್ಯವನ್ನು ವಿರುದ್ಧವಾಗಿಸಿ.<br>1. <code>is_locked = True</code> ಹೊಂದಿಸಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'Logical NOT (വിപരീതമാക്കുക)', goal: '<strong>ടാസ്ക്:</strong> <code>not</code> ഉപയോഗിക്കുക.<br>1. മൂല്യം നൽകുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'Logical NOT (ਉਲਟਾਉਣਾ)', goal: '<strong>ਕੰਮ:</strong> ਮੁੱਲ ਨੂੰ ਉਲਟਾਓ।<br>1. <code>is_locked = True</code> ਲਓ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Boolean Reassignment', goal: '<strong>Task:</strong> Toggle a state.<br>1. Set <code>is_playing = True</code> and print.<br>2. Change it to <code>False</code> and print.' },
+      hi: { title: 'बूलियन को दोबारा असाइन करना', goal: '<strong>कार्य:</strong> <code>is_playing</code> को True से False में बदलें और प्रिंट करें।' },
+      mr: { title: 'बूलियन पुन्हा असाइन करणे', goal: '<strong>कृती:</strong> <code>is_playing</code> ची स्थिती बदला आणि प्रिंट करा.' },
+      ta: { title: 'பூலியனை மாற்றுதல்', goal: '<strong>பணி:</strong> நிலையை மாற்றி அச்சிடவும்.' },
+      te: { title: 'బూలియన్ మార్చడం', goal: '<strong>టాస్క్:</strong> <code>is_playing</code> ని మార్చి ప్రింట్ చేయండి.' },
+      bn: { title: 'বুলিয়ান পরিবর্তন করা', goal: '<strong>কাজ:</strong> <code>is_playing</code> পরিবর্তন করে প্রিন্ট করুন।' },
+      gu: { title: 'બુલિયન ફરીથી અસાઇન કરવું', goal: '<strong>કાર્ય:</strong> <code>is_playing</code> બદલી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಬೂಲಿಯನ್ ಬದಲಾಯಿಸುವುದು', goal: '<strong>ಕಾರ್ಯ:</strong> <code>is_playing</code> ಸ್ಥಿತಿ ಬದಲಾಯಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ബൂളിയൻ മാറ്റുക', goal: '<strong>ടാസ്ക്:</strong> <code>is_playing</code> മാറ്റി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਬੂਲੀਅਨ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> <code>is_playing</code> ਬਦਲ ਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'val = 72\nmin_val = 60\nmax_val = 80\nin_range = (val >= min_val) and (val <= max_val)\nprint(in_range)',
+    code: 'scale = 1.0\nscale = 2.5\nprint(scale)',
     i18n: {
-      en: { title: 'Testing Ranges with Logic', goal: '<strong>Task:</strong> Check if a number is inside a range.<br>1. Set <code>val = 72</code>, <code>min_val = 60</code>, <code>max_val = 80</code>.<br>2. Check range with <code>and</code>.<br>3. Print.' },
-      hi: { title: 'रेंज की जांच करना', goal: '<strong>कार्य:</strong> जांचें कि क्या संख्या सीमा में है।<br>1. मान और सीमाएं निर्धारित करें।<br>2. <code>in_range</code> की जांच करें और प्रिंट करें।' },
-      mr: { title: 'मर्यादा तपासणे (Range Test)', goal: '<strong>कृती:</strong> संख्या मर्यादेत आहे का तपासा.<br>1. मर्यादा आणि संख्या सेट करा.<br>2. तपासून प्रिंट करा.' },
-      ta: { title: 'எல்லைகளைச் சோதித்தல்', goal: '<strong>பணி:</strong> எண் வரம்பிற்குள் உள்ளதா எனப் பார்க்கவும்.<br>1. மாறிகளை அமைக்கவும்.<br>2. அச்சிடவும்.' },
-      te: { title: 'పరిధిని తనిఖీ చేయడం', goal: '<strong>టాస్క్:</strong> సంఖ్య పరిధిలో ఉందో లేదో చూడండి.<br>1. విలువలు ఇవ్వండి.<br>2. ప్రింట్ చేయండి.' },
-      bn: { title: 'নির্দিষ্ট সীমা পরীক্ষা', goal: '<strong>কাজ:</strong> সংখ্যাটি সীমার ভেতর কিনা দেখুন।<br>1. মান ও সীমা দিন।<br>2. প্রিন্ট করুন।' },
-      gu: { title: 'રેન્જ ચકાસવી', goal: '<strong>કાર્ય:</strong> સંખ્યા મર્યાદામાં છે કે નહીં તે ચકાસો.<br>1. કિંમતો સેટ કરો.<br>2. પ્રિન્ટ કરો.' },
-      kn: { title: 'ಶ್ರೇಣಿಯನ್ನು ಪರೀಕ್ಷಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ಸಂಖ್ಯೆ ಮಿತಿಯಲ್ಲಿದೆಯೇ ತಿಳಿಯಿರಿ.<br>1. ಸಂಖ್ಯೆಗಳನ್ನು ನಮೂದಿಸಿ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'പരിധി പരിശോധിക്കുക', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യ പരിധിക്കുള്ളിലാണോ എന്ന് നോക്കുക.<br>1. അളവുകൾ നൽകുക.<br>2. പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਸੀਮਾ ਦੀ ਜਾਂਚ ਕਰਨਾ', goal: '<strong>ਕੰਮ:</strong> ਚੈੱਕ ਕਰੋ ਕਿ ਨੰਬਰ ਸੀਮਾ ਵਿੱਚ ਹੈ ਜਾਂ ਨਹੀਂ।<br>1. ਮੁੱਲ ਸੈੱਟ ਕਰੋ।<br>2. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Float Reassignment', goal: '<strong>Task:</strong> Update a decimal value.<br>1. Set <code>scale = 1.0</code>.<br>2. Update to <code>2.5</code> and print.' },
+      hi: { title: 'फ्लोट को दोबारा असाइन करना', goal: '<strong>कार्य:</strong> दशमलव मान बदलें और प्रिंट करें।' },
+      mr: { title: 'फ्लोट पुन्हा असाइन करणे', goal: '<strong>कृती:</strong> दशांश मूल्य बदला आणि प्रिंट करा.' },
+      ta: { title: 'தசம எண்ணை மாற்றுதல்', goal: '<strong>பணி:</strong> தசம மதிப்பை மாற்றி அச்சிடவும்.' },
+      te: { title: 'దశాంఖం మార్చడం', goal: '<strong>టాస్క్:</strong> దశాంఖ విలువను మార్చి ప్రింట్ చేయండి.' },
+      bn: { title: 'দশমিক পরিবর্তন করা', goal: '<strong>কাজ:</strong> দশমিক মান পরিবর্তন করে প্রিন্ট করুন।' },
+      gu: { title: 'ફ્લોટ ફરીથી અસાઇન કરવું', goal: '<strong>કાર્ય:</strong> દશાંશ કિંમત બદલી પ્રિન્ટ કરો.' },
+      kn: { title: 'ದಶಮಾಂಶ ಬದಲಾಯಿಸುವುದು', goal: '<strong>ಕಾರ್ಯ:</strong> ದಶಮಾಂಶ ಮೌಲ್ಯ ಬದಲಾಯಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ദശാംശം മാറ്റുക', goal: '<strong>ടാസ്ക്:</strong> ദശാംശ മൂല്യം മാറ്റി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਫਲੋਟ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> ਦਸ਼ਮਲਵ ਮੁੱਲ ਬਦਲ ਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'print(bool(0), bool(15))\nprint(bool(""), bool("Python"))',
+    code: 'id1, id2 = None, None\nprint(id1, id2)',
     i18n: {
-      en: { title: 'Truthiness and bool()', goal: '<strong>Task:</strong> Check truthy and falsy values.<br>1. Test numbers: <code>print(bool(0), bool(15))</code>.<br>2. Test strings: <code>print(bool(""), bool("Python"))</code>.' },
-      hi: { title: 'सत्यता और bool() रूपांतरण', goal: '<strong>कार्य:</strong> सत्य (Truthy) और असत्य (Falsy) मान देखें।<br>1. <code>print(bool(0), bool(15))</code>.<br>2. <code>print(bool(""), bool("Python"))</code>.' },
-      mr: { title: 'सत्यता आणि bool()', goal: '<strong>कृती:</strong> ट्रुथी व फॉल्सी मूल्ये तपासा.<br>1. संख्या तपासा.<br>2. मजकूर तपासा.' },
-      ta: { title: 'bool() மூலம் உண்மைநிலை அறிதல்', goal: '<strong>பணி:</strong> உண்மை மற்றும் பொய் நிலைகளைச் சோதிக்கவும்.<br>1. எண்களைச் சோதிக்கவும்.<br>2. உரைகளைச் சோதிக்கவும்.' },
-      te: { title: 'bool() తో నిజనిర్ధారణ', goal: '<strong>టాస్క్:</strong> ట్రూతీ మరియు ఫాల్సీ విలువలు చూడండి.<br>1. సంఖ్యలను పరీక్షించండి.<br>2. పదాలను పరీక్షించండి.' },
-      bn: { title: 'সত্যতা ও bool() রূপান্তর', goal: '<strong>কাজ:</strong> Truthy ও Falsy মান দেখুন।<br>1. সংখ্যা পরীক্ষা করুন।<br>2. স্ট্রিং পরীক্ষা করুন।' },
-      gu: { title: 'સત્યતા અને bool()', goal: '<strong>કાર્ય:</strong> સાચી અને ખોટી કિંમતો તપાસો.<br>1. નંબર્સ ચકાસો.<br>2. શબ્દો ચકાસો.' },
-      kn: { title: 'bool() ಮತ್ತು ಸತ್ಯಾಸತ್ಯತೆ', goal: '<strong>ಕಾರ್ಯ:</strong> Truthy ಮತ್ತು Falsy ತಿಳಿಯಿರಿ.<br>1. ಸಂಖ್ಯೆಗಳನ್ನು ಪರೀಕ್ಷಿಸಿ.<br>2. ಪಠ್ಯವನ್ನು ಪರೀಕ್ಷಿಸಿ.' },
-      ml: { title: 'bool() ഉപയോഗിച്ച് സത്യവസ്ഥ അറിയുക', goal: '<strong>ടാസ്ക്:</strong> ശരി, തെറ്റ് അവസ്ഥകൾ കാണുക.<br>1. സംഖ്യകൾ പരിശോധിക്കുക.<br>2. ടെക്സ്റ്റ് പരിശോധിക്കുക.' },
-      pa: { title: 'bool() ਨਾਲ ਸੱਚਾਈ ਪਰਖਣਾ', goal: '<strong>ਕੰਮ:</strong> Truthy ਅਤੇ Falsy ਮੁੱਲ ਦੇਖੋ।<br>1. ਨੰਬਰਾਂ ਦੀ ਜਾਂਚ ਕਰੋ।<br>2. ਟੈਕਸਟ ਦੀ ਜਾਂਚ ਕਰੋ।' }
+      en: { title: 'Multiple None Assignment', goal: '<strong>Task:</strong> Initialize variables as empty.<br>1. Set <code>id1, id2 = None, None</code>.<br>2. Print both.' },
+      hi: { title: 'कई None असाइनमेंट', goal: '<strong>कार्य:</strong> दो वेरिएबल्स को None सेट करें और प्रिंट करें।' },
+      mr: { title: 'अनेक None असाइनमेंट', goal: '<strong>कृती:</strong> दोन वेरिएबल्स None सेट करा आणि प्रिंट करा.' },
+      ta: { title: 'பல None ஒதுக்கீடு', goal: '<strong>பணி:</strong> இரண்டு மாறிகளை None ஆக அமைத்து அச்சிடவும்.' },
+      te: { title: 'బహుళ None అసైన్‌మెంట్', goal: '<strong>టాస్క్:</strong> రెండు వేరియబుల్స్‌ని None గా సెట్ చేసి ప్రింట్ చేయండి.' },
+      bn: { title: 'একাধিক None অ্যাসাইনমেন্ট', goal: '<strong>কাজ:</strong> দুটি ভেরিয়েবল None সেট করে প্রিন্ট করুন।' },
+      gu: { title: 'બહુવિધ None અસાઇનમેન્ટ', goal: '<strong>કાર્ય:</strong> બે વેરિયેબલ્સ None સેટ કરી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಹಲವು None ನಿಯೋಜನೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಎರಡು ವೇರಿಯೇಬಲ್‌ಗಳನ್ನು None ಆಗಿ ಹೊಂದಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'ഒന്നിലധികം None നൽകുക', goal: '<strong>ടാസ്ക്:</strong> രണ്ട് വേരിയബിളുകൾ None ആക്കി പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਕਈ None ਅਸਾਈਨਮੈਂਟ', goal: '<strong>ਕੰਮ:</strong> ਦੋ ਵੇਰੀਏਬਲ None ਸੈੱਟ ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
   {
-    code: 'total = (25.0 * 2) + 4.0\nover_fifty = total > 50.0\nprint(f"Total: ${total}, Over $50: {over_fifty}")',
+    code: 'num, text = 404, "Error"\nnum, text = text, num\nprint(num, text)',
     i18n: {
-      en: { title: 'Capstone: Receipt Generator', goal: '<strong>Task:</strong> Put everything together.<br>1. Calculate total: <code>total = (25.0 * 2) + 4.0</code>.<br>2. Check: <code>over_fifty = total > 50.0</code>.<br>3. Print receipt string.' },
-      hi: { title: 'अंतिम चुनौती: रसीद जनरेटर', goal: '<strong>कार्य:</strong> सब कुछ एक साथ जोड़ें।<br>1. कुल योग निकालें।<br>2. 50 से अधिक की जांच करें।<br>3. फॉर्मेटेड स्ट्रिंग प्रिंट करें।' },
-      mr: { title: 'अंतिम आव्हान: पावती जनरेटर', goal: '<strong>कृती:</strong> सर्व संकल्पना एकत्र वापरा.<br>1. एकूण बेरीज करा.<br>2. 50 पेक्षा जास्त आहे का तपासा.<br>3. पावती प्रिंट करा.' },
-      ta: { title: 'இறுதி சவால்: ரசீது தயாரித்தல்', goal: '<strong>பணி:</strong> அனைத்தையும் ஒன்றாக இணைக்கவும்.<br>1. மொத்தத்தைக் கணக்கிடவும்.<br>2. 50க்கு மேல் உள்ளதா எனப் பார்க்கவும்.<br>3. அச்சிடவும்.' },
-      te: { title: 'చివరి సవాలు: రసీదు జనరేటర్', goal: '<strong>టాస్క్:</strong> అన్నింటినీ కలపండి.<br>1. మొత్తం లెక్కించండి.<br>2. 50 కంటే ఎక్కువో కాదో చూడండి.<br>3. రసీదు ప్రింట్ చేయండి.' },
-      bn: { title: 'চূড়ান্ত চ্যালেঞ্জ: রসিদ তৈরি', goal: '<strong>কাজ:</strong> সব একত্র করে প্রোগ্রাম তৈরি করুন।<br>1. মোট হিসাব করুন।<br>2. ৫০ এর বেশি কিনা দেখুন।<br>3. প্রিন্ট করুন।' },
-      gu: { title: 'અંતિમ પડકાર: રસીદ જનરેટર', goal: '<strong>કાર્ય:</strong> બધું એકસાથે જોડો.<br>1. કુલ ગણતરી કરો.<br>2. 50 થી વધુ છે કે નહીં તે ચકાસો.<br>3. પ્રિન્ટ કરો.' },
-      kn: { title: 'ಅಂತಿಮ ಸವಾಲು: ರಸೀದಿ ತಯಾರಿಕೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಎಲ್ಲವನ್ನೂ ಒಟ್ಟಿಗೆ ಸೇರಿಸಿ.<br>1. ಒಟ್ಟು ಲೆಕ್ಕ ಮಾಡಿ.<br>2. 50 ಕ್ಕಿಂತ ಹೆಚ್ಚೇ ತಿಳಿಯಿರಿ.<br>3. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'അവസാന ചലഞ്ച്: രസീത് ഉണ്ടാക്കുക', goal: '<strong>ടാസ്ക്:</strong> എല്ലാം സംയോജിപ്പിക്കുക.<br>1. ആകെ തുക കണക്കാക്കുക.<br>2. 50-ൽ കൂടുതലാണോ എന്ന് നോക്കുക.<br>3. പ്രിന്റ് ചെയ്യുക.' },
-      pa: { title: 'ਆਖਰੀ ਚੁਣੌਤੀ: ਰਸੀਦ ਜਨਰੇਟਰ', goal: '<strong>ਕੰਮ:</strong> ਸਭ ਕੁਝ ਇਕੱਠਾ ਕਰੋ।<br>1. ਕੁੱਲ ਹਿਸਾਬ ਲਗਾਓ।<br>2. 50 ਤੋਂ ਵੱਧ ਦੀ ਜਾਂਚ ਕਰੋ।<br>3. ਪ੍ਰਿੰਟ ਕਰੋ।' }
+      en: { title: 'Swapping Mixed Types', goal: '<strong>Task:</strong> Swap an int and a string.<br>1. Set <code>num, text = 404, "Error"</code>.<br>2. Swap them.<br>3. Print both.' },
+      hi: { title: 'मिश्रित प्रकारों की अदला-बदली', goal: '<strong>कार्य:</strong> एक इंट और एक स्ट्रिंग को स्वैप करके प्रिंट करें।' },
+      mr: { title: 'मिश्रित प्रकारांची अदलाबदल', goal: '<strong>कृती:</strong> एक इंट आणि एक स्ट्रिंग स्वॅप करून प्रिंट करा.' },
+      ta: { title: 'கலப்பு வகைகளை மாற்றுதல்', goal: '<strong>பணி:</strong> ஒரு முழு எண் மற்றும் சரத்தை மாற்றி அச்சிடவும்.' },
+      te: { title: 'మిశ్రమ రకాల మార్పిడి', goal: '<strong>టాస్క్:</strong> ఒక ఇంట్, ఒక స్ట్రింగ్‌ని స్వాప్ చేసి ప్రింట్ చేయండి.' },
+      bn: { title: 'মিশ্র প্রকারের অদলবদল', goal: '<strong>কাজ:</strong> একটি ইন্ট এবং একটি স্ট্রিং সোয়াপ করে প্রিন্ট করুন।' },
+      gu: { title: 'મિશ્ર પ્રકારોની અદલાબદલી', goal: '<strong>કાર્ય:</strong> એક ઇન્ટ અને એક સ્ટ્રિંગ સ્વેપ કરી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಮಿಶ್ರ ಪ್ರಕಾರಗಳ ಅದಲು-ಬದಲು', goal: '<strong>ಕಾರ್ಯ:</strong> ಒಂದು ಇಂಟ್ ಮತ್ತು ಒಂದು ಪಠ್ಯವನ್ನು ಅದಲು-ಬದಲು ಮಾಡಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'മിക്സഡ് തരങ്ങൾ മാറ്റുക', goal: '<strong>ടാസ്ക്:</strong> ഒരു ഇന്റും സ്ട്രിംഗും സ്വാപ്പ് ചെയ്ത് പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਮਿਸ਼ਰਤ ਕਿਸਮਾਂ ਬਦਲਣਾ', goal: '<strong>ਕੰਮ:</strong> ਇੱਕ ਇੰਟ ਅਤੇ ਇੱਕ ਸਟ੍ਰਿੰਗ ਸਵੈਪ ਕਰਕੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'a, b, c, d = 12, 45, 78, 99\na, b, c, d = c, a, d, b\nb, d = d, b\na, c, b, d = d, b, c, a\nprint(a, b, c, d)',
+    i18n: {
+      en: { title: 'Very Hard 4-Variable Multi-Stage Cross Swap', goal: '<strong>Task:</strong> Perform a complex 3-step cross-permutation swap across 4 variables.<br>1. Initialize <code>a, b, c, d = 12, 45, 78, 99</code>.<br>2. Execute multiple coordinated parallel reassignments.<br>3. Print final results.' },
+      hi: { title: 'अत्यधिक कठिन 4-वेरिएबल स्वैप', goal: '<strong>कार्य:</strong> 4 वेरिएबल्स पर कठिन 3-चरणीय स्वैप निष्पादित करें।' },
+      mr: { title: 'अतिशय कठीण 4-व्हेरिएबल स्वॅप', goal: '<strong>कृती:</strong> 4 व्हेरिएबल्सवर कठीण 3-टप्प्यांचा स्वॅप अंमलात आणा.' },
+      ta: { title: 'மிகவும் கடினமான 4-மாறி இடமாற்றம்', goal: '<strong>பணி:</strong> 4 மாறிகளில் மிகவும் சிக்கலான இடமாற்றத்தைச் செய்யவும்.' },
+      te: { title: 'చాలా కఠినమైన 4-వేరియబుల్ మార్పిడి', goal: '<strong>టాస్క్:</strong> 4 వేరియబుల్స్‌పై సంక్లిష్టమైన మార్పిడి చేయండి.' },
+      bn: { title: 'খুব কঠিন ৪-ভেরিয়েবল সোয়াপ', goal: '<strong>কাজ:</strong> ৪টি ভেরিয়েবলের উপর অত্যন্ত জটিল সোয়াপ প্রয়োগ করুন।' },
+      gu: { title: 'ખૂબ જ અઘરું 4-વેરિયેબલ સ્વેપ', goal: '<strong>કાર્ય:</strong> 4 વેરિયેબલ્સ પર જટિલ સ્વેપ કરો.' },
+      kn: { title: 'ಅತ್ಯಂತ ಕಠಿಣ 4-ವೇರಿಯೇಬಲ್ ಅದಲು-ಬದಲು', goal: '<strong>ಕಾರ್ಯ:</strong> 4 ವೇರಿಯೇಬಲ್‌ಗಳ ಮೇಲೆ ಸಂಕೀರ್ಣ ಅದಲು-ಬದಲು ಮಾಡಿ.' },
+      ml: { title: 'വളരെ കഠിനമായ 4-വേരിയബിൾ സ്വാപ്പ്', goal: '<strong>ടാസ്ക്:</strong> 4 വേരിയബിളുകളിൽ സങ്കീർണ്ണമായ സ്വാപ്പ് നടത്തുക.' },
+      pa: { title: 'ਬਹੁਤ ਔਖਾ 4-ਵੇਰੀਏਬਲ ਸਵੈਪ', goal: '<strong>ਕੰਮ:</strong> 4 ਵੇਰੀਏਬਲਾਂ ਉੱਤੇ ਗੁੰਝਲਦਾਰ ਸਵੈਪ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'a, b, c = 1, 2, 3\na, b, c = c, a, b\nprint(a, b, c)',
+    i18n: {
+      en: { title: 'Advanced Swapping', goal: '<strong>Task:</strong> Rotate values among 3 variables.<br>1. <code>a, b, c = 1, 2, 3</code><br>2. Swap: <code>a, b, c = c, a, b</code><br>3. Print.' },
+      hi: { title: 'उन्नत स्वैपिंग', goal: '<strong>कार्य:</strong> 3 वेरिएबल्स के मानों को घुमाएं और प्रिंट करें।' },
+      mr: { title: 'प्रगत स्वॅपिंग', goal: '<strong>कृती:</strong> 3 वेरिएबल्सची मूल्ये फिरवा आणि प्रिंट करा.' },
+      ta: { title: 'மேம்பட்ட இடமாற்றம்', goal: '<strong>பணி:</strong> 3 மாறிகளுக்கு இடையில் மதிப்புகளை சுழற்றி அச்சிடவும்.' },
+      te: { title: 'అధునాతన మార్పిడి', goal: '<strong>టాస్క్:</strong> 3 వేరియబుల్స్ మధ్య విలువలను తిప్పి ప్రింట్ చేయండి.' },
+      bn: { title: 'উন্নত সোয়াপিং', goal: '<strong>কাজ:</strong> ৩টি ভেরিয়েবলের মান ঘুরিয়ে প্রিন্ট করুন।' },
+      gu: { title: 'એડવાન્સ્ડ સ્વેપિંગ', goal: '<strong>કાર્ય:</strong> 3 વેરિયેબલ્સની કિંમતો ફેરવી પ્રિન્ટ કરો.' },
+      kn: { title: 'ಸುಧಾರಿತ ಅದಲು-ಬದಲು', goal: '<strong>ಕಾರ್ಯ:</strong> 3 ವೇರಿಯೇಬಲ್‌ಗಳ ಮೌಲ್ಯಗಳನ್ನು ತಿರುಗಿಸಿ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
+      ml: { title: 'നൂതന സ്വാപ്പിംഗ്', goal: '<strong>ടാസ്ക്:</strong> 3 വേരിയബിളുകൾക്കിടയിൽ മൂല്യങ്ങൾ തിരിച്ച് പ്രിന്റ് ചെയ്യുക.' },
+      pa: { title: 'ਐਡਵਾਂਸਡ ਸਵੈਪਿੰਗ', goal: '<strong>ਕੰਮ:</strong> 3 ਵੇਰੀਏਬਲਾਂ ਦੇ ਮੁੱਲਾਂ ਨੂੰ ਘੁੰਮਾਓ ਅਤੇ ਪ੍ਰਿੰਟ ਕਰੋ।' }
+    }
+  },
+  {
+    code: 'alpha, beta, gamma, delta, epsilon = 5, 10, 15, 20, 25\nalpha, beta, gamma, delta, epsilon = epsilon, delta, gamma, beta, alpha\nbeta, delta, epsilon = epsilon, beta, delta\nalpha, gamma, epsilon = epsilon, alpha, gamma\nalpha, beta, gamma, delta, epsilon = delta, epsilon, alpha, beta, gamma\nprint(alpha, beta, gamma, delta, epsilon)',
+    i18n: {
+      en: { title: 'Masterclass Very Hard 5-Variable Matrix Swap', goal: '<strong>Task:</strong> Conquer a brutal 4-stage multi-layered permutation matrix across 5 variables.<br>1. Initialize 5 variables.<br>2. Execute complex sequential cyclic swaps.<br>3. Print final values.' },
+      hi: { title: 'मास्टरक्लास अत्यंत कठिन 5-वेरिएबल स्वैप', goal: '<strong>कार्य:</strong> 5 वेरिएबल्स पर 4-चरणीय जटिल स्वैप मैट्रिक्स निष्पादित करें।' },
+      mr: { title: 'मास्टरक्लास अत्यंत कठीण 5-व्हेरिएबल स्वॅप', goal: '<strong>कृती:</strong> 5 व्हेरिएबल्सवर 4 टप्प्यांचा कठीण स्वॅप अंमलात आणा.' },
+      ta: { title: 'மாஸ்டர்கிளாஸ் மிகவும் கடினமான 5-மாறி இடமாற்றம்', goal: '<strong>பணி:</strong> 5 மாறிகளில் 4-கட்ட இடமாற்றத்தைச் செய்யவும்.' },
+      te: { title: 'మాస్టర్‌క్లాస్ అత్యంత కఠినమైన 5-వేరియబుల్ మార్పిడి', goal: '<strong>టాస్క్:</strong> 5 వేరియబుల్స్‌పై 4 దశల సంక్లిష్ట మార్పిడి చేయండి.' },
+      bn: { title: 'মাস্টারক্লাস অত্যন্ত কঠিন ৫-ভেরিয়েবল সোয়াপ', goal: '<strong>কাজ:</strong> ৫টি ভেরিয়েবলের উপর ৪-পর্যায়ের জটিল সোয়াপ প্রয়োগ করুন।' },
+      gu: { title: 'માસ્ટરક્લાસ ખૂબ જ અઘરું 5-વેરિયેબલ સ્વેપ', goal: '<strong>કાર્ય:</strong> 5 વેરિયેબલ્સ પર 4-તબક્કાનું જટિલ સ્વેપ કરો.' },
+      kn: { title: 'ಮಾಸ್ಟರ್‌ಕ್ಲಾಸ್ ಅತ್ಯಂತ ಕಠಿಣ 5-ವೇರಿಯೇಬಲ್ ಅದಲು-ಬದಲು', goal: '<strong>ಕಾರ್ಯ:</strong> 5 ವೇರಿಯೇಬಲ್‌ಗಳ ಮೇಲೆ 4 ಹಂತದ ಸಂಕೀರ್ಣ ಅದಲು-ಬದಲು ಮಾಡಿ.' },
+      ml: { title: 'മാസ്റ്റർക്ലാസ് വളരെ കഠിനമായ 5-വേരിയബിൾ സ്വാപ്പ്', goal: '<strong>ടാസ്ക്:</strong> 5 വേരിയബിളുകളിൽ 4-ഘട്ട സങ്കീർണ്ണ സ്വാപ്പ് നടത്തുക.' },
+      pa: { title: 'ਮਾਸਟਰਕਲਾਸ ਬਹੁਤ ਔਖਾ 5-ਵੇਰੀਏਬਲ ਸਵੈਪ', goal: '<strong>ਕੰਮ:</strong> 5 ਵੇਰੀਏਬਲਾਂ ਉੱਤੇ 4-ਪੜਾਵੀ ਗੁੰਝਲਦਾਰ ਸਵੈਪ ਕਰੋ।' }
     }
   }
 ];
@@ -2130,28 +2100,92 @@ els.kidsToggleBtn.addEventListener('click', () => {
   }
 });
 
-els.code.addEventListener('input', () => {
+// ============================================================
+// IDLE-Like Text Editor Logic (Brackets, Quotes, Indentation, Tabs)
+// ============================================================
+const pairs = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'" };
+const closingChars = Object.values(pairs);
+
+function triggerInputUpdate() {
   if (!isPeeking) {
     userCodeStore[state.lessonIndex] = els.code.value;
     saveUserCodes();
   }
   syncGutter();
-});
-els.code.addEventListener('scroll', () => {
-  els.gutter.scrollTop = els.code.scrollTop;
-});
+}
+
 els.code.addEventListener('keydown', (e) => {
+  const start = els.code.selectionStart;
+  const end = els.code.selectionEnd;
+  const val = els.code.value;
+
+  // 1. Auto Tabs (4 spaces)
   if (e.key === 'Tab') {
     e.preventDefault();
-    const s = els.code.selectionStart, en = els.code.selectionEnd;
-    els.code.value = els.code.value.slice(0, s) + '    ' + els.code.value.slice(en);
-    els.code.selectionStart = els.code.selectionEnd = s + 4;
-    if (!isPeeking) {
-      userCodeStore[state.lessonIndex] = els.code.value;
-      saveUserCodes();
-    }
-    syncGutter();
+    els.code.value = val.slice(0, start) + '    ' + val.slice(end);
+    els.code.selectionStart = els.code.selectionEnd = start + 4;
+    triggerInputUpdate();
+    return;
   }
+
+  // 2. Auto-closing brackets & quotes
+  if (pairs[e.key] && start === end) {
+    e.preventDefault();
+    const close = pairs[e.key];
+    els.code.value = val.slice(0, start) + e.key + close + val.slice(end);
+    els.code.selectionStart = els.code.selectionEnd = start + 1;
+    triggerInputUpdate();
+    return;
+  }
+
+  // Skip over matching closing character if typed
+  if (closingChars.includes(e.key) && start === end && val[start] === e.key) {
+    e.preventDefault();
+    els.code.selectionStart = els.code.selectionEnd = start + 1;
+    return;
+  }
+
+  // 3. Smart Backspace between pairs
+  if (e.key === 'Backspace' && start === end && start > 0) {
+    const prev = val[start - 1];
+    const next = val[start];
+    if (Object.keys(pairs).some(k => pairs[k] === next && k === prev)) {
+      e.preventDefault();
+      els.code.value = val.slice(0, start - 1) + val.slice(start + 1);
+      els.code.selectionStart = els.code.selectionEnd = start - 1;
+      triggerInputUpdate();
+      return;
+    }
+  }
+
+  // 4. Auto-Indentation & Smart Enter
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+    const currentLine = val.slice(lineStart, start);
+    
+    const match = currentLine.match(/^([ \t]*)/);
+    let indent = match ? match[1] : '';
+    
+    // Add extra 4 spaces indent if line ends with a colon
+    if (currentLine.trim().endsWith(':')) {
+      indent += '    ';
+    }
+
+    const insertion = '\n' + indent;
+    els.code.value = val.slice(0, start) + insertion + val.slice(end);
+    els.code.selectionStart = els.code.selectionEnd = start + insertion.length;
+    triggerInputUpdate();
+    return;
+  }
+});
+
+els.code.addEventListener('input', () => {
+  triggerInputUpdate();
+});
+
+els.code.addEventListener('scroll', () => {
+  els.gutter.scrollTop = els.code.scrollTop;
 });
 
 els.langSelect.addEventListener('change', (e) => {
