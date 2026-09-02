@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Strings & Text Complete Masterclass · Notebook Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper-bg: #fdfbf7;
+    --line-color: #d4e4f7;
+    --margin-color: #fca5a5;
+    --ink-blue: #1e3a8a;
+    --ink-dark: #1f2937;
+    --code-bg: #f3f4f6;
+    --card-bg: #ffffff;
+    --accent-blue: #3b82f6;
+    --accent-purple: #7c3aed;
+    --accent-green: #10b981;
+    --accent-amber: #d9a24b;
+  }
+
+  /* Allow vertical scrolling to hold all detailed boxes */
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    /* padding: 1rem 0px; */
+    background-color: #0f172a;
+    font-family: 'Patrick Hand', cursive, sans-serif;
+    color: var(--ink-dark);
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+
+  .notebook-container {
+    width: 100%;
+    /* max-width: 1200px; */
+    margin: 0 auto;
+    background-color: var(--paper-bg);
+    background-image: 
+      linear-gradient(90deg, transparent 75px, var(--margin-color) 75px, var(--margin-color) 77px, transparent 77px),
+      linear-gradient(var(--line-color) 1px, transparent 1px);
+    background-size: 100% 32px;
+    border-radius: 8px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    padding: 30px 40px 40px 100px;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  /* Binder holes on the left margin */
+  .notebook-container::before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 40px;
+    bottom: 40px;
+    width: 16px;
+    background: radial-gradient(circle, #94a3b8 55%, transparent 56%);
+    background-size: 16px 60px;
+    background-repeat: repeat-y;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed #93c5fd;
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-family: 'Caveat', cursive;
+    font-size: 36px;
+    color: var(--ink-blue);
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: #4b5563;
+    margin: 4px 0 0 0;
+  }
+
+  .practice-btn {
+    font-family: 'Patrick Hand', cursive;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    box-shadow: 0 3px 6px rgba(217, 119, 6, 0.3);
+  }
+
+  .practice-btn:hover {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  }
+
+  /* Grid layout for comprehensive function boxes */
+  .functions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  /* Individual Box per Topic/Function */
+  .function-card {
+    background: var(--card-bg);
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 16px 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .function-card h2 {
+    font-family: 'Caveat', cursive;
+    font-size: 24px;
+    color: var(--ink-blue);
+    margin: 0 0 8px 0;
+    border-bottom: 1.5px solid #e2e8f0;
+    padding-bottom: 4px;
+  }
+
+  p {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  ul {
+    margin: 0 0 8px 0;
+    padding-left: 18px;
+    font-size: 15.5px;
+    line-height: 24px;
+  }
+
+  .code-snippet {
+    font-family: 'JetBrains Mono', monospace;
+    background-color: var(--code-bg);
+    border-left: 4px solid var(--accent-blue);
+    padding: 8px 12px;
+    margin: 8px 0;
+    font-size: 13.5px;
+    color: #111827;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .keyword { color: var(--accent-purple); font-weight: 600; }
+  .variable { color: var(--accent-blue); font-weight: 600; }
+  .number { color: var(--accent-green); }
+  .string { color: #db2777; }
+  .comment { color: #6b7280; font-style: italic; }
+
+  .tip-box {
+    background: #fffbeb;
+    border: 1.5px dashed #f59e0b;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: 14.5px;
+  }
+
+  .tip-header {
+    font-weight: bold;
+    color: #b45309;
+    margin-bottom: 2px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #e0e7ff;
+    color: #3730a3;
+    padding: 0 5px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .functions-grid { grid-template-columns: 1fr; }
+    .notebook-container { padding: 20px 20px 30px 70px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="notebook-container">
+  <header>
+    <div>
+      <h1>Python Strings & Text Complete Masterclass 📓</h1>
+      <p class="subtitle">Merged Reference Guide: Fundamentals, Slicing & In-Depth Built-In Methods</p>
+    </div>
+    <a href="../index.html" class="practice-btn">💻 Practice Lab 🚀</a>
+  </header>
+
+  <div class="functions-grid">
+    
+    <!-- BOX 1: String Creation -->
+    <div class="function-card">
+      <div>
+        <h2>1. String Creation & Quotes</h2>
+        <p>Strings store text characters enclosed in single (<span class="badge">'</span>) or double (<span class="badge">"</span>) quotes.</p>
+        <div class="code-snippet">
+          <span class="variable">msg</span> = <span class="string">"Hello Python"</span><br>
+          <span class="variable">char</span> = <span class="string">'A'</span>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-header">💡 Flexibility Rule</div>
+        <p style="margin:0;">Use opposite quotes if your text contains apostrophes (e.g., <span class="string">"It's working"</span>).</p>
+      </div>
+    </div>
+
+    <!-- BOX 2: Combining Strings -->
+    <div class="function-card">
+      <div>
+        <h2>2. Concatenation & Repetition</h2>
+        <p>Use arithmetic operators to combine or repeat text patterns:</p>
+        <div class="code-snippet">
+          <span class="comment"># Concatenation (+)</span><br>
+          <span class="variable">full</span> = <span class="string">"Cyber"</span> + <span class="string">"Security"</span><br>
+          <span class="comment"># Repetition (*)</span><br>
+          <span class="variable">dash</span> = <span class="string">"-"</span> * <span class="number">10</span>
+        </div>
+      </div>
+      <div class="tip-box" style="border-color:#ef4444; background:#fef2f2;">
+        <div class="tip-header" style="color:#b91c1c;">💀 Warning</div>
+        <p style="margin:0;">You cannot add strings and integers directly (<span class="badge">"Score: " + 10</span> causes a crash).</p>
+      </div>
+    </div>
+
+    <!-- BOX 3: Indexing & Slicing -->
+    <div class="function-card">
+      <div>
+        <h2>3. Indexing & Slicing</h2>
+        <p>Python strings are indexed starting at <span class="number">0</span>. Access specific segments using brackets:</p>
+        <div class="code-snippet">
+          <span class="variable">text</span> = <span class="string">"Python"</span><br>
+          <span class="variable">first</span> = <span class="variable">text</span>[<span class="number">0</span>] <span class="comment"># 'P'</span><br>
+          <span class="variable">sub</span> = <span class="variable">text</span>[<span class="number">0</span>:<span class="number">2</span>] <span class="comment"># 'Py'</span>
+        </div>
+      </div>
+      <div class="tip-box" style="border-color:#10b981; background:#ecfdf5;">
+        <div class="tip-header" style="color:#047857;">⚡ Negative Indexing</div>
+        <p style="margin:0;"><span class="badge">text[-1]</span> fetches the very last character of any string!</p>
+      </div>
+    </div>
+
+    <!-- BOX 4: upper() & lower() -->
+    <div class="function-card">
+      <div>
+        <h2>4. upper() & lower()</h2>
+        <p>Converts all characters in a string to uppercase or lowercase letters respectively.</p>
+        <div class="code-snippet">
+          <span class="variable">text</span> = <span class="string">"Python IT"</span><br>
+          <span class="variable">print</span>(<span class="variable">text</span>.<span class="variable">upper</span>()) <span class="comment"># "PYTHON IT"</span><br>
+          <span class="variable">print</span>(<span class="variable">text</span>.<span class="variable">lower</span>()) <span class="comment"># "python it"</span>
+        </div>
+      </div>
+      <div class="tip-box" style="border-color:#3b82f6; background:#eff6ff;">
+        <div class="tip-header" style="color:#1d4ed8;">🎯 Use Case</div>
+        <p style="margin:0;">Great for normalizing user inputs (e.g., checking <span class="badge">ans.lower() == 'yes'</span>).</p>
+      </div>
+    </div>
+
+    <!-- BOX 5: strip() -->
+    <div class="function-card">
+      <div>
+        <h2>5. strip(), lstrip(), rstrip()</h2>
+        <p>Removes leading and trailing whitespaces or specified characters from a string.</p>
+        <div class="code-snippet">
+          <span class="variable">msg</span> = <span class="string">"   Hello World!   "</span><br>
+          <span class="variable">print</span>(<span class="variable">msg</span>.<span class="variable">strip</span>()) <span class="comment"># "Hello World!"</span><br>
+          <span class="variable">print</span>(<span class="variable">msg</span>.<span class="variable">lstrip</span>()) <span class="comment"># Left strip only</span>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-header">💡 Data Cleanup</div>
+        <p style="margin:0;">Essential when processing text data from files or user form submissions.</p>
+      </div>
+    </div>
+
+    <!-- BOX 6: replace() -->
+    <div class="function-card">
+      <div>
+        <h2>6. replace(old, new)</h2>
+        <p>Searches the string for a specified phrase and replaces all occurrences with a new phrase.</p>
+        <div class="code-snippet">
+          <span class="variable">sentence</span> = <span class="string">"I like cats"</span><br>
+          <span class="variable">res</span> = <span class="variable">sentence</span>.<span class="variable">replace</span>(<span class="string">"cats"</span>, <span class="string">"dogs"</span>)<br>
+          <span class="variable">print</span>(<span class="variable">res</span>) <span class="comment"># "I like dogs"</span>
+        </div>
+      </div>
+      <div class="tip-box" style="border-color:#10b981; background:#ecfdf5;">
+        <div class="tip-header" style="color:#047857;">⚡ Parameters</div>
+        <p style="margin:0;">You can add a third limit argument <span class="badge">replace(old, new, count)</span> to restrict changes.</p>
+      </div>
+    </div>
+
+    <!-- BOX 7: find() & index() -->
+    <div class="function-card">
+      <div>
+        <h2>7. find() & index()</h2>
+        <p>Locates the starting position (index) of the first occurrence of a substring.</p>
+        <div class="code-snippet">
+          <span class="variable">word</span> = <span class="string">"Computer"</span><br>
+          <span class="variable">print</span>(<span class="variable">word</span>.<span class="variable">find</span>(<span class="string">"put"</span>)) <span class="comment"># 3</span><br>
+          <span class="comment"># find() returns -1 if missing, index() crashes with ValueError</span>
+        </div>
+      </div>
+      <div class="tip-box" style="border-color:#ef4444; background:#fef2f2;">
+        <div class="tip-header" style="color:#b91c1c;">💀 Error Warning</div>
+        <p style="margin:0;">Use <span class="badge">find()</span> if you aren't sure if the substring exists to avoid program crashes.</p>
+      </div>
+    </div>
+
+    <!-- BOX 8: split() & join() -->
+    <div class="function-card">
+      <div>
+        <h2>8. split() & join()</h2>
+        <p><span class="badge">split()</span> breaks a string into a list based on a separator. <span class="badge">join()</span> stitches a list back into a string.</p>
+        <div class="code-snippet">
+          <span class="variable">text</span> = <span class="string">"apple,banana,grape"</span><br>
+          <span class="variable">lst</span> = <span class="variable">text</span>.<span class="variable">split</span>(<span class="string">","</span>) <span class="comment"># ['apple', 'banana', ...]</span><br>
+          <span class="variable">back</span> = <span class="string">" "</span>.<span class="variable">join</span>(<span class="variable">lst</span>) <span class="comment"># 'apple banana grape'</span>
+        </div>
+      </div>
+      <div class="tip-box" style="border-color:#3b82f6; background:#eff6ff;">
+        <div class="tip-header" style="color:#1d4ed8;">🎯 Popular Combo</div>
+        <p style="margin:0;">Extremely common in text processing, CSV parsing, and sentence word counts.</p>
+      </div>
+    </div>
+
+    <!-- BOX 9: count() -->
+    <div class="function-card">
+      <div>
+        <h2>9. count(substring)</h2>
+        <p>Returns the exact number of times a specified substring appears in the string.</p>
+        <div class="code-snippet">
+          <span class="variable">phrase</span> = <span class="string">"banana banana split"</span><br>
+          <span class="variable">print</span>(<span class="variable">phrase</span>.<span class="variable">count</span>(<span class="string">"banana"</span>)) <span class="comment"># 2</span>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-header">💡 Sub-range Counting</div>
+        <p style="margin:0;">You can define optional start and end bounds: <span class="badge">count(sub, start, end)</span>.</p>
+      </div>
+    </div>
+
+    <!-- BOX 10: startswith() & endswith() -->
+    <div class="function-card">
+      <div>
+        <h2>10. startswith() & endswith()</h2>
+        <p>Checks whether a string begins or ends with specific characters, returning <span class="badge">True</span> or <span class="badge">False</span>.</p>
+        <div class="code-snippet">
+          <span class="variable">filename</span> = <span class="string">"report.pdf"</span><br>
+          <span class="variable">print</span>(<span class="variable">filename</span>.<span class="variable">endswith</span>(<span class="string">".pdf"</span>)) <span class="comment"># True</span><br>
+          <span class="variable">print</span>(<span class="variable">filename</span>.<span class="variable">startswith</span>(<span class="string">"re"</span>)) <span class="comment"># True</span>
+        </div>
+      </div>
+      <div class="tip-box" style="border-color:#10b981; background:#ecfdf5;">
+        <div class="tip-header" style="color:#047857;">⚡ File Validation</div>
+        <p style="margin:0;">Standard approach for validating file extensions or URL prefixes in scripts.</p>
+      </div>
+    </div>
+
+    <!-- BOX 11: Validation Methods (isdigit, isalpha) -->
+    <div class="function-card">
+      <div>
+        <h2>11. isdigit() & isalpha()</h2>
+        <p>Inspects the contents of a string to check character classifications.</p>
+        <div class="code-snippet">
+          <span class="variable">print</span>(<span class="string">"12345"</span>.<span class="variable">isdigit</span>()) <span class="comment"># True (Only numbers)</span><br>
+          <span class="variable">print</span>(<span class="string">"Python"</span>.<span class="variable">isalpha</span>()) <span class="comment"># True (Only letters)</span><br>
+          <span class="variable">print</span>(<span class="string">"Python3"</span>.<span class="variable">isalnum</span>()) <span class="comment"># True (Letters + numbers)</span>
+        </div>
+      </div>
+      <div class="tip-box" style="border-color:#ef4444; background:#fef2f2;">
+        <div class="tip-header" style="color:#b91c1c;">💀 Input Check</div>
+        <p style="margin:0;">Always verify inputs before casting strings to integers to prevent runtime crashes.</p>
+      </div>
+    </div>
+
+    <!-- BOX 12: f-Strings & len() -->
+    <div class="function-card">
+      <div>
+        <h2>12. f-Strings & len()</h2>
+        <p>Measures string length using <span class="badge">len()</span> and embeds variables cleanly using f-strings.</p>
+        <div class="code-snippet">
+          <span class="variable">s</span> = <span class="string">"hello"</span><br>
+          <span class="variable">print</span>(<span class="variable">len</span>(<span class="variable">s</span>)) <span class="comment"># Length (5)</span><br>
+          <span class="variable">print</span>(<span class="string">f"Length is {len(s)}"</span>) <span class="comment"># f-string formatting</span>
+        </div>
+      </div>
+      <div class="tip-box" style="border-color:#3b82f6; background:#eff6ff;">
+        <div class="tip-header" style="color:#1d4ed8;">🎯 Modern Standard</div>
+        <p style="margin:0;">f-strings are the fastest and cleanest way to inject variables directly into text output.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Conditional Statements Masterclass · Notebook Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper-bg: #fdfbf7;
+    --line-color: #d4e4f7;
+    --margin-color: #fca5a5;
+    --ink-blue: #1e3a8a;
+    --ink-dark: #1f2937;
+    --code-bg: #f3f4f6;
+    --card-bg: #ffffff;
+    --accent-blue: #3b82f6;
+    --accent-purple: #7c3aed;
+    --accent-green: #10b981;
+    --accent-amber: #d9a24b;
+  }
+
+  /* Allow smooth vertical scrolling for detailed notes and diagrams */
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    /* padding: 20px; */
+    background-color: #0f172a;
+    font-family: 'Patrick Hand', cursive, sans-serif;
+    color: var(--ink-dark);
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+
+  .notebook-container {
+    width: 100%;
+    /* max-width: 1200px; */
+    margin: 0 auto;
+    background-color: var(--paper-bg);
+    background-image: 
+      linear-gradient(90deg, transparent 75px, var(--margin-color) 75px, var(--margin-color) 77px, transparent 77px),
+      linear-gradient(var(--line-color) 1px, transparent 1px);
+    background-size: 100% 32px;
+    border-radius: 8px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    padding: 30px 40px 40px 100px;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  /* Binder holes on the left margin */
+  .notebook-container::before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 40px;
+    bottom: 40px;
+    width: 16px;
+    background: radial-gradient(circle, #94a3b8 55%, transparent 56%);
+    background-size: 16px 60px;
+    background-repeat: repeat-y;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed #93c5fd;
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-family: 'Caveat', cursive;
+    font-size: 36px;
+    color: var(--ink-blue);
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: #4b5563;
+    margin: 4px 0 0 0;
+  }
+
+  .practice-btn {
+    font-family: 'Patrick Hand', cursive;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    box-shadow: 0 3px 6px rgba(217, 119, 6, 0.3);
+  }
+
+  .practice-btn:hover {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  }
+
+  /* Grid layout for structured cards */
+  .conditionals-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .note-card {
+    background: var(--card-bg);
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 16px 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .note-card h2 {
+    font-family: 'Caveat', cursive;
+    font-size: 24px;
+    color: var(--ink-blue);
+    margin: 0 0 8px 0;
+    border-bottom: 1.5px solid #e2e8f0;
+    padding-bottom: 4px;
+  }
+
+  p {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  /* Code Snippets */
+  .code-snippet {
+    font-family: 'JetBrains Mono', monospace;
+    background-color: var(--code-bg);
+    border-left: 4px solid var(--accent-blue);
+    padding: 8px 12px;
+    margin: 8px 0;
+    font-size: 13.5px;
+    color: #111827;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .keyword { color: var(--accent-purple); font-weight: 600; }
+  .variable { color: var(--accent-blue); font-weight: 600; }
+  .number { color: var(--accent-green); }
+  .string { color: #db2777; }
+  .comment { color: #6b7280; font-style: italic; }
+
+  /* Diagram & Flowchart Styling */
+  .flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin: 10px 0;
+  }
+
+  .flow-box {
+    background: #eff6ff;
+    border: 1.5px solid #bfdbfe;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .flow-box.highlight {
+    background: #fef3c7;
+    border-color: #fde68a;
+    font-weight: bold;
+  }
+
+  .flow-box.decision {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+  }
+
+  .flow-arrow {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1;
+  }
+
+  /* Tip / Warning Callout Box */
+  .tip-box {
+    background: #fffbeb;
+    border: 1.5px dashed #f59e0b;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: 14.5px;
+  }
+
+  .tip-header {
+    font-weight: bold;
+    color: #b45309;
+    margin-bottom: 2px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #e0e7ff;
+    color: #3730a3;
+    padding: 0 5px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .conditionals-grid { grid-template-columns: 1fr; }
+    .notebook-container { padding: 20px 20px 30px 70px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="notebook-container">
+  <header>
+    <div>
+      <h1>Python Conditional Statements Masterclass 📓</h1>
+      <p class="subtitle">Complete Decision-Making Guide: if, elif, else, Nested Blocks & Flowcharts</p>
+    </div>
+    <a href="../index.html" class="practice-btn">💻 Practice Lab 🚀</a>
+  </header>
+
+  <div class="conditionals-grid">
+    
+    <!-- BOX 1: The if Statement -->
+    <div class="note-card">
+      <div>
+        <h2>1. The Basic if Statement</h2>
+        <p>Used to test a specific condition. If the boolean expression evaluates to <span class="badge">True</span>, the indented block runs; otherwise, it is skipped.</p>
+        
+        <div class="code-snippet">
+          <span class="keyword">if</span> score >= <span class="number">40</span>:<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;print(<span class="string">"Passed!"</span>)
+        </div>
+
+        <p><strong>Execution Flow Diagram:</strong></p>
+        <div class="flowchart">
+          <div class="flow-box decision">Condition: score >= 40</div>
+          <div class="flow-arrow">⬇ (If True)</div>
+          <div class="flow-box highlight">Execute indented print() block</div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-header">💡 Indentation Rule</div>
+        <p style="margin:0;">Python uses 4 spaces of indentation instead of curly braces <span class="badge">{}</span> to group code blocks.</p>
+      </div>
+    </div>
+
+    <!-- BOX 2: The if-else Clause -->
+    <div class="note-card">
+      <div>
+        <h2>2. The if-else Dual Branch</h2>
+        <p>Provides an alternative backup block of code that automatically executes if the initial <span class="keyword">if</span> condition turns out to be <span class="badge">False</span>.</p>
+        
+        <div class="code-snippet">
+          <span class="keyword">if</span> age >= <span class="number">18</span>:<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;print(<span class="string">"Adult"</span>)<br>
+          <span class="keyword">else</span>:<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;print(<span class="string">"Minor"</span>)
+        </div>
+
+        <p><strong>Flow Diagram:</strong></p>
+        <div class="flowchart">
+          <div class="flow-box decision">Condition True?</div>
+          <div class="flow-arrow">↙ (True) &nbsp;&nbsp;&nbsp;&nbsp; ↘ (False)</div>
+          <div class="flow-box highlight">Run if block &nbsp;&nbsp; Run else block</div>
+        </div>
+      </div>
+
+      <div class="tip-box" style="border-color:#ef4444; background:#fef2f2;">
+        <div class="tip-header" style="color:#b91c1c;">💀 Syntax Trap</div>
+        <p style="margin:0;">Never forget the colon (<span class="badge">:</span>) at the end of every <span class="keyword">if</span>, <span class="keyword">elif</span>, and <span class="keyword">else</span> statement line!</p>
+      </div>
+    </div>
+
+    <!-- BOX 3: Multi-Branching with elif -->
+    <div class="note-card">
+      <div>
+        <h2>3. Multi-Branch Ladder (elif)</h2>
+        <p>Allows testing multiple sequential conditions one by one until a match is found. Once a branch evaluates to True, Python skips the rest.</p>
+        
+        <div class="code-snippet">
+          <span class="keyword">if</span> marks >= <span class="number">85</span>: grade = <span class="string">"A"</span><br>
+          <span class="keyword">elif</span> marks >= <span class="number">60</span>: grade = <span class="string">"B"</span><br>
+          <span class="keyword">else</span>: grade = <span class="string">"C"</span>
+        </div>
+
+        <p><strong>Ladder Evaluation Flow:</strong></p>
+        <div class="flowchart">
+          <div class="flow-box">Check 1 (if) ➔ False</div>
+          <div class="flow-arrow">⬇</div>
+          <div class="flow-box decision">Check 2 (elif) ➔ True ✅</div>
+          <div class="flow-arrow">⬇ (Stops testing further)</div>
+          <div class="flow-box highlight">Execute Grade B Branch</div>
+        </div>
+      </div>
+
+      <div class="tip-box" style="border-color:#10b981; background:#ecfdf5;">
+        <div class="tip-header" style="color:#047857;">⚡ Order Matters</div>
+        <p style="margin:0;">Always arrange conditions from most restrictive to least restrictive in an <span class="keyword">elif</span> ladder.</p>
+      </div>
+    </div>
+
+    <!-- BOX 4: Nested Conditionals -->
+    <div class="note-card">
+      <div>
+        <h2>4. Nested Conditionals</h2>
+        <p>Placing an entire <span class="keyword">if</span> statement inside another <span class="keyword">if</span> block to check dependent secondary conditions.</p>
+        
+        <div class="code-snippet">
+          <span class="keyword">if</span> logged_in:<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> is_admin:<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(<span class="string">"Welcome Admin Panel"</span>)
+        </div>
+
+        <p><strong>Dependency Diagram:</strong></p>
+        <div class="flowchart">
+          <div class="flow-box">Outer Check: logged_in? (True)</div>
+          <div class="flow-arrow">⬇</div>
+          <div class="flow-box decision">Inner Check: is_admin? (True)</div>
+          <div class="flow-arrow">⬇</div>
+          <div class="flow-box highlight">Execute Inner Action</div>
+        </div>
+      </div>
+
+      <div class="tip-box" style="border-color:#3b82f6; background:#eff6ff;">
+        <div class="tip-header" style="color:#1d4ed8;">🎯 Clean Code Tip</div>
+        <p style="margin:0;">Avoid deep nesting by combining conditions using logical operators like <span class="keyword">and</span>.</p>
+      </div>
+    </div>
+
+    <!-- BOX 5: Ternary Operator (Shorthand IF) -->
+    <div class="note-card">
+      <div>
+        <h2>5. Ternary Operator (Shorthand)</h2>
+        <p>A compact, single-line alternative for simple <span class="keyword">if-else</span> assignments.</p>
+        
+        <div class="code-snippet">
+          <span class="comment"># Syntax: [on_true] if [cond] else [on_false]</span><br>
+          <span class="variable">status</span> = <span class="string">"Adult"</span> <span class="keyword">if</span> age >= <span class="number">18</span> <span class="keyword">else</span> <span class="string">"Minor"</span>
+        </div>
+
+        <p><strong>Inline Logic Flow:</strong></p>
+        <div class="flowchart">
+          <div class="flow-box decision">Evaluate: age >= 18</div>
+          <div class="flow-arrow">↙ (True) &nbsp;&nbsp;&nbsp;&nbsp; ↘ (False)</div>
+          <div class="flow-box highlight">Returns "Adult" &nbsp;&nbsp; Returns "Minor"</div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-header">💡 Readability Check</div>
+        <p style="margin:0;">Great for simple value assignments, but avoid using it for long complex blocks of code.</p>
+      </div>
+    </div>
+
+    <!-- BOX 6: Common Errors & Best Practices -->
+    <div class="note-card">
+      <div>
+        <h2>6. Common Gotchas & Best Practices</h2>
+        <p>Review frequent mistakes student programmers make when writing conditional logic:</p>
+        
+        <div class="code-snippet">
+          <span class="comment"># IndentationError trap:</span><br>
+          <span class="keyword">if</span> x > <span class="number">5</span>:<br>
+          print(<span class="string">"Oops, missing space indentation!"</span>)
+        </div>
+
+        <p><strong>Checklist:</strong></p>
+        <ul>
+          <li>Always verify indentation depth (consistent 4 spaces).</li>
+          <li>Make sure variable names match casing rules.</li>
+          <li>Ensure logical expressions evaluate cleanly to booleans.</li>
+        </ul>
+      </div>
+
+      <div class="tip-box" style="border-color:#ef4444; background:#fef2f2;">
+        <div class="tip-header" style="color:#b91c1c;">💀 Crash Prevention</div>
+        <p style="margin:0;">Watch out for type mismatch errors when comparing user strings against numbers!</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

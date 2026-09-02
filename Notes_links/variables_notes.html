@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Variables Masterclass · Practice Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper-bg: #fdfbf7;
+    --line-color: #d4e4f7;
+    --margin-color: #fca5a5;
+    --ink-blue: #1e3a8a;
+    --ink-dark: #1f2937;
+    --code-bg: #f3f4f6;
+    --card-bg: #ffffff;
+    --accent-blue: #3b82f6;
+    --accent-purple: #7c3aed;
+    --accent-green: #10b981;
+    --accent-amber: #d9a24b;
+  }
+
+  /* Lock viewport to prevent scrollbars */
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: #0f172a;
+    font-family: 'Patrick Hand', cursive, sans-serif;
+    color: var(--ink-dark);
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .portrait-notebook {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--paper-bg);
+    background-image: 
+      linear-gradient(90deg, transparent 55px, var(--margin-color) 55px, var(--margin-color) 57px, transparent 57px),
+      linear-gradient(var(--line-color) 1px, transparent 1px);
+    background-size: 100% 28px;
+    padding: 12px 16px 12px 75px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Binder holes for portrait margin */
+  .portrait-notebook::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    bottom: 20px;
+    width: 16px;
+    background: radial-gradient(circle, #94a3b8 55%, transparent 56%);
+    background-size: 100% 45px;
+    background-repeat: repeat-y;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed #93c5fd;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(20px, 3.5vw, 28px);
+    color: var(--ink-blue);
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .subtitle {
+    font-size: clamp(11px, 1.8vw, 14px);
+    color: #4b5563;
+    margin: 2px 0 0 0;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Practice Button Styling */
+  .practice-btn {
+    font-family: 'Patrick Hand', cursive;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #ffffff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: clamp(12px, 1.8vw, 15px);
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(217, 119, 6, 0.3);
+    transition: transform 0.1s ease, background 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  .practice-btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  }
+
+  .practice-btn:active {
+    transform: scale(0.96);
+  }
+
+  /* 2x2 Grid Layout optimized for High Visibility */
+  .portrait-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .note-card {
+    background: var(--card-bg);
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .note-card h2 {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(18px, 3vw, 24px);
+    color: var(--ink-blue);
+    margin: 0 0 6px 0;
+    border-bottom: 1.5px solid #e2e8f0;
+    padding-bottom: 3px;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0 0 6px 0;
+    font-size: clamp(14px, 2.1vw, 17px);
+    line-height: 1.4;
+  }
+
+  ul {
+    margin: 0 0 6px 0;
+    padding-left: 18px;
+    font-size: clamp(13px, 2vw, 16px);
+    line-height: 1.35;
+  }
+
+  /* Clearly Visible Code Snippets */
+  .code-snippet {
+    font-family: 'JetBrains Mono', monospace;
+    background-color: var(--code-bg);
+    border-left: 4px solid var(--accent-blue);
+    padding: 6px 10px;
+    margin: 6px 0;
+    font-size: clamp(11.5px, 1.8vw, 14px);
+    color: #111827;
+    border-radius: 0 6px 6px 0;
+    line-height: 1.35;
+  }
+
+  .keyword { color: var(--accent-purple); font-weight: 600; }
+  .variable { color: var(--accent-blue); font-weight: 600; }
+  .number { color: var(--accent-green); }
+  .string { color: #db2777; }
+  .comment { color: #6b7280; font-style: italic; }
+
+  /* Clear Flowchart Styling */
+  .flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    margin: 4px 0;
+  }
+
+  .flow-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(11px, 1.7vw, 13px);
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .flow-box.highlight {
+    background: #fef3c7;
+    border-color: #fde68a;
+    font-weight: bold;
+  }
+
+  .flow-arrow {
+    font-size: 10px;
+    color: #64748b;
+    line-height: 1;
+  }
+
+  /* High Visibility Callout Box */
+  .meme-box {
+    background: #fffbeb;
+    border: 1.5px dashed #f59e0b;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-top: 4px;
+    font-size: clamp(13px, 1.9vw, 15px);
+  }
+
+  .meme-header {
+    font-weight: bold;
+    color: #b45309;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #e0e7ff;
+    color: #3730a3;
+    padding: 0 4px;
+    border-radius: 4px;
+    font-size: clamp(11px, 1.7vw, 13px);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Responsive fallback for narrow phones */
+  @media (max-width: 650px) {
+    .portrait-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(4, 1fr);
+      gap: 8px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="portrait-notebook">
+  <header>
+    <div>
+      <h1>Python Variables Masterclass 📓</h1>
+      <p class="subtitle">High-Visibility Portrait View · Variables Only</p>
+    </div>
+    <div class="header-actions">
+      <!-- Practice Button linking to your lab page -->
+      <a href="../index.html" class="practice-btn">💻 Practice Lab 🚀</a>
+    </div>
+  </header>
+
+  <div class="portrait-grid">
+    
+    <!-- CARD 1: Anatomy & Memory -->
+    <div class="note-card">
+      <div>
+        <h2>1. Anatomy & Memory</h2>
+        <p>A variable is a sticky label pointing to an object in memory using <span class="badge">=</span>.</p>
+        
+        <div class="code-snippet">
+          <span class="variable">score</span> = <span class="number">100</span>
+        </div>
+
+        <div class="flowchart">
+          <div class="flow-box">Label: <span class="variable">score</span></div>
+          <div class="flow-arrow">⬇</div>
+          <div class="flow-box highlight">Memory Address: Integer <span class="number">100</span></div>
+        </div>
+      </div>
+
+      <div class="meme-box">
+        <div class="meme-header">💡 Core Rule</div>
+        <p style="margin:0;">Variables are created instantly the moment you assign a value!</p>
+      </div>
+    </div>
+
+    <!-- CARD 2: Naming Rules & Style -->
+    <div class="note-card">
+      <div>
+        <h2>2. Naming Rules & Style</h2>
+        <p>Must start with letter/underscore. <strong>Case-sensitive</strong> (<span class="variable">Age</span> ≠ <span class="variable">age</span>).</p>
+        
+        <ul>
+          <li><strong>Valid:</strong> letters, numbers, <span class="badge">_</span></li>
+          <li><strong>PEP 8 Standard:</strong> Use <span class="badge">snake_case</span> (e.g., <span class="variable">user_score</span>).</li>
+        </ul>
+      </div>
+
+      <div class="meme-box" style="border-color:#ef4444; background:#fef2f2;">
+        <div class="meme-header" style="color:#b91c1c;">💀 Invalid Examples</div>
+        <p style="margin:0;"><span class="badge">1st_score</span> (starts with number ❌)</p>
+      </div>
+    </div>
+
+    <!-- CARD 3: Dynamic Typing -->
+    <div class="note-card">
+      <div>
+        <h2>3. Dynamic Typing</h2>
+        <p>Python variables don't lock to a fixed type; objects in memory do.</p>
+
+        <div class="code-snippet">
+          <span class="variable">x</span> = <span class="number">50</span> <span class="comment"># int</span><br>
+          <span class="variable">x</span> = <span class="string">"Hello"</span> <span class="comment"># str</span>
+        </div>
+
+        <p>You can freely reassign variables across different data types.</p>
+      </div>
+
+      <div class="meme-box" style="border-color:#10b981; background:#ecfdf5;">
+        <div class="meme-header" style="color:#047857;">⚡ Type Checking</div>
+        <p style="margin:0;">Use built-in <span class="badge">type(variable)</span> to inspect current object types.</p>
+      </div>
+    </div>
+
+    <!-- CARD 4: Advanced Assignment -->
+    <div class="note-card">
+      <div>
+        <h2>4. Advanced Assignment</h2>
+        <p>Shorthand syntaxes to manage variables efficiently in single lines.</p>
+
+        <div class="code-snippet">
+          <span class="variable">x</span>, <span class="variable">y</span> = <span class="number">10</span>, <span class="number">20</span> <span class="comment"># Multiple</span><br>
+          <span class="variable">a</span> = <span class="variable">b</span> = <span class="number">100</span> <span class="comment"># Chained</span>
+        </div>
+
+        <p>Constants use <span class="badge">ALL_CAPS</span> by convention to warn against changes.</p>
+      </div>
+
+      <div class="meme-box" style="border-color:#3b82f6; background:#eff6ff;">
+        <div class="meme-header" style="color:#1d4ed8;">🎯 Pro Swap Trick</div>
+        <p style="margin:0;">Swap values instantly: <span class="badge">a, b = b, a</span></p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

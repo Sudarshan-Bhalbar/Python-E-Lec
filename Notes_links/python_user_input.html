@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python User Input Masterclass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper-bg: #fdfbf7; --line-color: #d4e4f7; --margin-color: #fca5a5;
+    --ink-blue: #1e3a8a; --ink-dark: #1f2937; --code-bg: #f3f4f6; --card-bg: #ffffff;
+    --accent-blue: #3b82f6; --accent-purple: #7c3aed; --accent-green: #10b981; --accent-amber: #d9a24b;
+  }
+  html, body { width: 100vw; height: 100vh; margin: 0; padding: 0; background-color: #0f172a; font-family: 'Patrick Hand', cursive, sans-serif; color: var(--ink-dark); box-sizing: border-box; overflow: hidden; }
+  .portrait-notebook { width: 100vw; height: 100vh; background-color: var(--paper-bg); background-image: linear-gradient(90deg, transparent 55px, var(--margin-color) 55px, var(--margin-color) 57px, transparent 57px), linear-gradient(var(--line-color) 1px, transparent 1px); background-size: 100% 28px; padding: 12px 16px 12px 75px; box-sizing: border-box; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .portrait-notebook::before { content: ''; position: absolute; left: 20px; top: 20px; bottom: 20px; width: 16px; background: radial-gradient(circle, #94a3b8 55%, transparent 56%); background-size: 100% 45px; background-repeat: repeat-y; }
+  header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #93c5fd; padding-bottom: 6px; margin-bottom: 10px; flex-shrink: 0; }
+  h1 { font-family: 'Caveat', cursive; font-size: clamp(20px, 3.5vw, 28px); color: var(--ink-blue); margin: 0; line-height: 1.1; }
+  .subtitle { font-size: clamp(11px, 1.8vw, 14px); color: #4b5563; margin: 2px 0 0 0; }
+  .practice-btn { font-family: 'Patrick Hand', cursive; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #fff; border: none; padding: 6px 14px; border-radius: 8px; font-size: clamp(12px, 1.8vw, 15px); font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; box-shadow: 0 3px 6px rgba(217, 119, 6, 0.3); }
+  .portrait-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 12px; flex: 1; min-height: 0; overflow: hidden; }
+  .note-card { background: var(--card-bg); border: 2px solid #cbd5e1; border-radius: 10px; padding: 12px 16px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.03); overflow: hidden; box-sizing: border-box; }
+  .note-card h2 { font-family: 'Caveat', cursive; font-size: clamp(18px, 3vw, 24px); color: var(--ink-blue); margin: 0 0 6px 0; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 3px; }
+  p { margin: 0 0 6px 0; font-size: clamp(13px, 2vw, 16px); line-height: 1.35; }
+  .code-snippet { font-family: 'JetBrains Mono', monospace; background-color: var(--code-bg); border-left: 4px solid var(--accent-blue); padding: 5px 8px; margin: 5px 0; font-size: clamp(11px, 1.7vw, 13.5px); color: #111827; border-radius: 0 6px 6px 0; }
+  .keyword { color: var(--accent-purple); font-weight: 600; } .variable { color: var(--accent-blue); font-weight: 600; } .number { color: var(--accent-green); } .string { color: #db2777; } .comment { color: #6b7280; font-style: italic; }
+  .flowchart { display: flex; flex-direction: column; align-items: center; gap: 2px; margin: 3px 0; }
+  .flow-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: clamp(10px, 1.5vw, 12px); text-align: center; width: 100%; box-sizing: border-box; }
+  .flow-box.highlight { background: #fef3c7; border-color: #fde68a; font-weight: bold; }
+  .flow-arrow { font-size: 9px; color: #64748b; line-height: 1; }
+  .meme-box { background: #fffbeb; border: 1.5px dashed #f59e0b; border-radius: 8px; padding: 6px 10px; margin-top: 4px; font-size: clamp(12px, 1.8vw, 14px); }
+  .meme-header { font-weight: bold; color: #b45309; margin-bottom: 2px; }
+  .badge { display: inline-block; background: #e0e7ff; color: #3730a3; padding: 0 4px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  @media (max-width: 650px) { .portrait-grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); gap: 8px; } }
+</style>
+</head>
+<body>
+<div class="portrait-notebook">
+  <header>
+    <div>
+      <h1>Python User Input Masterclass 📓</h1>
+      <p class="subtitle">Capturing Data & Type Casting Essentials</p>
+    </div>
+    <a href="../index.html" class="practice-btn">💻 Practice Lab 🚀</a>
+  </header>
+  <div class="portrait-grid">
+    <div class="note-card">
+      <div>
+        <h2>1. The input() Function</h2>
+        <p>Used to prompt users in the terminal and capture keyboard data interactively.</p>
+        <div class="code-snippet"><span class="variable">name</span> = <span class="variable">input</span>(<span class="string">"Enter your name: "</span>)</div>
+      </div>
+      <div class="meme-box"><div class="meme-header">💡 Core Rule</div><p style="margin:0;">Execution pauses completely until the user types text and presses Enter.</p></div>
+    </div>
+    <div class="note-card">
+      <div>
+        <h2>2. The String Trap</h2>
+        <p>The <span class="badge">input()</span> function <strong>always</strong> returns data as a string (<span class="badge">str</span>), even numbers!</p>
+        <div class="code-snippet"><span class="variable">age</span> = <span class="variable">input</span>(<span class="string">"Age: "</span>) <span class="comment"># Returns str</span></div>
+      </div>
+      <div class="meme-box" style="border-color:#ef4444; background:#fef2f2;"><div class="meme-header" style="color:#b91c1c;">💀 Danger Zone</div><p style="margin:0;">Trying to do math on raw input results in a <span class="badge">TypeError</span>.</p></div>
+    </div>
+    <div class="note-card">
+      <div>
+        <h2>3. Type Casting Wrapper</h2>
+        <p>Convert text inputs into numbers using wrapper functions immediately.</p>
+        <div class="code-snippet"><span class="variable">raw</span> = <span class="variable">input</span>(<span class="string">"Score: "</span>)<br><span class="variable">score</span> = <span class="keyword">int</span>(<span class="variable">raw</span>) <span class="comment"># Cast to int</span></div>
+      </div>
+      <div class="flowchart">
+        <div class="flow-box">input() ➔ String</div><div class="flow-arrow">⬇</div>
+        <div class="flow-box highlight">int() or float() Casting</div><div class="flow-arrow">⬇</div>
+        <div class="flow-box">Ready for Math! ✅</div>
+      </div>
+    </div>
+    <div class="note-card">
+      <div>
+        <h2>4. Inline Casting Shortcut</h2>
+        <p>Experienced developers wrap the input function directly inside the type caster to save lines.</p>
+        <div class="code-snippet"><span class="variable">price</span> = <span class="keyword">float</span>(<span class="variable">input</span>(<span class="string">"Enter price: "</span>))</div>
+      </div>
+      <div class="meme-box" style="border-color:#10b981; background:#ecfdf5;"><div class="meme-header" style="color:#047857;">⚡ Pro Tip</div><p style="margin:0;">Always validate or wrap inputs when building numerical scripts to avoid crashes.</p></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

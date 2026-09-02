@@ -39,7 +39,93 @@
   .wrap{
     max-width:1160px;
     margin:0 auto;
-    padding:56px 28px 80px;
+    padding:40px 28px 80px;
+  }
+
+  /* ---------- Top Nav Bar & Dropdown ---------- */
+  .top-nav {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 50;
+  }
+  .notes-dropdown-container {
+    position: relative;
+    display: inline-block;
+  }
+  .notes-btn {
+    background: var(--panel-dark);
+    border: 1px solid var(--line-dark);
+    color: var(--text-dark);
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 9px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color .15s ease, background .15s ease, transform .15s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .notes-btn:hover {
+    border-color: var(--teal);
+    background: var(--panel-dark-2);
+  }
+  .notes-btn svg {
+    transition: transform 0.2s ease;
+  }
+  .notes-dropdown-container.active .notes-btn svg {
+    transform: rotate(180deg);
+  }
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    background: var(--panel-dark);
+    border: 1px solid var(--line-dark);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    min-width: 250px;
+    overflow: hidden;
+    animation: fadeIn 0.15s ease;
+  }
+  .dropdown-menu.show {
+    display: block;
+  }
+  .dropdown-menu-header {
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted-dark);
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .dropdown-menu a {
+    display: block;
+    padding: 11px 16px;
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 13px;
+    border-bottom: 1px solid var(--line-dark);
+    transition: background .15s ease, color .15s ease;
+  }
+  .dropdown-menu a:last-child {
+    border-bottom: none;
+  }
+  .dropdown-menu a:hover {
+    background: var(--panel-dark-2);
+    color: var(--teal);
+    padding-left: 20px;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   /* ---------- Hero ---------- */
@@ -276,6 +362,25 @@
 </head>
 <body>
 <div class="wrap">
+
+  <!-- Top Navigation Bar with Notes Dropdown -->
+  <div class="top-nav">
+    <div class="notes-dropdown-container" id="notesDropdown">
+      <button class="notes-btn" id="notesDropdownBtn">
+        <span>📖 Masterclass Notes</span>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="dropdown-menu" id="notesDropdownMenu">
+        <div class="dropdown-menu-header">Quick Access Notes</div>
+        <a href="/Notes_links/variables_notes.html">1. Variables & Types</a>
+        <a href="/Notes_links/python_numbers_math.html">2. Numbers & Math</a>
+        <a href="/Notes_links/python_user_input.html">3. User Input & Interaction</a>
+        <a href="/Notes_links/python_operators_logic.html">4. Operators & Logic</a>
+        <a href="/Notes_links/python_strings_text.html">5. Strings & Text</a>
+        <a href="/Notes_links/python_conditionals.html">6. Conditional Statements</a>
+      </div>
+    </div>
+  </div>
 
   <div class="hero">
     <div class="hero-copy">
@@ -531,6 +636,24 @@ TOPICS.forEach(t => {
     </div>` : ''}
   `;
   grid.appendChild(el);
+});
+
+// Dropdown Toggle Logic
+const dropdownContainer = document.getElementById('notesDropdown');
+const dropdownBtn = document.getElementById('notesDropdownBtn');
+const dropdownMenu = document.getElementById('notesDropdownMenu');
+
+dropdownBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  dropdownContainer.classList.toggle('active');
+  dropdownMenu.classList.toggle('show');
+});
+
+window.addEventListener('click', () => {
+  if (dropdownMenu.classList.contains('show')) {
+    dropdownContainer.classList.remove('active');
+    dropdownMenu.classList.remove('show');
+  }
 });
 </script>
 </body>

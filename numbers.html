@@ -79,7 +79,6 @@
     color:var(--muted-dark);
     font-size:14.5px;
     line-height:1.55;
-    /* max-width:65ch; */
   }
 
   .lessons{
@@ -1211,7 +1210,7 @@ const LESSONS = [
       bn: { title: 'গুণফল (*)', goal: '<strong>কাজ:</strong> সংখ্যা গুণ করুন।<br>1. সংখ্যা ও মূল্য দিন।<br>2. মোট খরচ প্রিন্ট করুন।' },
       gu: { title: 'ગુણાકાર (*)', goal: '<strong>કાર્ય:</strong> ગુણાકાર કરો.<br>1. જથ્થો અને ભાવ સેટ કરો.<br>2. કુલ કિંમત પ્રિન્ટ કરો.' },
       kn: { title: 'ಗುಣಾಕಾರ (*)', goal: '<strong>ಕಾರ್ಯ:</strong> ಸಂಖ್ಯೆಗಳನ್ನು ಗುಣಿಸಿ.<br>1. ಪ್ರಮಾಣ ಮತ್ತು ದರ ನಮೂದಿಸಿ.<br>2. ಒಟ್ಟು ಮೊತ್ತ ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
-      ml: { title: 'ഗുണനം (*)', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യകൾ ഗുണിക്കുക.<br>1. എണ്ണവും വിലയും നൽകുക.<br>2. ആകെ തുക പ്രಿന്റ് ചെയ്യുക.' },
+      ml: { title: 'ഗുണനം (*)', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യകൾ ഗുണിക്കുക.<br>1. എണ്ണവും വിലയും നൽകുക.<br>2. ആകെ തുക പ്രിന്റ് ചെയ്യുക.' },
       pa: { title: 'ਗੁਣਾ (*)', goal: '<strong>ਕੰਮ:</strong> ਨੰਬਰਾਂ ਨੂੰ ਗੁਣਾ ਕਰੋ।<br>1. ਗਿਣਤੀ ਅਤੇ ਮੁੱਲ ਸੈੱਟ ਕਰੋ।<br>2. ਕੁੱਲ ਮੁੱਲ ਪ੍ਰਿੰਟ ਕਰੋ।' }
     }
   },
@@ -1223,11 +1222,11 @@ const LESSONS = [
       mr: { title: 'भागाकार (/ नेहमी float देतो)', goal: '<strong>कृती:</strong> <code>/</code> नेहमी दशांश देतो हे पहा.<br>1. 100 ला 4 ने भागा.<br>2. उत्तर <code>25.0</code> येईल.' },
       ta: { title: 'வகுத்தல் (/ எப்போதும் float தரும்)', goal: '<strong>பணி:</strong> <code>/</code> தசம எண்ணைத் தரும் என்பதை அறிக.<br>1. 100 ஐ 4 ஆல் வகுக்கவும்.<br>2. விடை <code>25.0</code> ஆகும்.' },
       te: { title: 'భాగాహారం (/ ఎల్లప్పుడూ float ఇస్తుంది)', goal: '<strong>టాస్క్:</strong> <code>/</code> దశాంశ ఫలితాన్ని ఇస్తుంది.<br>1. 100 ను 4 తో భాగించండి.<br>2. ఫలితం <code>25.0</code> చూడండి.' },
-      bn: { title: 'ভাগ (/ সর্বদা float দেয়)', goal: '<strong>কাজ:</strong> ভাগফল সবসময় দশমিক হয়।<br>1. ১০০ কে ৪ দিয়ে ভাগ করুন।<br>2. ফলাফল <code>25.0</code> লক্ষ্য করুন।' },
+      bn: { title: 'ভাগ (/ সর্বদা float দেয়)', goal: '<strong>কাজ:</strong> ভাগফল সবসময় দশমিক হয়।<br>1. ১০০ কে ৪ দিয়ে ভাগ করুন।<br>2. ফলাফল <code>25.0</code> লক্ষ্য করুন।' },
       gu: { title: 'ભાગાકાર (/ હંમેશા float આપે છે)', goal: '<strong>કાર્ય:</strong> <code>/</code> દશાંશ આપે છે તે જુઓ.<br>1. 100 ને 4 વડે ભાગો.<br>2. પરિણામ <code>25.0</code> આવશે.' },
       kn: { title: 'ಭಾಗಾಕಾರ (/ ಯಾವಾಗಲೂ float ನೀಡುತ್ತದೆ)', goal: '<strong>ಕಾರ್ಯ:</strong> <code>/</code> ದಶಮಾಂಶ ನೀಡುವುದನ್ನು ಗಮನಿಸಿ.<br>1. 100 ನ್ನು 4 ರಿಂದ ಭಾಗಿಸಿ.<br>2. ಫಲಿತಾಂಶ <code>25.0</code> ಆಗಿರುತ್ತದೆ.' },
       ml: { title: 'ഹരണം (/ എപ്പോഴും float തരുന്നു)', goal: '<strong>ടാസ്ക്:</strong> <code>/</code> ദശാംശം നൽകുന്നത് കാണുക.<br>1. 100 നെ 4 കൊണ്ട് ഹരിക്കുക.<br>2. ഉത്തരം <code>25.0</code> ആയിരിക്കും.' },
-      pa: { title: 'ਭਾਗ (/ ਹਮੇਸ਼ਾ float ਦਿੰਦਾ ਹੈ)', goal: '<strong>ਕੰਮ:</strong> ਦੇਖੋ ਕਿ <code>/</code> ਹਮੇਸ਼ਾ ਦਸ਼ਮਲਵ ਦਿੰਦਾ ਹੈ।<br>1. 100 ਨੂੰ 4 ਨਾਲ ਭਾਗ ਕਰੋ।<br>2. ਨਤੀਜਾ <code>25.0</code> ਆਵੇਗਾ।' }
+      pa: { title: 'ਭਾਗ (/ ਹਮੇਸ਼ਾ float ਦਿੰਦਾ ਹੈ)', goal: '<strong>ਕੰਮ:</strong> ਦੇਖੋ ਕਿ <code>/</code> ਹਮੇਸ਼ਾ ਦਸ਼ਮਲਵ ਦਿੰਦਾ ਹੈ।<br>1. 100 ਨੂੰ 4 ਨਾਲ ਭਾਗ ਕਰੋ።<br>2. ਨਤੀਜਾ <code>25.0</code> ਆਵੇਗਾ।' }
     }
   },
   {
@@ -1298,7 +1297,7 @@ const LESSONS = [
       mr: { title: 'गणितीय अग्रक्रम', goal: '<strong>कृती:</strong> गुणाकार आधी होतो.<br>1. <code>3 * 4</code> आधी होईल (12).<br>2. उत्तर 14 येईल.' },
       ta: { title: 'கணித முன்னுரிமை', goal: '<strong>பணி:</strong> பெருக்கல் முதலில் நடக்கும்.<br>1. <code>3 * 4</code> முதலில் கணக்கிடப்படும்.<br>2. விடை 14.' },
       te: { title: 'గణిత ప్రాధాన్యత', goal: '<strong>టాస్క్:</strong> గుణకారం ముందుగా జరుగుతుంది.<br>1. <code>3 * 4</code> ముందుగా అవుతుంది.<br>2. ఫలితం 14.' },
-      bn: { title: 'হিসাবের অগ্রাধিকার', goal: '<strong>কাজ:</strong> গুণের কাজ আগে হয়।<br>1. <code>3 * 4</code> আগে হবে (১২)।<br>2. উত্তর ১৪ প্রিন্ট করুন।' },
+      bn: { title: 'হিসাবের অগ্রাধিকার', goal: '<strong>কাজ:</strong> গুণের কাজ আগে হয়।<br>1. <code>3 * 4</code> আগে হবে (১২)।<br>2. উত্তর ১৪ প্রিন্ট করুন।' },
       gu: { title: 'ગણતરીનો ક્રમ', goal: '<strong>કાર્ય:</strong> ગુણાકાર પહેલા થાય.<br>1. <code>3 * 4 = 12</code>.<br>2. જવાબ 14 આવશે.' },
       kn: { title: 'ಗಣಿತದ ಆದ್ಯತೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಗುಣಾಕಾರ ಮೊದಲು ನಡೆಯುತ್ತದೆ.<br>1. <code>3 * 4</code> ಮೊದಲು ಆಗುತ್ತದೆ.<br>2. ಉತ್ತರ 14.' },
       ml: { title: 'മുൻഗണനാ ക്രമം', goal: '<strong>ടാസ്ക്:</strong> ഗുണനം ആദ്യം നടക്കുന്നു.<br>1. <code>3 * 4</code> ആദ്യം ചെയ്യും.<br>2. ഉത്തരം 14.' },
@@ -1358,7 +1357,7 @@ const LESSONS = [
       mr: { title: 'गुणून असाइन करणे (*=)', goal: '<strong>कृती:</strong> 4 ने गुणा.<br>1. <code>score = 25</code> घ्या.<br>2. <code>score *= 4</code> करा (100).' },
       ta: { title: 'பெருக்கி ஒதுக்குதல் (*=)', goal: '<strong>பணி:</strong> 4 ஆல் பெருக்கவும்.<br>1. <code>score = 25</code> அமைக்கவும்.<br>2. <code>score *= 4</code> அச்சிடவும்.' },
       te: { title: 'గుణించి అసైన్ చేయడం (*=)', goal: '<strong>టాస్క్:</strong> 4 తో గుణించండి.<br>1. <code>score = 25</code> ఇవ్వండి.<br>2. <code>score *= 4</code> ప్రింట్ చేయండి.' },
-      bn: { title: 'গুণ করে অ্যাসাইন (*=)', goal: '<strong>কাজ:</strong> ৪ দিয়ে গুণ করুন।<br>1. <code>score = 25</code> লিখুন।<br>2. <code>score *= 4</code> করে ১০০ প্রিন্ট করুন।' },
+      bn: { title: 'গুণ করে অ্যাসাইন (*=)', goal: '<strong>কাজ:</strong> ৪ দিয়ে গুণ করুন।<br>1. <code>score = 25</code> লিখুন।<br>2. <code>score *= 4</code> করে ১০০ প্রিন্ট করুন।' },
       gu: { title: 'ગુણો અને અસાઇન કરો (*=)', goal: '<strong>કાર્ય:</strong> 4 વડે ગુણો.<br>1. <code>score = 25</code> લો.<br>2. <code>score *= 4</code> કરો.' },
       kn: { title: 'ಗುಣಿಸಿ ನಿಯೋಜಿಸಿ (*=)', goal: '<strong>ಕಾರ್ಯ:</strong> 4 ರಿಂದ ಗುಣಿಸಿ.<br>1. <code>score = 25</code> ಹೊಂದಿಸಿ.<br>2. <code>score *= 4</code> ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
       ml: { title: 'ഗുണിച്ച് അസൈൻ ചെയ്യുക (*=)', goal: '<strong>ടാസ്ക്:</strong> 4 കൊണ്ട് ഗുണിക്കുക.<br>1. <code>score = 25</code> നൽകുക.<br>2. <code>score *= 4</code> പ്രിന്റ് ചെയ്യുക.' },
@@ -1403,7 +1402,7 @@ const LESSONS = [
       mr: { title: 'मजकूराचे पूर्णांकात रूपांतर (int)', goal: '<strong>कृती:</strong> <code>int()</code> वापरा.<br>1. <code>"150"</code> चे संख्येत रूपांतर करा.<br>2. 50 मिळवून 200 प्रिंट करा.' },
       ta: { title: 'உரையை int() ஆக மாற்றுதல்', goal: '<strong>பணி:</strong> உரையை எண்ணாக மாற்றவும்.<br>1. <code>int("150")</code> பயன்படுத்தவும்.<br>2. 50 கூட்டி 200 பெறவும்.' },
       te: { title: 'టెక్స్ట్‌ను int() గా మార్చడం', goal: '<strong>టాస్క్:</strong> <code>int()</code> తో మార్చండి.<br>1. <code>int("150")</code> చేయండి.<br>2. 50 కలిపి 200 ప్రింట్ చేయండి.' },
-      bn: { title: 'টেক্সটকে int() এ রূপান্তর', goal: '<strong>কাজ:</strong> স্ট্রিংকে পূর্ণসংখ্যায় রূপান্তর করুন।<br>1. <code>int("150")</code> ব্যবহার করুন।<br>2. ৫০ যোগ করে ২০০ প্রিন্ট করুন।' },
+      bn: { title: 'টেক্সটকে int() এ রূপান্তর', goal: '<strong>কাজ:</strong> স্ট্রিংকে পূর্ণসংখ্যায় রূপান্তর করুন।<br>1. <code>int("150")</code> ব্যবহার করুন।<br>2. ৫০ যোগ করে ২০০ প্রিন্ট করুন।' },
       gu: { title: 'ટેક્સ્ટને int() માં ફેરવવું', goal: '<strong>કાર્ય:</strong> <code>int()</code> વાપરો.<br>1. <code>"150"</code> ને નંબરમાં ફેરવો.<br>2. 50 ઉમેરી 200 મેળવો.' },
       kn: { title: 'ಪಠ್ಯವನ್ನು int() ಆಗಿ ಪರಿವರ್ತಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> <code>int()</code> ಬಳಸಿ ಸಂಖ್ಯೆ ಮಾಡಿ.<br>1. <code>int("150")</code> ಬಳಸಿ.<br>2. 50 ಸೇರಿಸಿ 200 ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
       ml: { title: 'ടെക്സ്റ്റിനെ int() ആക്കുക', goal: '<strong>ടാസ്ക്:</strong> സംഖ്യയാക്കി മാറ്റുക.<br>1. <code>int("150")</code> ഉപയോഗിക്കുക.<br>2. 50 കൂട്ടി 200 പ്രിന്റ് ചെയ്യുക.' },
@@ -1418,7 +1417,7 @@ const LESSONS = [
       mr: { title: 'मजकूराचे दशांशात रूपांतर (float)', goal: '<strong>कृती:</strong> <code>float()</code> वापरा.<br>1. <code>float("12.75")</code> करा.<br>2. 2 ने गुणून 25.5 प्रिंट करा.' },
       ta: { title: 'உரையை float() ஆக மாற்றுதல்', goal: '<strong>பணி:</strong> தசம எண்ணாக மாற்றவும்.<br>1. <code>float("12.75")</code> பயன்படுத்தவும்.<br>2. 2 ஆல் பெருக்கவும்.' },
       te: { title: 'టెక్స్ట్‌ను float() గా మార్చడం', goal: '<strong>టాస్క్:</strong> <code>float()</code> తో మార్చండి.<br>1. <code>float("12.75")</code> చేయండి.<br>2. 2 తో గుణించండి.' },
-      bn: { title: 'টেক্সটকে float() এ রূপান্তর', goal: '<strong>কাজ:</strong> দশমিক সংখ্যায় রূপান্তর করুন।<br>1. <code>float("12.75")</code> ব্যবহার করুন।<br>2. ২ দিয়ে গুণ করুন।' },
+      bn: { title: 'টেক্সটকে float() এ রূপান্তর', goal: '<strong>কাজ:</strong> দশমিক সংখ্যায় রূপান্তর করুন।<br>1. <code>float("12.75")</code> ব্যবহার করুন।<br>2. ২ দিয়ে গুণ করুন।' },
       gu: { title: 'ટેક્સ્ટને float() માં ફેરવવું', goal: '<strong>કાર્ય:</strong> દશાંશમાં ફેરવો.<br>1. <code>float("12.75")</code> વાપરો.<br>2. 2 વડે ગુણો.' },
       kn: { title: 'ಪಠ್ಯವನ್ನು float() ಆಗಿ ಪರಿವರ್ತಿಸಿ', goal: '<strong>ಕಾರ್ಯ:</strong> ದಶಮಾಂಶವಾಗಿ ಪರಿವರ್ತಿಸಿ.<br>1. <code>float("12.75")</code> ಬಳಸಿ.<br>2. 2 ರಿಂದ ಗುಣಿಸಿ.' },
       ml: { title: 'ടെക്സ്റ്റിനെ float() ആക്കുക', goal: '<strong>ടാസ്ക്:</strong> ദശാംശമാക്കി മാറ്റുക.<br>1. <code>float("12.75")</code> ഉപയോഗിക്കുക.<br>2. 2 കൊണ്ട് ഗുണിക്കുക.' },
@@ -1433,7 +1432,7 @@ const LESSONS = [
       mr: { title: 'दशांश वगळणे (int())', goal: '<strong>कृती:</strong> दशांश काढून टाका.<br>1. <code>int(3.14159)</code> फक्त 3 ठेवेल.<br>2. प्रिंट करा.' },
       ta: { title: 'தசமத்தை நீக்குதல் (int())', goal: '<strong>பணி:</strong> தசமப் பகுதியை நீக்கவும்.<br>1. <code>int(3.14159)</code> 3 ஆக மாறும்.<br>2. அச்சிடவும்.' },
       te: { title: 'దశాంశాన్ని తొలగించడం (int())', goal: '<strong>టాస్క్:</strong> దశాంశ భాగాన్ని తీసివేయండి.<br>1. <code>int(3.14159)</code> ఫలితం 3.<br>2. ప్రింట్ చేయండి.' },
-      bn: { title: 'দশমিক বাদ দেওয়া (int())', goal: '<strong>কাজ:</strong> দশমিকের অংশ ফেলে দিন।<br>1. <code>int(3.14159)</code> শুধু ৩ রাখবে।<br>2. প্রিন্ট করুন।' },
+      bn: { title: 'দশমিক বাদ দেওয়া (int())', goal: '<strong>কাজ:</strong> দশমিকের অংশ ফেলে দিন।<br>1. <code>int(3.14159)</code> শুধু ৩ রাখবে।<br>2. প্রিন্ট করুন।' },
       gu: { title: 'દશાંશ કાઢી નાખવું (int())', goal: '<strong>કાર્ય:</strong> પોઇન્ટ પછીનું કાઢી નાખો.<br>1. <code>int(3.14159)</code> માત્ર 3 રાખશે.<br>2. પ્રિન્ટ કરો.' },
       kn: { title: 'ದಶಮಾಂಶ ಕತ್ತರಿಸುವುದು (int())', goal: '<strong>ಕಾರ್ಯ:</strong> ದಶಮಾಂಶ ಭಾಗವನ್ನು ತೆಗೆಯಿರಿ.<br>1. <code>int(3.14159)</code> ಕೇವಲ 3 ನೀಡುತ್ತದೆ.<br>2. ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
       ml: { title: 'ദശാംശം ഒഴിവാക്കുക (int())', goal: '<strong>ടാസ്ക്:</strong> ദശാംശ ഭാഗം ഒഴിവാക്കുക.<br>1. <code>int(3.14159)</code> 3 നൽകും.<br>2. പ്രിന്റ് ചെയ്യുക.' },
@@ -1478,7 +1477,7 @@ const LESSONS = [
       mr: { title: 'सम किंवा विषम चाचणी', goal: '<strong>कृती:</strong> 2 ने भागून पहा.<br>1. 37 ही विषम संख्या आहे.<br>2. निकाल False येईल.' },
       ta: { title: 'இரட்டைப்படை / ஒற்றைப்படை', goal: '<strong>பணி:</strong> 2 ஆல் வகுபடுமா எனப் பார்க்கவும்.<br>1. 37 ஒற்றைப்படை எண்.<br>2. False கிடைக்கும்.' },
       te: { title: 'సరి లేదా బేసి పరీక్ష', goal: '<strong>టాస్క్:</strong> 2 తో భాగాహారం చూడండి.<br>1. 37 బేసి సంఖ్య.<br>2. False వస్తుంది.' },
-      bn: { title: 'জোড় বা বিজোড় যাচাই', goal: '<strong>কাজ:</strong> ২ দিয়ে বিভাজ্য কিনা দেখুন।<br>1. ৩৭ বিজোড় সংখ্যা।<br>2. ফলাফল False আসবে।' },
+      bn: { title: 'জোড় বা বিজোড় যাচাই', goal: '<strong>কাজ:</strong> ২ দিয়ে বিভাজ্য কিনা দেখুন।<br>1. ৩৭ বিজোড় সংখ্যা।<br>2. ফলাফল False আসবে।' },
       gu: { title: 'બેકી કે એકી ચકાસણી', goal: '<strong>કાર્ય:</strong> 2 વડે ભાગીને જુઓ.<br>1. 37 એકી સંખ્યા છે.<br>2. False આવશે.' },
       kn: { title: 'ಸಮ ಅಥವಾ ಬೆಸ ಸಂಖ್ಯೆ', goal: '<strong>ಕಾರ್ಯ:</strong> 2 ರಿಂದ ಭಾಗಿಸಿ ಪರೀಕ್ಷಿಸಿ.<br>1. 37 ಬೆಸ ಸಂಖ್ಯೆ.<br>2. False ಬರುತ್ತದೆ.' },
       ml: { title: 'ഇരട്ടയോ ഒറ്റയോ എന്ന് നോക്കുക', goal: '<strong>ടാസ്ക്:</strong> 2 കൊണ്ട് ഹരിക്കുക.<br>1. 37 ഒറ്റസംഖ്യയാണ്.<br>2. False ലഭിക്കും.' },
@@ -1508,7 +1507,7 @@ const LESSONS = [
       mr: { title: 'सरासरी काढणे', goal: '<strong>कृती:</strong> सरासरी काढा.<br>1. तिन्ही गुणांची बेरीज करा.<br>2. 3 ने भागून 90.0 मिळवा.' },
       ta: { title: 'சராசரி கணக்கிடுதல்', goal: '<strong>பணி:</strong> சராசரியைக் கணக்கிடவும்.<br>1. மூன்றையும் கூட்டவும்.<br>2. 3 ஆல் வகுத்து 90.0 பெறவும்.' },
       te: { title: 'సగటు లెక్కించడం', goal: '<strong>టాస్క్:</strong> సగటు కనుగొనండి.<br>1. మూడింటిని కూడండి.<br>2. 3 తో భాగించి 90.0 పొందండి.' },
-      bn: { title: 'গড় নির্ণয়', goal: '<strong>কাজ:</strong> গড় মান বের করুন।<br>1. তিনটি সংখ্যা যোগ করুন।<br>2. ৩ দিয়ে ভাগ করে ৯০.০ পান।' },
+      bn: { title: 'গড় নির্ণয়', goal: '<strong>কাজ:</strong> গড় মান বের করুন।<br>1. তিনটি সংখ্যা যোগ করুন।<br>2. ৩ দিয়ে ভাগ করে ৯০.০ পান।' },
       gu: { title: 'સરેરાશ શોધવી', goal: '<strong>કાર્ય:</strong> સરેરાશ ગણો.<br>1. ત્રણેયનો સરવાળો કરો.<br>2. 3 વડે ભાગી 90.0 મેળવો.' },
       kn: { title: 'ಸರಾಸರಿ ಲೆಕ್ಕಾಚಾರ', goal: '<strong>ಕಾರ್ಯ:</strong> ಸರಾಸರಿ ಕಂಡುಹಿಡಿಯಿರಿ.<br>1. ಮೂರನ್ನು ಕೂಡಿಸಿ.<br>2. 3 ರಿಂದ ಭಾಗಿಸಿ 90.0 ಪಡೆಯಿರಿ.' },
       ml: { title: 'ശരാശരി കണക്കാക്കുക', goal: '<strong>ടാസ്ക്:</strong> ശരാശരി കണ്ടെത്തുക.<br>1. മൂന്നും കൂട്ടുക.<br>2. 3 കൊണ്ട് ഹരിച്ച് 90.0 നേടുക.' },
@@ -1523,7 +1522,7 @@ const LESSONS = [
       mr: { title: 'टक्केवारी काढणे', goal: '<strong>कृती:</strong> टक्केवारी काढा.<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% प्रिंट करा.' },
       ta: { title: 'சதவீதம் கணக்கிடுதல்', goal: '<strong>பணி:</strong> சதவீதமாக மாற்றவும்.<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% அச்சிடவும்.' },
       te: { title: 'శాతం లెక్కించడం', goal: '<strong>టాస్క్:</strong> శాతాన్ని లెక్కించండి.<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% ప్రింట్ చేయండి.' },
-      bn: { title: 'শতকরা নির্ণয়', goal: '<strong>কাজ:</strong> শতকরায় প্রকাশ করুন।<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% প্রিন্ট করুন।' },
+      bn: { title: 'শতকরা নির্ণয়', goal: '<strong>কাজ:</strong> শতকরায় প্রকাশ করুন।<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% প্রিন্ট করুন।' },
       gu: { title: 'ટકાવારી ગણવી', goal: '<strong>કાર્ય:</strong> ટકાવારી શોધો.<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% પ્રિન્ટ કરો.' },
       kn: { title: 'ಶೇಕಡಾವಾರು ಲೆಕ್ಕಾಚಾರ', goal: '<strong>ಕಾರ್ಯ:</strong> ಶೇಕಡಾವಾರು ತಿಳಿಯಿರಿ.<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
       ml: { title: 'ശതമാനം കണ്ടെത്തുക', goal: '<strong>ടാസ്ക്:</strong> ശതമാനമാക്കുക.<br>1. <code>(score / total) * 100</code>.<br>2. 84.0% പ്രിന്റ് ചെയ്യുക.' },
@@ -1538,7 +1537,7 @@ const LESSONS = [
       mr: { title: 'क्षेत्रफळ आणि परिमिती', goal: '<strong>कृती:</strong> आयताची गणना करा.<br>1. क्षेत्रफळ = 60.<br>2. परिमिती = 34.' },
       ta: { title: 'பரப்பளவு மற்றும் சுற்றளவு', goal: '<strong>பணி:</strong> செவ்வகத்தைக் கணக்கிடவும்.<br>1. பரப்பளவு = 60.<br>2. சுற்றளவு = 34.' },
       te: { title: 'వైశాల్యం మరియు చుట్టుకొలత', goal: '<strong>టాస్క్:</strong> దీర్ఘచతురస్రం లెక్కలు చేయండి.<br>1. వైశాల్యం = 60.<br>2. చుట్టుకొలత = 34.' },
-      bn: { title: 'ক্ষেত্রফল ও পরিসীমা', goal: '<strong>কাজ:</strong> আয়তক্ষেত্রের হিসাব করুন।<br>1. ক্ষেত্রফল = ৬০.<br>2. পরিসীমা = ৩৪.' },
+      bn: { title: 'ক্ষেত্রফল ও পরিসীমা', goal: '<strong>কাজ:</strong> আয়তক্ষেত্রের হিসাব করুন।<br>1. ক্ষেত্রফল = ৬০.<br>2. পরিসীমা = ৩৪.' },
       gu: { title: 'ક્ષેત્રફળ અને પરિમિતિ', goal: '<strong>કાર્ય:</strong> લંબચોરસની ગણતરી કરો.<br>1. ક્ષેત્રફળ = 60.<br>2. પરિમિતિ = 34.' },
       kn: { title: 'ವಿಸ್ತೀರ್ಣ ಮತ್ತು ಸುತ್ತಳತೆ', goal: '<strong>ಕಾರ್ಯ:</strong> ಆಯತದ ಲೆಕ್ಕಾಚಾರ ಮಾಡಿ.<br>1. ವಿಸ್ತೀರ್ಣ = 60.<br>2. ಸುತ್ತಳತೆ = 34.' },
       ml: { title: 'വിസ്തീർണ്ണവും ചുറ്റളവും', goal: '<strong>ടാസ്ക്:</strong> കണക്കുകൂട്ടുക.<br>1. വിസ്തീർണ്ണം = 60.<br>2. ചുറ്റളവ് = 34.' },
@@ -1568,7 +1567,7 @@ const LESSONS = [
       mr: { title: 'कर आणि सवलतीसह बिल', goal: '<strong>कृती:</strong> एकूण बिल काढा.<br>1. सवलत वजा करा.<br>2. 5% कर जोडून 131.25 प्रिंट करा.' },
       ta: { title: 'வரி மற்றும் தள்ளுபடியுடன் பில்', goal: '<strong>பணி:</strong> பில் கணக்கிடவும்.<br>1. தள்ளுபடியைக் கழிக்கவும்.<br>2. வரி சேர்த்து 131.25 பெறவும்.' },
       te: { title: 'పన్ను మరియు డిస్కౌంట్‌తో బిల్లు', goal: '<strong>టాస్క్:</strong> మొత్తం బిల్లు లెక్కించండి.<br>1. డిస్కౌంట్ తీసివేయండి.<br>2. టాక్స్ కలిపి 131.25 పొందండి.' },
-      bn: { title: 'ছাড় ও ট্যাক্সসহ মোট বিল', goal: '<strong>কাজ:</strong> বিলের হিসাব করুন।<br>1. ডিসকাউন্ট বাদ দিন।<br>2. ট্যাক্স যোগ করে ১৩১.২৫ প্রিন্ট করুন।' },
+      bn: { title: 'ছাড় ও ট্যাক্সসহ মোট বিল', goal: '<strong>কাজ:</strong> বিলের হিসাব করুন।<br>1. ডিসকাউন্ট বাদ দিন।<br>2. ট্যাক্স যোগ করে ১৩১.২৫ প্রিন্ট করুন।' },
       gu: { title: 'ટેક્સ અને ડિસ્કાઉન્ટ સાથે બિલ', goal: '<strong>કાર્ય:</strong> બિલિંગ ગણો.<br>1. ડિસ્કાઉન્ટ બાદ કરો.<br>2. ટેક્સ ઉમેરી 131.25 મેળવો.' },
       kn: { title: 'ತೆರಿಗೆ ಮತ್ತು ರಿಯಾಯಿತಿಯೊಂದಿಗೆ ಬಿಲ್', goal: '<strong>ಕಾರ್ಯ:</strong> ಒಟ್ಟು ಬಿಲ್ ಲೆಕ್ಕ ಹಾಕಿ.<br>1. ರಿಯಾಯಿತಿ ಕಳೆಯಿರಿ.<br>2. ತೆರಿಗೆ ಸೇರಿಸಿ 131.25 ಪಡೆಯಿರಿ.' },
       ml: { title: 'നികുതിയും കിഴിവും ചേർത്ത ബിൽ', goal: '<strong>ടാസ്ക്:</strong> ബിൽ കണക്കാക്കുക.<br>1. ഡിസ്കൗണ്ട് കുറയ്ക്കുക.<br>2. ടാക്സ് ചേർത്ത് 131.25 നേടുക.' },
@@ -1598,7 +1597,7 @@ const LESSONS = [
       mr: { title: 'अंतिम आव्हान: वरचा पूर्णांक काढणे', goal: '<strong>कृती:</strong> लागणाऱ्या बसेसची संख्या काढा.<br>1. 58 विद्यार्थ्यांसाठी 3 बसेस हव्यात.<br>2. 3 प्रिंट करा.' },
       ta: { title: 'இறுதி சவால்: முழுமையாக்கல்', goal: '<strong>பணி:</strong> தேவையான பேருந்துகளைக் கணக்கிடவும்.<br>1. 58 மாணவர்களுக்கு 3 பேருந்துகள் தேவை.<br>2. 3 அச்சிடவும்.' },
       te: { title: 'చివరి సవాలు: సీలింగ్ డివిజన్', goal: '<strong>టాస్క్:</strong> బస్సుల సంఖ్యను లెక్కించండి.<br>1. 58 మందికి 3 బస్సులు అవసరం.<br>2. 3 ప్రింట్ చేయండి.' },
-      bn: { title: 'চূড়ান্ত চ্যালেঞ্জ: সিলিং ডিভিশন', goal: '<strong>কাজ:</strong> কয়টি বাস লাগবে হিসাব করুন।<br>1. ৫৮ জন শিক্ষার্থীর জন্য ৩টি বাস প্রয়োজন।<br>2. ৩ প্রিন্ট করুন।' },
+      bn: { title: 'চূড়ান্ত চ্যালেঞ্জ: সিলিং ডিভিশন', goal: '<strong>কাজ:</strong> কয়টি বাস লাগবে হিসাব করুন।<br>1. ৫৮ জন শিক্ষার্থীর জন্য ৩টি বাস প্রয়োজন।<br>2. ৩ প্রিন্ট করুন।' },
       gu: { title: 'અંતિમ પડકાર: સીલિંગ ડિવિઝન', goal: '<strong>કાર્ય:</strong> જરૂરી બસોની ગણતરી કરો.<br>1. 58 વિદ્યાર્થીઓ માટે 3 બસ જોઈએ.<br>2. 3 પ્રિન્ટ કરો.' },
       kn: { title: 'ಅಂತಿಮ ಸವಾಲು: ಸೀಲಿಂಗ್ ಭಾಗಾಕಾರ', goal: '<strong>ಕಾರ್ಯ:</strong> ಅಗತ್ಯವಿರುವ ಬಸ್‌ಗಳನ್ನು ಲೆಕ್ಕ ಹಾಕಿ.<br>1. 58 ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ 3 ಬಸ್‌ಗಳು ಬೇಕು.<br>2. 3 ಪ್ರಿಂಟ್ ಮಾಡಿ.' },
       ml: { title: 'അവസാന ചലഞ്ച്: സീലിംഗ് ഡിവിഷൻ', goal: '<strong>ടാസ്ക്:</strong> ആവശ്യമായ ബസുകൾ കണ്ടെത്തുക.<br>1. 58 കുട്ടികൾക്ക് 3 ബസുകൾ വേണം.<br>2. 3 പ്രിന്റ് ചെയ്യുക.' },
@@ -1991,28 +1990,98 @@ els.kidsToggleBtn.addEventListener('click', () => {
   }
 });
 
-els.code.addEventListener('input', () => {
+// ============================================================
+// IDLE-Like Text Editor Logic (Brackets, Quotes, Indentation, Tabs)
+// ============================================================
+const pairs = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'" };
+const closingChars = Object.values(pairs);
+
+function triggerInputUpdate() {
   if (!isPeeking) {
     userCodeStore[state.lessonIndex] = els.code.value;
     saveUserCodes();
   }
   syncGutter();
-});
-els.code.addEventListener('scroll', () => {
-  els.gutter.scrollTop = els.code.scrollTop;
-});
+}
+
 els.code.addEventListener('keydown', (e) => {
+  const start = els.code.selectionStart;
+  const end = els.code.selectionEnd;
+  const val = els.code.value;
+
+  // 1. Auto Tabs (4 spaces)
   if (e.key === 'Tab') {
     e.preventDefault();
-    const s = els.code.selectionStart, en = els.code.selectionEnd;
-    els.code.value = els.code.value.slice(0, s) + '    ' + els.code.value.slice(en);
-    els.code.selectionStart = els.code.selectionEnd = s + 4;
-    if (!isPeeking) {
-      userCodeStore[state.lessonIndex] = els.code.value;
-      saveUserCodes();
-    }
-    syncGutter();
+    els.code.value = val.slice(0, start) + '    ' + val.slice(end);
+    els.code.selectionStart = els.code.selectionEnd = start + 4;
+    triggerInputUpdate();
+    return;
   }
+
+  // 2. Auto-closing brackets & quotes
+  if (pairs[e.key] && start === end) {
+    e.preventDefault();
+    const close = pairs[e.key];
+    els.code.value = val.slice(0, start) + e.key + close + val.slice(end);
+    els.code.selectionStart = els.code.selectionEnd = start + 1;
+    triggerInputUpdate();
+    return;
+  }
+
+  // Skip over matching closing character if typed
+  if (closingChars.includes(e.key) && start === end && val[start] === e.key) {
+    e.preventDefault();
+    els.code.selectionStart = els.code.selectionEnd = start + 1;
+    return;
+  }
+
+  // 3. Smart Backspace between pairs
+  if (e.key === 'Backspace' && start === end && start > 0) {
+    const prev = val[start - 1];
+    const next = val[start];
+    if (Object.keys(pairs).some(k => pairs[k] === next && k === prev)) {
+      e.preventDefault();
+      els.code.value = val.slice(0, start - 1) + val.slice(start + 1);
+      els.code.selectionStart = els.code.selectionEnd = start - 1;
+      triggerInputUpdate();
+      return;
+    }
+  }
+
+  // 4. Auto-Indentation & Smart Enter
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+    const currentLine = val.slice(lineStart, start);
+    
+    const match = currentLine.match(/^([ \t]*)/);
+    let indent = match ? match[1] : '';
+    
+    // Add extra 4 spaces indent if line ends with a colon
+    if (currentLine.trim().endsWith(':')) {
+      indent += '    ';
+    }
+
+    const insertion = '\n' + indent;
+    els.code.value = val.slice(0, start) + insertion + val.slice(end);
+    els.code.selectionStart = els.code.selectionEnd = start + insertion.length;
+    triggerInputUpdate();
+    return;
+  }
+});
+
+els.code.addEventListener('input', () => {
+  // Whitespace fix: Clean non-breaking space characters that trigger font ligature issues
+  if (els.code.value.includes('\u00A0')) {
+    const pos = els.code.selectionStart;
+    els.code.value = els.code.value.replace(/\u00A0/g, ' ');
+    els.code.selectionStart = els.code.selectionEnd = pos;
+  }
+  triggerInputUpdate();
+});
+
+els.code.addEventListener('scroll', () => {
+  els.gutter.scrollTop = els.code.scrollTop;
 });
 
 els.langSelect.addEventListener('change', (e) => {

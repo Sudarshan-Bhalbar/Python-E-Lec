@@ -79,10 +79,8 @@
     color:var(--muted-dark);
     font-size:14.5px;
     line-height:1.55;
-    /* max-width:65ch; */
   }
 
-  /* All 50 question pills wrapped cleanly into multi-line rows without any scrollbar */
   .lessons{
     display:flex;
     flex-wrap:wrap;
@@ -122,7 +120,6 @@
     background:rgba(217,162,75,0.12);
   }
 
-  /* ---------- Topics link & progress ---------- */
   .topics-link{
     display:inline-flex;
     align-items:center;
@@ -152,7 +149,6 @@
     transition:width .35s ease;
   }
 
-  /* ---------- Instructions ---------- */
   .instructions{
     background:var(--panel-dark);
     border:1px solid var(--line-dark);
@@ -230,7 +226,6 @@
     max-width:70ch;
   }
 
-  /* ---------- Grid ---------- */
   .grid{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -278,7 +273,6 @@
     letter-spacing:0.03em;
   }
 
-  /* ---------- Editor ---------- */
   .editor-panel{ background:var(--panel-dark); flex:1; min-height:360px; }
   .editor-panel.peeking{ border-color:var(--amber); }
   .editor-body{
@@ -379,6 +373,7 @@
     background:rgba(217, 162, 75, 0.12);
     color:var(--amber);
     border-color:rgba(217, 162, 75, 0.35);
+    touch-action: none;
   }
   .btn-peek:hover:not(:disabled){
     background:rgba(217, 162, 75, 0.22);
@@ -399,7 +394,6 @@
     min-width:180px;
   }
 
-  /* ---------- Visual panel ---------- */
   .visual-panel{
     background:var(--paper);
     color:var(--text-light);
@@ -550,7 +544,6 @@
   .vbox.is-updated{ animation:flash .6s ease; }
   .vbox.is-referenced{ animation:refPulse 1.3s ease; }
 
-  /* Kids Mode Styles */
   .vbox.kid-card{
     background:#ffffff;
     border:2.5px solid var(--tag-color, #4a5568);
@@ -600,7 +593,6 @@
     100%{ transform:scale(1); }
   }
 
-  /* ---------- Terminal panel & interactive input ---------- */
   .terminal-panel{ background:var(--panel-dark); flex:1; min-height:180px; }
   .terminal-body{
     flex:1;
@@ -661,7 +653,7 @@
       <div class="dot"></div>
       <div>
         <h1>Operators Lab</h1>
-        <p>Operators are special symbols (<code>+</code>, <code>-</code>, <code>==</code>, <code>and</code>, <code>+=</code>) that perform operations on variables and values. They allow your Python code to compute arithmetic, compare data, evaluate logic, and assign updated values in memory.</p>
+        <p>Explore variables, types, numeric calculations, user interactions, and operators (<code>+</code>, <code>-</code>, <code>==</code>, <code>and</code>, <code>+=</code>) step by step.</p>
       </div>
     </div>
   </header>
@@ -694,7 +686,7 @@
         </select>
       </div>
     </div>
-    <h2 id="lesson-title">Addition Operator (+)</h2>
+    <h2 id="lesson-title">Storing Whole Numbers</h2>
     <p id="lesson-goal">Loading lesson details...</p>
   </div>
 
@@ -706,7 +698,7 @@
             <span class="swatch" style="background:var(--amber)"></span>code.py
             <span class="peek-badge" id="peek-badge">SOLUTION PREVIEW</span>
           </div>
-          <div class="sub" id="line-count">3 lines</div>
+          <div class="sub" id="line-count">1 line</div>
         </div>
         <div class="editor-body">
           <div class="gutter" id="gutter">1</div>
@@ -1197,142 +1189,143 @@ async function executeStatement(toks, env, order, created, updated, referenced, 
 }
 
 // ============================================================
-// Exactly 50 Structured Operator Lessons with Indian Languages
+// 50 Strict Numeric, Input, Variable & Operator Lessons
 // ============================================================
 const LESSON_TITLES = [
-  "Addition (+)", "Subtraction (-)", "Multiplication (*)", "True Division (/)", "Floor Division (//)",
-  "Modulo Remainder (%)", "Exponentiation (**)", "Unary Negation (-)", "Mixed Arithmetic (+ and *)", "String Concatenation (+)",
-  "String Repetition (*)", "Input Conversion with int()", "Input Conversion with float()", "Input String Length with len()", "Formatting Operator Results",
-  "Equality Check (==)", "Inequality Check (!=)", "Greater Than (>)", "Less Than (<)", "Greater Than or Equal (>=)",
-  "Less Than or Equal (<=)", "Word Comparison (<)", "Case-Sensitive Text Equality (==)", "Even Number Test (% 2 == 0)", "Odd Number Test (% 2 != 0)",
-  "Add & Assign (+=)", "Subtract & Assign (-=)", "Multiply & Assign (*=)", "Divide & Assign (/=)", "Floor Divide & Assign (//=)",
-  "Modulo & Assign (%=)", "Exponentiate & Assign (**=)", "Incrementing Variables", "Scaling Factors", "Logical AND (and)",
-  "Logical OR (or)", "Logical NOT (not)", "Combining AND with NOT", "Combining OR with NOT", "Exclusive OR (XOR)",
-  "Truthiness with bool()", "Double Negation (not not)", "Three-Way Condition", "Precedence: * over +", "Precedence: Parentheses",
-  "Precedence: Comparison over Logic", "Compound Interest Formula", "Pass / Fail Condition", "Divisibility by 3 and 5", "Capstone: Shopping Discount Engine"
+  "Storing Whole Numbers", "Storing Decimal Numbers", "Storing Boolean Values", "Basic User Input", "Converting Input to Integer",
+  "Converting Input to Float", "Addition Operator (+)", "Subtraction Operator (-)", "Multiplication Operator (*)", "True Division Operator (/)",
+  "Floor Division Operator (//)", "Modulo Operator (%)", "Exponentiation Operator (**)", "Unary Negation (-)", "Mixed Arithmetic (+ and *)",
+  "Precedence: * over +", "Precedence: Parentheses ()", "Complex Expression Evaluation", "Equality Check (==)", "Inequality Check (!=)",
+  "Greater Than (>)", "Less Than (<)", "Greater Than or Equal (>=)", "Less Than or Equal (<=)", "Comparing Booleans",
+  "Logical AND (and)", "Logical OR (or)", "Logical NOT (not)", "Combining AND with NOT", "Combining OR with NOT",
+  "Complex Logical Expression", "Truthiness with bool()", "Double Negation (not not)", "Assignment Operator (=)", "Add & Assign (+=)",
+  "Subtract & Assign (-=)", "Multiply & Assign (*=)", "Divide & Assign (/=)", "Floor Divide & Assign (//=)", "Modulo & Assign (%=)",
+  "Exponentiate & Assign (**=)", "Incrementing Variables", "Accumulating Totals", "Range Boundary Validation", "Divisibility Testing",
+  "Simple Interest Calculation", "Rectangle Area Calculation", "Body Mass Index (BMI) Math", "Celsius to Fahrenheit Conversion", "Capstone: Numeric Evaluation Engine"
 ];
 
-const LESSON_CODES = [
-  'a = int(input("Enter a: "))\nb = int(input("Enter b: "))\nprint(f"Sum (+): {a + b}")',
-  'a = float(input("Total money: "))\nb = float(input("Spent: "))\nprint(f"Remaining (-): {a - b}")',
-  'rate = float(input("Hourly rate: "))\nhours = float(input("Hours: "))\nprint(f"Total pay (*): {rate * hours}")',
-  'bill = float(input("Total bill: "))\npeople = int(input("People: "))\nprint(f"Each share (/): {bill / people}")',
-  'cookies = int(input("Cookies: "))\nfriends = int(input("Friends: "))\nprint(f"Whole cookies each (//): {cookies // friends}")',
-  'candies = int(input("Candies: "))\nkids = int(input("Kids: "))\nprint(f"Leftover candies (%): {candies % kids}")',
-  'base = int(input("Base: "))\npower = int(input("Power: "))\nprint(f"{base} ** {power} = {base ** power}")',
-  'temp = int(input("Temperature: "))\nprint(f"Opposite sign: {-temp}")',
-  'a = int(input("a: "))\nb = int(input("b: "))\nc = int(input("c: "))\nprint(f"a + b * c = {a + b * c}")',
-  'first = input("First name: ")\nlast = input("Last name: ")\nprint("Full name (+): " + first + " " + last)',
-  'char = input("Character: ")\ncount = int(input("Count: "))\nprint(char * count)',
-  'val = int(input("Enter number: "))\nprint(f"Square: {val * val}")',
-  'price = float(input("Enter price: "))\nprint(f"With 10% tax: {price * 1.10}")',
-  'msg = input("Type message: ")\nprint(f"Length of message: {len(msg)}")',
-  'qty = int(input("Qty: "))\nrate = float(input("Rate: "))\nprint(f"Total: ${qty * rate}")',
-  'pin = input("Enter PIN: ")\nprint(f"PIN correct (==): {pin == \'1234\'}")',
-  'role = input("Role: ")\nprint(f"Not admin (!=): {role != \'admin\'}")',
-  'score = int(input("Score: "))\nprint(f"Above 100 (>): {score > 100}")',
-  'temp = float(input("Temp: "))\nprint(f"Below zero (<): {temp < 0.0}")',
-  'age = int(input("Age: "))\nprint(f"Eligible to vote (>= 18): {age >= 18}")',
-  'speed = int(input("Speed: "))\nprint(f"Speed limit okay (<= 60): {speed <= 60}")',
-  'w1 = input("Word 1: ")\nw2 = input("Word 2: ")\nprint(f"w1 before w2 alphabetically (<): {w1 < w2}")',
-  'color = input("Favorite color: ")\nprint(f"Matches \'blue\' exactly (==): {color == \'blue\'}")',
-  'num = int(input("Number: "))\nprint(f"Is even (% 2 == 0): {num % 2 == 0}")',
-  'num = int(input("Number: "))\nprint(f"Is odd (% 2 != 0): {num % 2 != 0}")',
-  'bal = float(input("Initial balance: "))\ndep = float(input("Deposit: "))\nbal += dep\nprint(f"Updated (+=): {bal}")',
-  'hp = int(input("Starting HP: "))\ndmg = int(input("Damage: "))\nhp -= dmg\nprint(f"Remaining HP (-=): {hp}")',
-  'coins = int(input("Coins: "))\nmult = int(input("Multiplier: "))\ncoins *= mult\nprint(f"Boosted (*=): {coins}")',
-  'fund = float(input("Fund: "))\nfund /= 2\nprint(f"Halved fund (/=): {fund}")',
-  'time_secs = int(input("Seconds: "))\ntime_secs //= 60\nprint(f"Whole minutes (//=): {time_secs}")',
-  'hrs = int(input("Military hour: "))\nhrs %= 12\nprint(f"12h clock (%=): {hrs}")',
-  'base = int(input("Base: "))\nbase **= 3\nprint(f"Cubed (**=): {base}")',
-  'counter = 0\nstep = int(input("Step: "))\ncounter += step\nprint(f"Counter: {counter}")',
-  'level = int(input("Level: "))\nxp = 100\nxp *= level\nprint(f"Required XP: {xp}")',
-  'age = int(input("Age: "))\nhas_id = input("Has ID (yes/no): ") == "yes"\nprint(f"Allowed (and): {age >= 18 and has_id}")',
-  'card = input("Card (yes/no): ") == "yes"\nupi = input("UPI (yes/no): ") == "yes"\nprint(f"Can pay (or): {card or upi}")',
-  'raining = input("Raining (yes/no): ") == "yes"\nprint(f"Good weather (not): {not raining}")',
-  'age = int(input("Age: "))\nis_senior = input("Senior (yes/no): ") == "yes"\nprint(f"Adult not senior: {age >= 18 and not is_senior}")',
-  'ticket = input("Ticket (yes/no): ") == "yes"\npass_vip = input("VIP (yes/no): ") == "yes"\nprint(f"Valid entry: {ticket or not pass_vip}")',
-  'a = input("A (on/off): ") == "on"\nb = input("B (on/off): ") == "on"\nprint(f"XOR (only one on): {(a or b) and not (a and b)}")',
-  'val = input("Type text: ")\nprint(f"Truthy bool(val): {bool(val)}")',
-  'val = int(input("Enter integer: "))\nprint(f"not not val: {not not val}")',
-  'score = int(input("Score: "))\natt = int(input("Attendance %: "))\nhw = input("HW done (yes/no): ") == "yes"\nprint(f"Passed: {score >= 40 and att >= 75 and hw}")',
-  'a = 10\nb = 5\nc = 2\nprint(f"10 + 5 * 2 = {a + b * c}")',
-  'a = 10\nb = 5\nc = 2\nprint(f"(10 + 5) * 2 = {(a + b) * c}")',
-  'val = int(input("Value: "))\nprint(f"Range 10..50: {val >= 10 and val <= 50}")',
-  'p = float(input("Principal: "))\nr = float(input("Rate (e.g. 0.05): "))\nt = int(input("Years: "))\nprint(f"Future: {p * ((1 + r) ** t)}")',
-  'marks = int(input("Marks: "))\nprint(f"Pass: {marks >= 40}, Distinction: {marks >= 75}")',
-  'n = int(input("Number: "))\nprint(f"Divisible by 3 and 5: {n % 3 == 0 and n % 5 == 0}")',
-  'cart = float(input("Cart Rs: "))\nprime = input("Prime (yes/no): ") == "yes"\nfree_ship = cart >= 499 or prime\ndisc = cart >= 1000 and prime\nprint(f"Free ship: {free_ship}, Discount: {disc}")'
+const LESSON_SOLUTIONS = [
+  'score = 100\nbonus = 25\ntotal = score + bonus\nprint(total)',
+  'price = 49.99\ntax_rate = 0.05\nfinal_price = price * (1 + tax_rate)\nprint(final_price)',
+  'is_active = True\nis_admin = False\nprint(is_active)\nprint(is_admin)',
+  'user_val = input("Enter a value: ")\nprint(user_val)',
+  'num_str = input("Enter an integer: ")\nnum = int(num_str)\nprint(num * 2)',
+  'val_str = input("Enter a decimal: ")\nval = float(val_str)\nprint(val / 2.0)',
+  'a = int(input("Enter a: "))\nb = int(input("Enter b: "))\nres = a + b\nprint(res)',
+  'total = float(input("Total budget: "))\nspent = float(input("Amount spent: "))\nrem = total - spent\nprint(rem)',
+  'rate = float(input("Rate: "))\nhours = float(input("Hours: "))\nearnings = rate * hours\nprint(earnings)',
+  'amount = float(input("Total amount: "))\npeople = int(input("Number of people: "))\nshare = amount / people\nprint(share)',
+  'items = int(input("Total items: "))\nbox_size = int(input("Box capacity: "))\nfull_boxes = items // box_size\nprint(full_boxes)',
+  'total_items = int(input("Total items: "))\ndivisor = int(input("Divisor: "))\nremainder = total_items % divisor\nprint(remainder)',
+  'base = int(input("Base: "))\nexp = int(input("Exponent: "))\npower_val = base ** exp\nprint(power_val)',
+  'val = int(input("Enter number: "))\nneg_val = -val\nprint(neg_val)',
+  'a = int(input("a: "))\nb = int(input("b: "))\nc = int(input("c: "))\nres = a + b * c\nprint(res)',
+  'x = 5\ny = 10\nz = 2\nresult = x + y * z\nprint(result)',
+  'x = 5\ny = 10\nz = 2\nresult = (x + y) * z\nprint(result)',
+  'a = int(input("a: "))\nb = int(input("b: "))\nres = (a + b) ** 2 / 2\nprint(res)',
+  'x = int(input("Enter x: "))\ny = int(input("Enter y: "))\ncheck = (x == y)\nprint(check)',
+  'x = int(input("Enter x: "))\ny = int(input("Enter y: "))\ncheck = (x != y)\nprint(check)',
+  'val = int(input("Enter value: "))\ncheck = (val > 100)\nprint(check)',
+  'val = int(input("Enter value: "))\ncheck = (val < 50)\nprint(check)',
+  'age = int(input("Enter age: "))\ncheck = (age >= 18)\nprint(check)',
+  'speed = int(input("Enter speed: "))\ncheck = (speed <= 60)\nprint(check)',
+  'p = True\nq = False\nres = (p == q)\nprint(res)',
+  'cond1 = True\ncond2 = False\nres = cond1 and cond2\nprint(res)',
+  'cond1 = True\ncond2 = False\nres = cond1 or cond2\nprint(res)',
+  'flag = True\nres = not flag\nprint(res)',
+  'a = True\nb = False\nres = a and not b\nprint(res)',
+  'a = False\nb = True\nres = a or not b\nprint(res)',
+  'x = int(input("x: "))\nres = (x > 0) and (x < 10) or (x == 100)\nprint(res)',
+  'val = int(input("Enter number: "))\nres = bool(val)\nprint(res)',
+  'val = int(input("Enter number: "))\nres = not not val\nprint(res)',
+  'x = 10\nprint(x)\nx = 25\nprint(x)',
+  'score = int(input("Starting score: "))\npoints = int(input("Points to add: "))\nscore += points\nprint(score)',
+  'health = int(input("Starting health: "))\ndamage = int(input("Damage taken: "))\nhealth -= damage\nprint(health)',
+  'score = int(input("Score: "))\nmult = int(input("Multiplier: "))\nscore *= mult\nprint(score)',
+  'val = float(input("Value: "))\nval /= 2.0\nprint(val)',
+  'val = int(input("Seconds: "))\nval //= 60\nprint(val)',
+  'val = int(input("Number: "))\nval %= 10\nprint(val)',
+  'base = int(input("Base: "))\nbase **= 2\nprint(base)',
+  'counter = 0\ncounter += 1\ncounter += 1\nprint(counter)',
+  'total = 0\ntotal += 10\ntotal += 20\ntotal += 30\nprint(total)',
+  'num = int(input("Enter number: "))\nin_range = (num >= 10) and (num <= 50)\nprint(in_range)',
+  'n = int(input("Enter number: "))\nis_divisible = (n % 3 == 0) and (n % 5 == 0)\nprint(is_divisible)',
+  'p = float(input("Principal: "))\nr = float(input("Rate: "))\nt = float(input("Time: "))\nsi = (p * r * t) / 100\nprint(si)',
+  'length = float(input("Length: "))\nwidth = float(input("Width: "))\narea = length * width\nprint(area)',
+  'weight = float(input("Weight kg: "))\nheight = float(input("Height m: "))\nbmi = weight / (height ** 2)\nprint(bmi)',
+  'celsius = float(input("Celsius: "))\nfahrenheit = (celsius * 9 / 5) + 32\nprint(fahrenheit)',
+  'score = int(input("Score: "))\nattendance = int(input("Attendance: "))\npassed = (score >= 40) and (attendance >= 75)\nprint(passed)'
 ];
 
 const LESSON_GOALS = [
-  "Add two user-provided numbers using the + operator.",
-  "Subtract expenses from total budget using the - operator.",
-  "Calculate earnings by multiplying rate and hours with the * operator.",
-  "Divide a bill equally among people using true float division /.",
-  "Calculate whole packages using floor division //.",
-  "Find the division remainder using the modulo % operator.",
-  "Raise a base number to an exponent with **.",
-  "Flip the sign of an integer using unary minus -.",
-  "Observe operator precedence where * happens before +.",
-  "Glue two text strings together using string concatenation +.",
-  "Repeat a character multiple times using string multiplication *.",
-  "Parse user input string to integer and perform arithmetic.",
-  "Parse user input string to float and compute taxes.",
-  "Count the length of user input with len().",
-  "Compute unit total and format it with an f-string.",
-  "Check equality with == returning True or False.",
-  "Check inequality with != returning True or False.",
-  "Test if a value is strictly greater with >.",
-  "Test if a value is strictly less with <.",
-  "Test if an input meets a threshold with >=.",
-  "Test if an input does not exceed a limit with <=.",
-  "Compare words in alphabetical order using <.",
-  "Check case-sensitive exact string matching with ==.",
-  "Check if a number is even using num % 2 == 0.",
-  "Check if a number is odd using num % 2 != 0.",
-  "Accumulate values directly in place with +=.",
-  "Reduce an inventory count in place with -=.",
-  "Multiply a score in place with *=.",
-  "Halve a number in place with /=.",
-  "Compute integer minutes in place with //=.",
-  "Wrap around a 24-hour clock into 12-hour format with %=.",
-  "Cube a number in place with **=.",
-  "Step up a game counter variable.",
-  "Scale required XP by player level.",
-  "Verify two conditions at once using logical and.",
-  "Accept either of two payment methods with logical or.",
-  "Invert a boolean flag using logical not.",
-  "Combine and with not for complex criteria.",
-  "Combine or with not for flexible access rules.",
-  "Emulate exclusive OR (XOR) logic in Python.",
-  "Test truthiness of user input using bool().",
-  "Observe double boolean inversion with not not.",
-  "Chain three boolean conditions with and.",
-  "Demonstrate standard multiplication before addition.",
-  "Override operator precedence using parentheses ().",
-  "Validate that a number falls inside a range window.",
-  "Calculate compound growth using powers and arithmetic.",
-  "Check multi-tier exam mark thresholds.",
-  "Test divisibility by two numbers simultaneously.",
-  "Build a complete e-commerce checkout decision engine."
+  "Store whole numbers in integer variables and perform basic addition.",
+  "Store decimal values in float variables and compute totals.",
+  "Assign and print boolean values (True or False).",
+  "Capture basic user input using the input() function.",
+  "Convert user input string into an integer using int().",
+  "Convert user input string into a float using float().",
+  "Add two numbers using the addition operator (+).",
+  "Subtract numbers using the subtraction operator (-).",
+  "Multiply numbers using the multiplication operator (*).",
+  "Divide numbers using true division (/)." ,
+  "Compute whole number division using floor division (//).",
+  "Find the division remainder using the modulo operator (%).",
+  "Raise a number to a power using the exponentiation operator (**).",
+  "Invert the sign of a number using unary negation (-).",
+  "Combine addition and multiplication in an expression.",
+  "Observe standard operator precedence where multiplication precedes addition.",
+  "Override standard precedence rules using parentheses.",
+  "Evaluate complex mathematical expressions combining parentheses, exponents, and division.",
+  "Check if two values are equal using (==).",
+  "Check if two values are not equal using (!=).",
+  "Test if a value is strictly greater than a threshold using (>).",
+  "Test if a value is strictly less than a threshold using (<).",
+  "Test if a value meets or exceeds a threshold using (>=).",
+  "Test if a value does not exceed a limit using (<=).",
+  "Compare boolean values directly using comparison operators.",
+  "Evaluate multiple conditions using the logical AND operator.",
+  "Evaluate alternative conditions using the logical OR operator.",
+  "Invert a boolean value using the logical NOT operator.",
+  "Combine logical AND and NOT operators in a single expression.",
+  "Combine logical OR and NOT operators in a single expression.",
+  "Build and evaluate a compound boolean expression with multiple operators.",
+  "Convert numeric values to boolean truthiness using bool().",
+  "Apply double negation to convert any expression into its strict boolean equivalent.",
+  "Assign and reassign values to variables using the assignment operator (=).",
+  "Accumulate values in place using the add-and-assign operator (+=).",
+  "Decrease values in place using the subtract-and-assign operator (-=).",
+  "Scale values in place using the multiply-and-assign operator (*=).",
+  "Divide values in place using the divide-and-assign operator (/=).",
+  "Perform floor division in place using (//=).",
+  "Compute remainder in place using the modulo-assign operator (%=).",
+  "Raise to a power in place using the exponentiate-assign operator (**=).",
+  "Increment a counter variable iteratively using assignment operators.",
+  "Accumulate multiple values into a single running total variable.",
+  "Check if a number falls within a specific range using comparison and logical operators.",
+  "Test simultaneous divisibility by two numbers using modulo and logical operators.",
+  "Calculate simple interest using arithmetic operators and variables.",
+  "Compute geometric properties using user inputs and multiplication.",
+  "Calculate BMI using exponentiation, division, and variables.",
+  "Perform temperature conversion math combining multiplication, division, and addition.",
+  "Build a complete boolean evaluation engine combining input, arithmetic, comparisons, and logic."
 ];
 
-// Generate full 50 lesson objects
+// Generate full 50 lesson objects with starter (empty) and solution code separated
 const LESSONS = LESSON_TITLES.map((title, idx) => {
   return {
-    code: LESSON_CODES[idx],
+    starter: '', // Starts completely blank so you can write your own code
+    solution: LESSON_SOLUTIONS[idx],
     i18n: {
-      en: { title: title, goal: `<strong>Task:</strong> ${LESSON_GOALS[idx]}<br>1. Run the code and test with interactive terminal inputs.` },
-      hi: { title: title, goal: `<strong>कार्य:</strong> ${LESSON_GOALS[idx]}<br>1. कोड चलाएं और टर्मिनल में इनपुट देकर जांचें।` },
-      mr: { title: title, goal: `<strong>कृती:</strong> ${LESSON_GOALS[idx]}<br>1. कोड चालवा आणि टर्मिनलमध्ये इनपुट देऊन तपासा.` },
-      ta: { title: title, goal: `<strong>பணி:</strong> ${LESSON_GOALS[idx]}<br>1. குறியீட்டை இயக்கி உள்ளீடு கொடுத்து சோதிக்கவும்.` },
-      te: { title: title, goal: `<strong>టాస్క్:</strong> ${LESSON_GOALS[idx]}<br>1. కోడ్ రన్ చేసి టెర్మినల్ లో ఇన్‌పుట్ ఇవ్వండి.` },
-      bn: { title: title, goal: `<strong>কাজ:</strong> ${LESSON_GOALS[idx]}<br>1. কোড চালান এবং টার্মিনালে ইনপুট দিয়ে যাচাই করুন।` },
-      gu: { title: title, goal: `<strong>કાર્ય:</strong> ${LESSON_GOALS[idx]}<br>1. કોડ ચલાવો અને ટર્મિનલમાં ઇનપુટ આપી ચકાસો.` },
-      kn: { title: title, goal: `<strong>ಕಾರ್ಯ:</strong> ${LESSON_GOALS[idx]}<br>1. ಕೋಡ್ ರನ್ ಮಾಡಿ ಟರ್ಮಿನಲ್‌ನಲ್ಲಿ ಇನ್‌ಪುಟ್ ನೀಡಿ ಪರೀಕ್ಷಿಸಿ.` },
-      ml: { title: title, goal: `<strong>ടാസ്ക്:</strong> ${LESSON_GOALS[idx]}<br>1. കോഡ് റൺ ചെയ്ത് ടെർമിനലിൽ ഇൻപുട്ട് നൽകുക.` },
-      pa: { title: title, goal: `<strong>ਕੰਮ:</strong> ${LESSON_GOALS[idx]}<br>1. ਕੋਡ ਚਲਾਓ ਅਤੇ ਟਰਮੀਨਲ ਵਿੱਚ ਇਨਪੁੱਟ ਦੇ ਕੇ ਪਰਖੋ।` }
+      en: { title: title, goal: `<strong>Task:</strong> ${LESSON_GOALS[idx]}<br>1. Write your code, run it, and test with interactive terminal inputs.` },
+      hi: { title: title, goal: `<strong>कार्य:</strong> ${LESSON_GOALS[idx]}<br>1. अपना कोड लिखें, चलाएं और टर्मिनल में इनपुट देकर जांचें।` },
+      mr: { title: title, goal: `<strong>कृती:</strong> ${LESSON_GOALS[idx]}<br>1. तुमचा कोड लिहा, चालवा आणि टर्मिनलमध्ये इनपुट देऊन तपासा.` },
+      ta: { title: title, goal: `<strong>பணி:</strong> ${LESSON_GOALS[idx]}<br>1. உங்கள் குறியீட்டை எழுதி இயக்கி சோதிக்கவும்.` },
+      te: { title: title, goal: `<strong>టాస్క్:</strong> ${LESSON_GOALS[idx]}<br>1. మీ కోడ్ రాయండి, రన్ చేయండి మరియు పరీక్షించండి.` },
+      bn: { title: title, goal: `<strong>কাজ:</strong> ${LESSON_GOALS[idx]}<br>1. আপনার কোড লিখুন, চালান এবং যাচাই করুন।` },
+      gu: { title: title, goal: `<strong>કાર્ય:</strong> ${LESSON_GOALS[idx]}<br>1. તમારો કોડ લખો, ચલાવો અને ચકાસો.` },
+      kn: { title: title, goal: `<strong>ಕಾರ್ಯ:</strong> ${LESSON_GOALS[idx]}<br>1. ನಿಮ್ಮ ಕೋಡ್ ಬರೆಯಿರಿ, ರನ್ ಮಾಡಿ ಪರೀಕ್ಷಿಸಿ.` },
+      ml: { title: title, goal: `<strong>ടാസ്ക്:</strong> ${LESSON_GOALS[idx]}<br>1. നിങ്ങളുടെ കോഡ് എഴുതുക, റൺ ചെയ്യുക.` },
+      pa: { title: title, goal: `<strong>ਕੰਮ:</strong> ${LESSON_GOALS[idx]}<br>1. ਆਪਣਾ ਕੋਡ ਲਿਖੋ, ਚਲਾਓ ਅਤੇ ਪਰਖੋ।` }
     }
   };
 });
@@ -1394,8 +1387,8 @@ const els = {
 const LINE_HEIGHT = 22;
 const STEP_DELAY = 450;
 const STEP_GAP = 200;
-const PROGRESS_KEY = 'operators-lab-progress-v2';
-const USER_CODE_KEY = 'operators-lab-user-code-v2';
+const PROGRESS_KEY = 'operators-lab-progress-v3';
+const USER_CODE_KEY = 'operators-lab-user-code-v3';
 const KIDS_MODE_KEY = 'operators-lab-kids-mode';
 
 let state = { running: false, lessonIndex: 0 };
@@ -1486,13 +1479,20 @@ function updateKidsModeUI() {
 }
 
 function loadLesson(i) {
+  if (isPeeking) {
+    isPeeking = false;
+    els.peekBtn.classList.remove('is-holding');
+    els.editorPanel.classList.remove('peeking');
+    els.peekBadge.style.display = 'none';
+  }
+
   state.lessonIndex = i;
   const lvl = levelFor(i);
   els.levelBadge.textContent = lvl.text;
   els.levelBadge.className = 'level-badge ' + lvl.cls;
 
   const savedUserCode = userCodeStore[i];
-  els.code.value = (savedUserCode !== undefined) ? savedUserCode : '# Write your operator code here\n';
+  els.code.value = (savedUserCode !== undefined) ? savedUserCode : LESSONS[i].starter;
   els.code.readOnly = false;
   
   updateQuestionUI(i);
@@ -1701,21 +1701,26 @@ async function runProgram() {
   els.runHint.textContent = 'Runs line by line & tests operators interactively';
 }
 
+// ============================================================
+// Hold-to-View Peek (Hint) Logic with Pointer Capture
+// ============================================================
 function startPeek(e) {
-  if (e) e.preventDefault();
-  if (isPeeking || state.running) return;
+  if (state.running || isPeeking) return;
   isPeeking = true;
   prePeekDraft = els.code.value;
-  els.code.value = LESSONS[state.lessonIndex].code;
+  els.code.value = LESSONS[state.lessonIndex].solution;
   els.code.readOnly = true;
   els.peekBtn.classList.add('is-holding');
   els.editorPanel.classList.add('peeking');
   els.peekBadge.style.display = 'inline-block';
   syncGutter();
+
+  if (e && e.target && e.target.setPointerCapture) {
+    try { e.target.setPointerCapture(e.pointerId); } catch (err) {}
+  }
 }
 
 function stopPeek(e) {
-  if (e) e.preventDefault();
   if (!isPeeking) return;
   isPeeking = false;
   els.code.value = prePeekDraft;
@@ -1724,21 +1729,25 @@ function stopPeek(e) {
   els.editorPanel.classList.remove('peeking');
   els.peekBadge.style.display = 'none';
   syncGutter();
+
+  if (e && e.target && e.target.releasePointerCapture) {
+    try { e.target.releasePointerCapture(e.pointerId); } catch (err) {}
+  }
 }
 
-els.peekBtn.addEventListener('mousedown', startPeek);
-window.addEventListener('mouseup', stopPeek);
-els.peekBtn.addEventListener('mouseleave', stopPeek);
-els.peekBtn.addEventListener('touchstart', startPeek, { passive: false });
-window.addEventListener('touchend', stopPeek);
-window.addEventListener('touchcancel', stopPeek);
+els.peekBtn.addEventListener('pointerdown', startPeek);
+els.peekBtn.addEventListener('pointerup', stopPeek);
+els.peekBtn.addEventListener('pointercancel', stopPeek);
+els.peekBtn.addEventListener('lostpointercapture', stopPeek);
 
 els.runBtn.addEventListener('click', runProgram);
 els.resetBtn.addEventListener('click', () => {
   if (!state.running && !isPeeking) {
     delete userCodeStore[state.lessonIndex];
     saveUserCodes();
-    loadLesson(state.lessonIndex);
+    els.code.value = LESSONS[state.lessonIndex].starter;
+    syncGutter();
+    clearOutputs();
   }
 });
 
@@ -1751,28 +1760,91 @@ els.kidsToggleBtn.addEventListener('click', () => {
   }
 });
 
-els.code.addEventListener('input', () => {
+// ============================================================
+// IDLE-Like Text Editor Logic (Brackets, Quotes, Indentation, Tabs)
+// ============================================================
+const pairs = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'" };
+const closingChars = Object.values(pairs);
+
+function triggerInputUpdate() {
   if (!isPeeking) {
     userCodeStore[state.lessonIndex] = els.code.value;
     saveUserCodes();
   }
   syncGutter();
-});
-els.code.addEventListener('scroll', () => {
-  els.gutter.scrollTop = els.code.scrollTop;
-});
+}
+
 els.code.addEventListener('keydown', (e) => {
+  const start = els.code.selectionStart;
+  const end = els.code.selectionEnd;
+  const val = els.code.value;
+
   if (e.key === 'Tab') {
     e.preventDefault();
-    const s = els.code.selectionStart, en = els.code.selectionEnd;
-    els.code.value = els.code.value.slice(0, s) + '    ' + els.code.value.slice(en);
-    els.code.selectionStart = els.code.selectionEnd = s + 4;
-    if (!isPeeking) {
-      userCodeStore[state.lessonIndex] = els.code.value;
-      saveUserCodes();
-    }
-    syncGutter();
+    els.code.value = val.slice(0, start) + '    ' + val.slice(end);
+    els.code.selectionStart = els.code.selectionEnd = start + 4;
+    triggerInputUpdate();
+    return;
   }
+
+  if (pairs[e.key] && start === end) {
+    e.preventDefault();
+    const close = pairs[e.key];
+    els.code.value = val.slice(0, start) + e.key + close + val.slice(end);
+    els.code.selectionStart = els.code.selectionEnd = start + 1;
+    triggerInputUpdate();
+    return;
+  }
+
+  if (closingChars.includes(e.key) && start === end && val[start] === e.key) {
+    e.preventDefault();
+    els.code.selectionStart = els.code.selectionEnd = start + 1;
+    return;
+  }
+
+  if (e.key === 'Backspace' && start === end && start > 0) {
+    const prev = val[start - 1];
+    const next = val[start];
+    if (Object.keys(pairs).some(k => pairs[k] === next && k === prev)) {
+      e.preventDefault();
+      els.code.value = val.slice(0, start - 1) + val.slice(start + 1);
+      els.code.selectionStart = els.code.selectionEnd = start - 1;
+      triggerInputUpdate();
+      return;
+    }
+  }
+
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+    const currentLine = val.slice(lineStart, start);
+    
+    const match = currentLine.match(/^([ \t]*)/);
+    let indent = match ? match[1] : '';
+    
+    if (currentLine.trim().endsWith(':')) {
+      indent += '    ';
+    }
+
+    const insertion = '\n' + indent;
+    els.code.value = val.slice(0, start) + insertion + val.slice(end);
+    els.code.selectionStart = els.code.selectionEnd = start + insertion.length;
+    triggerInputUpdate();
+    return;
+  }
+});
+
+els.code.addEventListener('input', () => {
+  if (els.code.value.includes('\u00A0')) {
+    const pos = els.code.selectionStart;
+    els.code.value = els.code.value.replace(/\u00A0/g, ' ');
+    els.code.selectionStart = els.code.selectionEnd = pos;
+  }
+  triggerInputUpdate();
+});
+
+els.code.addEventListener('scroll', () => {
+  els.gutter.scrollTop = els.code.scrollTop;
 });
 
 els.langSelect.addEventListener('change', (e) => {
