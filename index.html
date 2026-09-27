@@ -359,6 +359,7 @@
     font-size:12.5px;
   }
 </style>
+<link rel="stylesheet" href="assets/common.css">
 </head>
 <body>
 <div class="wrap">
@@ -366,18 +367,18 @@
   <!-- Top Navigation Bar with Notes Dropdown -->
   <div class="top-nav">
     <div class="notes-dropdown-container" id="notesDropdown">
-      <button class="notes-btn" id="notesDropdownBtn">
+      <button class="notes-btn" id="notesDropdownBtn" aria-expanded="false" aria-controls="notesDropdownMenu">
         <span>📖 Masterclass Notes</span>
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <div class="dropdown-menu" id="notesDropdownMenu">
         <div class="dropdown-menu-header">Quick Access Notes</div>
-        <a href="/Python-E-Lec/Notes_links/variables_notes.html">1. Variables & Types</a>
-        <a href="/Python-E-Lec/Notes_links/python_numbers_math.html">2. Numbers & Math</a>
-        <a href="/Python-E-Lec/Notes_links/python_user_input.html">3. User Input & Interaction</a>
-        <a href="/Python-E-Lec/Notes_links/python_operators_logic.html">4. Operators & Logic</a>
-        <a href="/Python-E-Lec/Notes_links/python_strings_text.html">5. Strings & Text</a>
-        <a href="/Python-E-Lec/Notes_links/python_conditionals.html">6. Conditional Statements</a>
+        <a href="Notes_links/variables_notes.html">1. Variables & Types</a>
+        <a href="Notes_links/python_numbers_math.html">2. Numbers & Math</a>
+        <a href="Notes_links/python_user_input.html">3. User Input & Interaction</a>
+        <a href="Notes_links/python_operators_logic.html">4. Operators & Logic</a>
+        <a href="Notes_links/python_strings_text.html">5. Strings & Text</a>
+        <a href="Notes_links/python_conditionals.html">6. Conditional Statements</a>
       </div>
     </div>
   </div>
@@ -390,7 +391,7 @@
     </div>
     <div class="hero-stats">
       <div class="hero-stat"><b>6</b><span>topics ready</span></div>
-      <div class="hero-stat"><b>240</b><span>lessons live</span></div>
+      <div class="hero-stat"><b>239</b><span>lessons live</span></div>
       <div class="hero-stat"><b>10</b><span>upcoming</span></div>
     </div>
   </div>
@@ -407,7 +408,7 @@
 
 <script>
 const TOPICS = [
-  /* Active Ready Labs (6 Topics / 240 Lessons) */
+  /* Active Ready Labs (6 Topics / 239 Lessons) */
   {
     accent: 'var(--teal)',
     title: 'Variables & Types',
@@ -443,7 +444,7 @@ const TOPICS = [
       ['age = ', 'int(input("Age: "))'],
       ['print(f', '"Hello {name}"', ')'],
     ],
-    lessons: 30,
+    lessons: 29,
     href: 'input.html',
     open: true,
   },
@@ -609,7 +610,7 @@ const TOPICS = [
 
 function renderGlyph(lines) {
   return lines.map(parts => {
-    const html = parts.map((p, i) => `<span class="${i === 0 || i === 2 ? 'c1' : 'c2'}">${p}</span>`).join('');
+    const html = parts.map((p, i) => `<span class="${i === 0 || i === 2 ? 'c1' : 'c2'}">${p.replace(/[&<>]/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;'}[c]))}</span>`).join('');
     return html;
   }).join('\n');
 }
@@ -647,12 +648,29 @@ dropdownBtn.addEventListener('click', (e) => {
   e.stopPropagation();
   dropdownContainer.classList.toggle('active');
   dropdownMenu.classList.toggle('show');
+  dropdownBtn.setAttribute('aria-expanded', dropdownMenu.classList.contains('show'));
 });
 
 window.addEventListener('click', () => {
   if (dropdownMenu.classList.contains('show')) {
     dropdownContainer.classList.remove('active');
     dropdownMenu.classList.remove('show');
+    dropdownBtn.setAttribute('aria-expanded', 'false');
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && dropdownMenu.classList.contains('show')) {
+    dropdownMenu.classList.remove('show');
+    dropdownContainer.classList.remove('active');
+    dropdownBtn.setAttribute('aria-expanded', 'false');
+    dropdownBtn.focus();
+  }
+});
+dropdownContainer.addEventListener('focusout', (e) => {
+  if (!dropdownContainer.contains(e.relatedTarget)) {
+    dropdownMenu.classList.remove('show');
+    dropdownContainer.classList.remove('active');
+    dropdownBtn.setAttribute('aria-expanded', 'false');
   }
 });
 </script>

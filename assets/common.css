@@ -1,0 +1,47 @@
+/* Shared refinements to the existing lab and notebook styles. */
+:root { --muted-dark: #a5aec2; }
+*, *::before, *::after { box-sizing: border-box; }
+:focus-visible { outline: 3px solid #5b8def; outline-offset: 3px; }
+button, select, textarea, input { font: inherit; }
+button, .practice-btn, .topics-link, .notes-btn { min-height: 44px; }
+img, svg { max-width: 100%; }
+.grid > *, .topics > *, .portrait-grid > *, .functions-grid > *, .conditionals-grid > * { min-width: 0; }
+.lesson-pill { width: 40px; height: 40px; }
+.panel-head, .editor-actions, .instructions-meta, .section-head { flex-wrap: wrap; }
+.panel-head { gap: 10px; }
+.vbox { max-width: 100%; overflow-wrap: anywhere; }
+.topic-glyph { margin-top: 26px; overflow-x: auto; }
+.topic-card:focus-visible { border-color: var(--accent); }
+.term-input-row { flex-wrap: wrap; }
+.term-input-field { min-width: 0; max-width: 100%; }
+.code-snippet { overflow-x: auto; }
+body.notes-page { width: 100%; height: auto; min-height: 100vh; overflow: auto; }
+html:has(.notes-page) { width: 100%; height: auto; overflow: auto; }
+.notes-page .portrait-notebook, .notes-page .notebook-container {
+  width: 100%; height: auto; min-height: 100vh; max-width: 1400px; margin: 0 auto; overflow: visible;
+}
+.notes-page .portrait-grid { grid-template-rows: auto; overflow: visible; }
+.notes-page .note-card { overflow: visible; gap: 12px; }
+.notes-page header { flex-wrap: wrap; gap: 12px; }
+.notes-page p { line-height: 1.5; }
+.notes-page .practice-btn { background: #92400e; }
+@media (max-width: 650px) {
+  .wrap { padding: 20px 16px 40px; }
+  .hero { gap: 24px; padding-bottom: 28px; margin-bottom: 28px; }
+  .hero h1 { font-size: clamp(34px, 9vw, 48px); }
+  .hero-stats { flex-wrap: wrap; gap: 24px; }
+  .brand { min-width: 0; }
+  .brand h1 { font-size: 25px; }
+  .run-hint { min-width: 0; flex-basis: 100%; text-align: left; }
+  .instructions { padding: 16px; }
+  .topic-meta { flex-wrap: wrap; }
+  .notes-page .portrait-notebook, .notes-page .notebook-container {
+    padding: 20px 16px 32px; background-image: linear-gradient(var(--line-color) 1px, transparent 1px);
+  }
+  .notes-page .portrait-notebook::before, .notes-page .notebook-container::before { display: none; }
+  .notes-page .portrait-grid, .notes-page .functions-grid, .notes-page .conditionals-grid { grid-template-columns: minmax(0, 1fr); }
+  .notes-page .note-card { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

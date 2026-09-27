@@ -712,6 +712,7 @@
   ::-webkit-scrollbar-thumb{ background:#33384a; border-radius:6px; }
   ::-webkit-scrollbar-track{ background:transparent; }
 </style>
+<link rel="stylesheet" href="assets/common.css">
 </head>
 <body>
 <div class="wrap">
@@ -774,7 +775,7 @@
           <div class="gutter" id="gutter">1</div>
           <div class="code-col">
             <div class="current-line" id="current-line"></div>
-            <textarea class="code-input" id="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+            <textarea class="code-input" id="code" aria-label="Python code editor" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
           </div>
         </div>
         <div class="editor-controls">
@@ -826,6 +827,7 @@
 
 </div>
 
+<script src="assets/storage.js"></script>
 <script>
 // ============================================================
 // Mini Python interpreter
@@ -1767,26 +1769,31 @@ let userCodeStore = {};
 let isPeeking = false;
 let prePeekDraft = '';
 let currentLanguage = 'en';
-let isKidsMode = localStorage.getItem(KIDS_MODE_KEY) !== 'false';
+let isKidsMode = labStorage.getItem(KIDS_MODE_KEY) !== 'false';
 
 try {
-  userCodeStore = JSON.parse(localStorage.getItem(USER_CODE_KEY) || '{}');
+  userCodeStore = JSON.parse(labStorage.getItem(USER_CODE_KEY) || '{}');
 } catch {
   userCodeStore = {};
 }
 
+if (!userCodeStore || typeof userCodeStore !== 'object' || Array.isArray(userCodeStore)) userCodeStore = {};
+for (const key of Object.keys(userCodeStore)) {
+  if (typeof userCodeStore[key] !== 'string') delete userCodeStore[key];
+}
+
 function saveUserCodes() {
   try {
-    localStorage.setItem(USER_CODE_KEY, JSON.stringify(userCodeStore));
+    labStorage.setItem(USER_CODE_KEY, JSON.stringify(userCodeStore));
   } catch {}
 }
 
 function loadProgress() {
-  try { return new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || '[]')); }
+  try { return new Set(JSON.parse(labStorage.getItem(PROGRESS_KEY) || '[]').filter(i => Number.isInteger(i) && i >= 0 && i < LESSONS.length)); }
   catch { return new Set(); }
 }
 function saveProgress(done) {
-  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify([...done])); } catch {}
+  try { labStorage.setItem(PROGRESS_KEY, JSON.stringify([...done])); } catch {}
 }
 let completed = loadProgress();
 
@@ -1810,6 +1817,7 @@ function buildLessonPills() {
     if (i === state.lessonIndex) cls += ' active';
     if (completed.has(i)) cls += ' done';
     pill.className = cls;
+    if (i === state.lessonIndex) pill.setAttribute('aria-current', 'step');
     pill.textContent = String(i + 1);
     const localized = l.i18n[currentLanguage] || l.i18n.en;
     pill.title = localized.title;
@@ -1832,11 +1840,13 @@ function updateQuestionUI(i) {
 }
 
 function updateKidsModeUI() {
+  els.kidsToggleBtn.setAttribute('aria-pressed', String(isKidsMode));
+  els.emptyStateText = document.getElementById('empty-state-text');
   if (isKidsMode) {
     els.kidsToggleBtn.classList.add('is-active');
     els.kidsToggleBtn.textContent = '🧸 Kids Mode: ON';
     els.visualPanel.classList.add('kids-active');
-    els.emptyStateText.textContent = '🚀 Run your code to build your toy inventory boxes!';
+    if (els.emptyStateText) els.emptyStateText.textContent = '🚀 Run your code to build your toy inventory boxes!';
     els.legendBar.innerHTML = `
       <div class="legend-item"><span>🔢</span> int (Whole Number)</div>
       <div class="legend-item"><span>🎯</span> float (Decimal)</div>
@@ -1848,7 +1858,7 @@ function updateKidsModeUI() {
     els.kidsToggleBtn.classList.remove('is-active');
     els.kidsToggleBtn.textContent = '🧸 Kids Mode: OFF';
     els.visualPanel.classList.remove('kids-active');
-    els.emptyStateText.textContent = 'Run your code to see each variable appear here as a labeled box.';
+    if (els.emptyStateText) els.emptyStateText.textContent = 'Run your code to see each variable appear here as a labeled box.';
     els.legendBar.innerHTML = `
       <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>int</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--violet)"></span>float</div>
@@ -1885,9 +1895,9 @@ function syncGutter() {
   els.lineCount.textContent = n + (n === 1 ? ' line' : ' lines');
 }
 
-function clearOutputs() {
+function clearOutputs(resetTerminal = true) {
   els.boxes.innerHTML = `<div class="empty-state"><div class="icon"></div><p id="empty-state-text">${isKidsMode ? '🚀 Run your code to build your toy inventory boxes!' : 'Run your code to see each variable appear here as a labeled box.'}</p></div>`;
-  els.terminal.innerHTML = '<div class="term-line is-muted">Waiting for you to press Run…</div>';
+  if (resetTerminal) els.terminal.innerHTML = '<div class="term-line is-muted">Waiting for you to press Run…</div>';
   els.currentLine.style.display = 'none';
   els.currentLine.classList.remove('err');
 }
@@ -1900,7 +1910,7 @@ function setCurrentLine(idx, isErr) {
 
 function renderVars(env, order, created, updated, referenced) {
   if (order.length === 0) {
-    clearOutputs();
+    clearOutputs(false);
     return;
   }
   els.boxes.innerHTML = '';
@@ -2024,7 +2034,7 @@ async function runProgram() {
     els.currentLine.style.display = 'none';
     if (!anyOutput) writeTerminalLine('(no output — try adding a print())', 'is-muted');
     writeCursor();
-    if (!completed.has(state.lessonIndex)) {
+    if (els.code.value.split('\n').some(line => stripComment(line).trim()) && !completed.has(state.lessonIndex)) {
       completed.add(state.lessonIndex);
       saveProgress(completed);
       buildLessonPills();
@@ -2033,7 +2043,7 @@ async function runProgram() {
   }
 
   if (order.length === 0 && !stopped) {
-    clearOutputs();
+    clearOutputs(false);
   }
 
   els.code.readOnly = false;
@@ -2080,6 +2090,14 @@ els.peekBtn.addEventListener('mouseleave', stopPeek);
 els.peekBtn.addEventListener('touchstart', startPeek, { passive: false });
 window.addEventListener('touchend', stopPeek);
 window.addEventListener('touchcancel', stopPeek);
+window.addEventListener('blur', stopPeek);
+els.peekBtn.addEventListener('keydown', (e) => {
+  if (e.key === ' ' || e.key === 'Enter') startPeek(e);
+});
+els.peekBtn.addEventListener('keyup', (e) => {
+  if (e.key === ' ' || e.key === 'Enter') stopPeek(e);
+});
+els.peekBtn.addEventListener('blur', stopPeek);
 
 els.runBtn.addEventListener('click', runProgram);
 els.resetBtn.addEventListener('click', () => {
@@ -2093,7 +2111,7 @@ els.resetBtn.addEventListener('click', () => {
 // Kids Mode Toggle Listener
 els.kidsToggleBtn.addEventListener('click', () => {
   isKidsMode = !isKidsMode;
-  localStorage.setItem(KIDS_MODE_KEY, isKidsMode);
+  labStorage.setItem(KIDS_MODE_KEY, isKidsMode);
   updateKidsModeUI();
   if (!state.running && els.code.value) {
     runProgram();
@@ -2115,6 +2133,7 @@ function triggerInputUpdate() {
 }
 
 els.code.addEventListener('keydown', (e) => {
+  if (els.code.readOnly || e.isComposing || e.ctrlKey || e.metaKey || e.altKey) return;
   const start = els.code.selectionStart;
   const end = els.code.selectionEnd;
   const val = els.code.value;
@@ -2128,6 +2147,13 @@ els.code.addEventListener('keydown', (e) => {
     return;
   }
 
+  // Skip over matching closing character if typed
+  if (closingChars.includes(e.key) && start === end && val[start] === e.key) {
+    e.preventDefault();
+    els.code.selectionStart = els.code.selectionEnd = start + 1;
+    return;
+  }
+
   // 2. Auto-closing brackets & quotes
   if (pairs[e.key] && start === end) {
     e.preventDefault();
@@ -2135,13 +2161,6 @@ els.code.addEventListener('keydown', (e) => {
     els.code.value = val.slice(0, start) + e.key + close + val.slice(end);
     els.code.selectionStart = els.code.selectionEnd = start + 1;
     triggerInputUpdate();
-    return;
-  }
-
-  // Skip over matching closing character if typed
-  if (closingChars.includes(e.key) && start === end && val[start] === e.key) {
-    e.preventDefault();
-    els.code.selectionStart = els.code.selectionEnd = start + 1;
     return;
   }
 

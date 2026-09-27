@@ -650,6 +650,7 @@
   ::-webkit-scrollbar-thumb{ background:#33384a; border-radius:6px; }
   ::-webkit-scrollbar-track{ background:transparent; }
 </style>
+<link rel="stylesheet" href="assets/common.css">
 </head>
 <body>
 <div class="wrap">
@@ -712,7 +713,7 @@
           <div class="gutter" id="gutter">1</div>
           <div class="code-col">
             <div class="current-line" id="current-line"></div>
-            <textarea class="code-input" id="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+            <textarea class="code-input" id="code" aria-label="Python code editor" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
           </div>
         </div>
         <div class="editor-controls">
@@ -763,6 +764,7 @@
 
 </div>
 
+<script src="assets/storage.js"></script>
 <script>
 // ============================================================
 // Enhanced Mini Python Interpreter with String Slicing & Methods
@@ -1568,21 +1570,26 @@ let userCodeStore = {};
 let isPeeking = false;
 let prePeekDraft = '';
 let currentLanguage = 'en';
-let isKidsMode = localStorage.getItem(KIDS_MODE_KEY) !== 'false';
+let isKidsMode = labStorage.getItem(KIDS_MODE_KEY) !== 'false';
 
-try { userCodeStore = JSON.parse(localStorage.getItem(USER_CODE_KEY) || '{}'); }
+try { userCodeStore = JSON.parse(labStorage.getItem(USER_CODE_KEY) || '{}'); }
 catch { userCodeStore = {}; }
 
+if (!userCodeStore || typeof userCodeStore !== 'object' || Array.isArray(userCodeStore)) userCodeStore = {};
+for (const key of Object.keys(userCodeStore)) {
+  if (typeof userCodeStore[key] !== 'string') delete userCodeStore[key];
+}
+
 function saveUserCodes() {
-  try { localStorage.setItem(USER_CODE_KEY, JSON.stringify(userCodeStore)); } catch {}
+  try { labStorage.setItem(USER_CODE_KEY, JSON.stringify(userCodeStore)); } catch {}
 }
 
 function loadProgress() {
-  try { return new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || '[]')); }
+  try { return new Set(JSON.parse(labStorage.getItem(PROGRESS_KEY) || '[]').filter(i => Number.isInteger(i) && i >= 0 && i < LESSONS.length)); }
   catch { return new Set(); }
 }
 function saveProgress(done) {
-  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify([...done])); } catch {}
+  try { labStorage.setItem(PROGRESS_KEY, JSON.stringify([...done])); } catch {}
 }
 let completed = loadProgress();
 
@@ -1605,6 +1612,7 @@ function buildLessonPills() {
     if (i === state.lessonIndex) cls += ' active';
     if (completed.has(i)) cls += ' done';
     pill.className = cls;
+    if (i === state.lessonIndex) pill.setAttribute('aria-current', 'step');
     pill.textContent = String(i + 1);
     const localized = l.i18n[currentLanguage] || l.i18n.en;
     pill.title = `${i + 1}. ${localized.title}`;
@@ -1625,11 +1633,13 @@ function updateQuestionUI(i) {
 }
 
 function updateKidsModeUI() {
+  els.kidsToggleBtn.setAttribute('aria-pressed', String(isKidsMode));
+  els.emptyStateText = document.getElementById('empty-state-text');
   if (isKidsMode) {
     els.kidsToggleBtn.classList.add('is-active');
     els.kidsToggleBtn.textContent = '🧸 Kids Mode: ON';
     els.visualPanel.classList.add('kids-active');
-    els.emptyStateText.textContent = '🚀 Run your code to see your text blocks and letter cuts!';
+    if (els.emptyStateText) els.emptyStateText.textContent = '🚀 Run your code to see your text blocks and letter cuts!';
     els.legendBar.innerHTML = `
       <div class="legend-item"><span>💬</span> str (Text Word)</div>
       <div class="legend-item"><span>🔢</span> int (Letter Count / Index)</div>
@@ -1639,7 +1649,7 @@ function updateKidsModeUI() {
     els.kidsToggleBtn.classList.remove('is-active');
     els.kidsToggleBtn.textContent = '🧸 Kids Mode: OFF';
     els.visualPanel.classList.remove('kids-active');
-    els.emptyStateText.textContent = 'Run your code to inspect string transformations in memory!';
+    if (els.emptyStateText) els.emptyStateText.textContent = 'Run your code to inspect string transformations in memory!';
     els.legendBar.innerHTML = `
       <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>str (Text Sequence)</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>int (Length / Index)</div>
@@ -1674,9 +1684,9 @@ function syncGutter() {
   els.lineCount.textContent = n + (n === 1 ? ' line' : ' lines');
 }
 
-function clearOutputs() {
+function clearOutputs(resetTerminal = true) {
   els.boxes.innerHTML = `<div class="empty-state"><div class="icon"></div><p id="empty-state-text">${isKidsMode ? '🚀 Run your code to see your text blocks and letter cuts!' : 'Run your code to inspect string transformations in memory!'}</p></div>`;
-  els.terminal.innerHTML = '<div class="term-line is-muted">Waiting for you to press Run…</div>';
+  if (resetTerminal) els.terminal.innerHTML = '<div class="term-line is-muted">Waiting for you to press Run…</div>';
   els.currentLine.style.display = 'none';
   els.currentLine.classList.remove('err');
 }
@@ -1689,7 +1699,7 @@ function setCurrentLine(idx, isErr) {
 
 function renderVars(env, order, created, updated, referenced) {
   if (order.length === 0) {
-    clearOutputs();
+    clearOutputs(false);
     return;
   }
   els.boxes.innerHTML = '';
@@ -1757,6 +1767,7 @@ function promptTerminalInput(promptText) {
 
     const input = document.createElement('input');
     input.type = 'text';
+    input.setAttribute('aria-label', promptText || 'Program input');
     input.className = 'term-input-field';
     input.placeholder = 'type string input & enter...';
 
@@ -1773,7 +1784,7 @@ function promptTerminalInput(promptText) {
     input.focus();
 
     function submit() {
-      const val = input.value || 'Python';
+      const val = input.value;
       row.innerHTML = `<span class="term-prompt-text">${escapeHtml(promptText || '▶ ')}</span><span style="color:#ffffff;">${escapeHtml(val)}</span>`;
       resolve(val);
     }
@@ -1843,7 +1854,7 @@ async function runProgram() {
     els.currentLine.style.display = 'none';
     if (!anyOutput) writeTerminalLine('(no output — try print())', 'is-muted');
     writeCursor();
-    if (!completed.has(state.lessonIndex)) {
+    if (els.code.value.split('\n').some(line => stripComment(line).trim()) && !completed.has(state.lessonIndex)) {
       completed.add(state.lessonIndex);
       saveProgress(completed);
       buildLessonPills();
@@ -1852,7 +1863,7 @@ async function runProgram() {
   }
 
   if (order.length === 0 && !stopped) {
-    clearOutputs();
+    clearOutputs(false);
   }
 
   els.code.readOnly = false;
@@ -1895,6 +1906,14 @@ els.peekBtn.addEventListener('mouseleave', stopPeek);
 els.peekBtn.addEventListener('touchstart', startPeek, { passive: false });
 window.addEventListener('touchend', stopPeek);
 window.addEventListener('touchcancel', stopPeek);
+window.addEventListener('blur', stopPeek);
+els.peekBtn.addEventListener('keydown', (e) => {
+  if (e.key === ' ' || e.key === 'Enter') startPeek(e);
+});
+els.peekBtn.addEventListener('keyup', (e) => {
+  if (e.key === ' ' || e.key === 'Enter') stopPeek(e);
+});
+els.peekBtn.addEventListener('blur', stopPeek);
 
 els.runBtn.addEventListener('click', runProgram);
 els.resetBtn.addEventListener('click', () => {
@@ -1907,7 +1926,7 @@ els.resetBtn.addEventListener('click', () => {
 
 els.kidsToggleBtn.addEventListener('click', () => {
   isKidsMode = !isKidsMode;
-  localStorage.setItem(KIDS_MODE_KEY, isKidsMode);
+  labStorage.setItem(KIDS_MODE_KEY, isKidsMode);
   updateKidsModeUI();
   if (!state.running && els.code.value) {
     runProgram();
@@ -1925,6 +1944,7 @@ els.code.addEventListener('scroll', () => {
   els.gutter.scrollTop = els.code.scrollTop;
 });
 els.code.addEventListener('keydown', (e) => {
+  if (els.code.readOnly || e.isComposing || e.ctrlKey || e.metaKey || e.altKey) return;
   if (e.key === 'Tab') {
     e.preventDefault();
     const s = els.code.selectionStart, en = els.code.selectionEnd;
