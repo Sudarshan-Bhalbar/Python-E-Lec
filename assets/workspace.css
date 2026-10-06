@@ -1,0 +1,129 @@
+/* Shared floating Python workspace. Used by Notes and Practice/Solver. */
+.workspace {
+  position: fixed;
+  z-index: 1100;
+  right: 28px;
+  bottom: 24px;
+  width: min(900px, calc(100vw - 48px));
+  height: min(680px, calc(100vh - 48px));
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  resize: none;
+  min-width: 560px;
+  min-height: 420px;
+  border: 1px solid rgba(255,255,255,.20);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(60,72,110,.42), rgba(31,37,55,.54) 48%, rgba(71,46,68,.42));
+  -webkit-backdrop-filter: blur(32px) saturate(145%);
+  backdrop-filter: blur(32px) saturate(145%);
+  color: #e7e9ee;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), inset 0 -1px 0 rgba(255,255,255,.04), 0 40px 100px rgba(0,0,0,.52);
+  isolation: isolate;
+}
+.workspace::before,
+.workspace::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(44px);
+  opacity: .14;
+}
+.workspace::before { inset: 0; width: auto; height: auto; border-radius: inherit; filter: none; opacity: 1; background: linear-gradient(135deg, rgba(255,255,255,.10), transparent 30%, transparent 70%, rgba(255,255,255,.03)); }
+.workspace::after { right: -80px; bottom: -90px; width: 240px; height: 190px; background: radial-gradient(circle, rgba(135,93,126,.24), transparent 68%); }
+.workspace > *:not(.workspace-resize-handle) { position: relative; z-index: 1; }
+.workspace.is-open { display: flex; }
+.workspace.is-minimized { height: 52px; min-height: 52px; }
+.workspace.is-minimized > :not(.workspace-head) { display: none; }
+.workspace.is-maximized { inset: 10px; width: auto; height: auto; resize: none; }
+
+.workspace-head {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex: 0 0 52px;
+  padding: 6px 10px 6px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.09);
+  background: rgba(255,255,255,.055);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  cursor: move;
+  user-select: none;
+}
+.workspace-title { color: #f4f5f2; font: 600 13px 'JetBrains Mono', monospace; letter-spacing: .01em; }
+.workspace-controls { display: flex; gap: 6px; }
+.workspace-controls button {
+  min-height: 40px;
+  width: 40px;
+  padding: 0;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 9px;
+  background: rgba(255,255,255,.025);
+  color: #b8c0d2;
+  cursor: pointer;
+  font-size: 16px;
+}
+.workspace-controls button:hover { background: rgba(255,255,255,.08); color: #fff; border-color: rgba(255,255,255,.20); }
+.workspace-controls button:last-child:hover { background: rgba(239,68,68,.18); border-color: rgba(239,68,68,.35); }
+
+.workspace-tabs { display: none; gap: 4px; padding: 8px 12px 0; background: rgba(255,255,255,.025); }
+.workspace-tab { border: 0; border-bottom: 2px solid transparent; background: transparent; color: #8991a6; cursor: pointer; padding: 7px 10px; }
+.workspace-tab.is-active { color: #e7e9ee; border-bottom-color: #b8e66b; }
+.workspace-pane { display: flex; flex-direction: column; min-height: 0; }
+.workspace-pane.is-active { display: flex; }
+.workspace-pane#pane-ide { flex: 1.8 1 0; min-height: 180px; }
+.workspace-pane#pane-console { flex: 1 1 0; min-height: 120px; }
+.workspace-pane-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex: 0 0 34px; padding: 0 14px; border-bottom: 1px solid rgba(255,255,255,.06); background: rgba(255,255,255,.035); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); color: #aeb7c9; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .12em; text-transform: uppercase; }
+.workspace-pane-head span:last-child { color: rgba(201,237,120,.72); font-size: 9px; }
+.editor-wrap { display: flex; flex: 1 1 auto; min-width: 0; min-height: 0; background: rgba(6,10,18,.78); }
+.editor-gutter { width: 48px; margin: 0; padding: 16px 10px; border-right: 1px solid rgba(255,255,255,.07); color: #626b80; background: rgba(0,0,0,.12); text-align: right; white-space: pre; font: 13px/1.55 'JetBrains Mono', monospace; user-select: none; overflow: hidden; }
+.practice-editor { flex: 1 1 auto; width: 100%; min-width: 0; min-height: 0; border: 0; resize: none; outline: 0; background: rgba(6,10,18,.78); color: #e7e9ee; padding: 16px; font: 13px/1.55 'JetBrains Mono', monospace; tab-size: 4; }
+.editor-suggestions, .editor-signature-hint { position: fixed; z-index: 1300; box-sizing: border-box; }
+.editor-suggestions { width: min(390px, calc(100vw - 16px)); max-height: 260px; overflow: auto; padding: 6px; border: 1px solid rgba(255,255,255,.10); border-radius: 10px; background: rgba(20,24,34,.90); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); box-shadow: 0 14px 36px rgba(0,0,0,.40); }
+.editor-suggestion { display: grid; grid-template-columns: 38px minmax(0,1fr) minmax(0,auto); align-items: center; gap: 8px; width: 100%; min-height: 29px; padding: 5px 8px; border: 0; border-radius: 6px; background: transparent; color: #e8ebf2; cursor: pointer; text-align: left; font: 12px/1.25 'JetBrains Mono', monospace; }
+.editor-suggestion:hover, .editor-suggestion[aria-selected="true"] { background: rgba(184,230,107,.12); color: #d9f5a9; }
+.editor-suggestion-kind { color: #c9ed78; font-size: 10px; text-transform: uppercase; }
+.editor-suggestion-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.editor-suggestion-signature { overflow: hidden; color: #8991a6; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.editor-signature-hint { padding: 5px 8px; border: 1px solid rgba(255,255,255,.08); border-radius: 6px; color: #b8c0d2; background: rgba(20,24,34,.92); box-shadow: 0 8px 18px rgba(0,0,0,.28); font: 11px 'JetBrains Mono', monospace; pointer-events: none; }
+.workspace-splitter { position: relative; z-index: 4; flex: 0 0 8px; cursor: row-resize; background: rgba(255,255,255,.025); touch-action: none; }
+.workspace-splitter::after { content: ""; position: absolute; top: 50%; left: 50%; width: 38px; height: 3px; border-radius: 999px; background: rgba(255,255,255,.18); transform: translate(-50%, -50%); }
+.workspace-splitter:hover { background: rgba(201,237,120,.06); }
+.workspace-pane#pane-console .workspace-pane-head { background: rgba(255,255,255,.03); border-bottom-color: rgba(255,255,255,.05); }
+.console { flex: 1 1 auto; min-height: 0; margin: 0; overflow-y: auto; overflow-x: auto; padding: 14px 16px; border-top: 1px solid rgba(255,255,255,.07); background: rgba(3,6,12,.80); color: #d6dbe6; font: 13px/1.6 'JetBrains Mono', monospace; white-space: pre-wrap; }
+.workspace-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex: 0 0 auto; padding: 8px 12px; border-top: 1px solid rgba(255,255,255,.05); border-bottom: 1px solid rgba(255,255,255,.06); background: rgba(255,255,255,.045); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.workspace-actions { display: flex; gap: 7px; }
+.run-btn, .stop-btn, .reset-code-btn { min-height: 34px; border: 1px solid rgba(255,255,255,.12); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 12px; }
+.run-btn { background: linear-gradient(180deg, #c8f277, #9fdc58); color: #10150b; border-color: rgba(201,237,120,.55); box-shadow: 0 8px 24px rgba(180,235,100,.16); font-weight: 700; }
+.run-btn:hover { background: #c9ed78; }
+.stop-btn { background: rgba(180,70,70,.28); border-color: rgba(255,100,100,.18); color: #f1aaa3; }
+.reset-code-btn { background: rgba(255,255,255,.035); border-color: rgba(255,255,255,.10); color: #b8c0d2; }
+.workspace-message { color: #8991a6; font-size: 11px; }
+
+.workspace-resize-handle { position: absolute; z-index: 20; display: block; touch-action: none; }
+.resize-n { top: 0; left: 14px; right: 14px; height: 9px; cursor: ns-resize; }
+.resize-e { top: 14px; right: 0; bottom: 14px; width: 9px; cursor: ew-resize; }
+.resize-s { right: 14px; bottom: 0; left: 14px; height: 9px; cursor: ns-resize; }
+.resize-w { top: 14px; bottom: 14px; left: 0; width: 9px; cursor: ew-resize; }
+.resize-ne, .resize-nw, .resize-se, .resize-sw { width: 16px; height: 16px; }
+.resize-ne { top: 0; right: 0; cursor: nesw-resize; }
+.resize-nw { top: 0; left: 0; cursor: nwse-resize; }
+.resize-se { right: 0; bottom: 0; cursor: nwse-resize; }
+.resize-sw { bottom: 0; left: 0; cursor: nesw-resize; }
+.workspace.is-maximized .workspace-resize-handle { pointer-events: none; }
+
+@media (max-width: 560px) {
+  .workspace { inset: 0; width: 100vw; height: 100vh; min-width: 0; min-height: 0; border-radius: 0; -webkit-backdrop-filter: blur(16px) saturate(125%); backdrop-filter: blur(16px) saturate(125%); }
+  .workspace.is-open { display: flex; }
+  .workspace-resize-handle { pointer-events: none; }
+  .workspace-tabs { display: flex; }
+  .workspace-pane { display: none; }
+  .workspace-pane.is-active { display: flex; }
+  .workspace-pane#pane-ide, .workspace-pane#pane-console { flex: 1 1 auto; min-height: 0; }
+  .workspace-splitter { display: none; }
+}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Strings Practice · Python E-Lec</title>
+  <link rel="stylesheet" href="../assets/common.css">
+  <link rel="stylesheet" href="lab.css">
+</head>
+<body class="practice-page">
+  <main class="practice-shell">
+    <div class="practice-sticky-header">
+    <div class="practice-topbar"><a class="back-link all-topics-btn" href="../index.html"><span class="back-arrow" aria-hidden="true">←</span><span>All Topics</span></a><span id="question-total" class="question-total">30 Questions</span></div>
+    <header class="practice-hero">
+      <div>
+        <p class="eyebrow" id="practice-eyebrow">DEVHUB PRACTICE</p>
+        <h1 id="practice-title">Practice</h1>
+      </div>
+    </header>
+    <section class="practice-controls" aria-label="Practice progress and filters">
+      <div class="stats-row" aria-label="Question status summary">
+        <div class="stat"><strong id="solved-count">0 / 0</strong><span>Solved</span></div>
+        <div class="stat"><strong id="attempted-count">0</strong><span>Attempted</span></div>
+        <div class="stat"><strong id="unsolved-count">0</strong><span>Unsolved</span></div>
+      </div>
+      <div class="progress-block">
+        <div class="progress-label"><span>Progress</span><span id="progress-percent">0%</span></div>
+        <div class="summary-track" aria-label="Solved progress"><span id="progress-fill"></span></div>
+      </div>
+      <div class="filters-block">
+        <span class="filters-label">Filter questions</span>
+        <nav class="filters" aria-label="Question filters">
+          <button class="filter-btn is-active" data-filter="all" aria-pressed="true">All <span id="all-count">0</span></button>
+          <button class="filter-btn" data-filter="unsolved" aria-pressed="false">Unsolved <span id="unsolved-filter-count">0</span></button>
+          <button class="filter-btn" data-filter="attempted" aria-pressed="false">Attempted <span id="attempted-filter-count">0</span></button>
+          <button class="filter-btn" data-filter="solved" aria-pressed="false">Solved <span id="solved-filter-count">0</span></button>
+        </nav>
+      </div>
+    </section>
+    </div>
+    <section id="question-list" class="question-list" aria-live="polite"></section>
+  </main>
+  <script src="../assets/storage.js"></script>
+  <script src="../questions/strings.js"></script>
+  <script src="../questions/banks.js"></script>
+  <script src="topics.js"></script>
+  <script src="progress.js"></script>
+  <script src="lab.js"></script>
+</body>
+</html>

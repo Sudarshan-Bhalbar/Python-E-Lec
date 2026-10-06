@@ -3,83 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Python Numbers & Math Masterclass</title>
+<title>Python Numbers &amp; Math Masterclass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&family=Patrick+Hand&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --paper-bg: #fdfbf7; --line-color: #d4e4f7; --margin-color: #fca5a5;
-    --ink-blue: #1e3a8a; --ink-dark: #1f2937; --code-bg: #f3f4f6; --card-bg: #ffffff;
-    --accent-blue: #3b82f6; --accent-purple: #7c3aed; --accent-green: #10b981; --accent-amber: #d9a24b;
-  }
-  html, body { width: 100vw; height: 100vh; margin: 0; padding: 0; background-color: #0f172a; font-family: 'Patrick Hand', cursive, sans-serif; color: var(--ink-dark); box-sizing: border-box; overflow: hidden; }
-  .portrait-notebook { width: 100vw; height: 100vh; background-color: var(--paper-bg); background-image: linear-gradient(90deg, transparent 55px, var(--margin-color) 55px, var(--margin-color) 57px, transparent 57px), linear-gradient(var(--line-color) 1px, transparent 1px); background-size: 100% 28px; padding: 12px 16px 12px 75px; box-sizing: border-box; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-  .portrait-notebook::before { content: ''; position: absolute; left: 20px; top: 20px; bottom: 20px; width: 16px; background: radial-gradient(circle, #94a3b8 55%, transparent 56%); background-size: 100% 45px; background-repeat: repeat-y; }
-  header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #93c5fd; padding-bottom: 6px; margin-bottom: 10px; flex-shrink: 0; }
-  h1 { font-family: 'Caveat', cursive; font-size: clamp(20px, 3.5vw, 28px); color: var(--ink-blue); margin: 0; line-height: 1.1; }
-  .subtitle { font-size: clamp(11px, 1.8vw, 14px); color: #4b5563; margin: 2px 0 0 0; }
-  .practice-btn { font-family: 'Patrick Hand', cursive; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #fff; border: none; padding: 6px 14px; border-radius: 8px; font-size: clamp(12px, 1.8vw, 15px); font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; box-shadow: 0 3px 6px rgba(217, 119, 6, 0.3); }
-  .portrait-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 12px; flex: 1; min-height: 0; overflow: hidden; }
-  .note-card { background: var(--card-bg); border: 2px solid #cbd5e1; border-radius: 10px; padding: 12px 16px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.03); overflow: hidden; box-sizing: border-box; }
-  .note-card h2 { font-family: 'Caveat', cursive; font-size: clamp(18px, 3vw, 24px); color: var(--ink-blue); margin: 0 0 6px 0; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 3px; }
-  p { margin: 0 0 6px 0; font-size: clamp(13px, 2vw, 16px); line-height: 1.35; }
-  ul { margin: 0 0 6px 0; padding-left: 18px; font-size: clamp(12px, 1.8vw, 15px); line-height: 1.35; }
-  .code-snippet { font-family: 'JetBrains Mono', monospace; background-color: var(--code-bg); border-left: 4px solid var(--accent-blue); padding: 5px 8px; margin: 5px 0; font-size: clamp(11px, 1.7vw, 13.5px); color: #111827; border-radius: 0 6px 6px 0; }
-  .keyword { color: var(--accent-purple); font-weight: 600; } .variable { color: var(--accent-blue); font-weight: 600; } .number { color: var(--accent-green); } .comment { color: #6b7280; font-style: italic; }
-  .meme-box { background: #fffbeb; border: 1.5px dashed #f59e0b; border-radius: 8px; padding: 6px 10px; margin-top: 4px; font-size: clamp(12px, 1.8vw, 14px); }
-  .meme-header { font-weight: bold; color: #b45309; margin-bottom: 2px; }
-  .badge { display: inline-block; background: #e0e7ff; color: #3730a3; padding: 0 4px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
-  @media (max-width: 650px) { .portrait-grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); gap: 8px; } }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/common.css">
+<link rel="stylesheet" href="notes-shared.css">
+<link rel="stylesheet" href="../assets/workspace.css">
 </head>
-<body class="notes-page">
-<div class="portrait-notebook">
-  <header>
-    <div>
-      <h1>Python Numbers & Math Masterclass 📓</h1>
-      <p class="subtitle">Integers, Floats, Operators & Precedence Rules</p>
-    </div>
-    <a href="../numbers.html" class="practice-btn">💻 Practice Lab 🚀</a>
+<body class="topic-notes-page" data-workspace-mode="notes" data-notes-topic="numbers">
+<main class="topic-notes-shell">
+  <header class="topic-notes-header">
+    <div><a class="topic-notes-back" href="../index.html"><span aria-hidden="true">←</span> Back to Python Hub</a><p class="topic-notes-kicker">02 / Fundamentals</p><h1>Numbers &amp; Math</h1><p class="topic-notes-subtitle">Integers, Floats, Operators &amp; Precedence Rules</p></div>
+    <div class="topic-notes-header-side"><div class="topic-notes-meta"><span>Beginner</span><span>15 min read</span></div><button id="open-workspace" class="workspace-trigger" type="button"><span aria-hidden="true">⌘</span> Open Workspace</button></div>
   </header>
-  <div class="portrait-grid">
-    <div class="note-card">
-      <div>
-        <h2>1. Integers vs Floats</h2>
-        <p>Python separates numbers into whole numbers (<span class="badge">int</span>) and decimals (<span class="badge">float</span>).</p>
-        <div class="code-snippet"><span class="variable">x</span> = <span class="number">10</span> <span class="comment"># int</span><br><span class="variable">y</span> = <span class="number">10.5</span> <span class="comment"># float</span></div>
-      </div>
-      <div class="meme-box"><div class="meme-header">💡 Memory Tip</div><p style="margin:0;">Any math operation involving a float automatically yields a float result.</p></div>
-    </div>
-    <div class="note-card">
-      <div>
-        <h2>2. Basic Arithmetic</h2>
-        <p>Standard operators handle everyday calculations seamlessly.</p>
-        <ul>
-          <li><span class="badge">+</span> Addition | <span class="badge">-</span> Subtraction</li>
-          <li><span class="badge">*</span> Multiplication | <span class="badge">/</span> True Division</li>
-        </ul>
-      </div>
-      <div class="meme-box" style="border-color:#ef4444; background:#fef2f2;"><div class="meme-header" style="color:#b91c1c;">💀 Division Note</div><p style="margin:0;"><span class="badge">/</span> always returns a float (e.g., <span class="number">4 / 2 = 2.0</span>).</p></div>
-    </div>
-    <div class="note-card">
-      <div>
-        <h2>3. Advanced Math Operators</h2>
-        <p>Special division and power operators for complex IT problems:</p>
-        <div class="code-snippet"><span class="variable">f</span> = <span class="number">10</span> // <span class="number">3</span> <span class="comment"># Floor Div (3)</span><br><span class="variable">m</span> = <span class="number">10</span> % <span class="number">3</span> <span class="comment"># Modulo Remainder (1)</span><br><span class="variable">p</span> = <span class="number">2</span> ** <span class="number">3</span> <span class="comment"># Exponent (8)</span></div>
-      </div>
-      <div class="meme-box" style="border-color:#10b981; background:#ecfdf5;"><div class="meme-header" style="color:#047857;">⚡ Modulo Use</div><p style="margin:0;">Modulo (<span class="badge">%</span>) is vital for checking even/odd numbers (<span class="badge">n % 2 == 0</span>).</p></div>
-    </div>
-    <div class="note-card">
-      <div>
-        <h2>4. Precedence & PEMDAS</h2>
-        <p>Python follows strict operator precedence order during calculation evaluation.</p>
-        <div class="code-snippet"><span class="variable">res</span> = (<span class="number">5</span> + <span class="number">5</span>) * <span class="number">2</span> ** <span class="number">2</span> <span class="comment"># Parentheses first!</span></div>
-      </div>
-      <div class="meme-box" style="border-color:#3b82f6; background:#eff6ff;"><div class="meme-header" style="color:#1d4ed8;">🎯 Best Practice</div><p style="margin:0;">Always use parentheses <span class="badge">()</span> to make complex formulas readable and correct.</p></div>
-    </div>
+  <div class="topic-notes-layout">
+    <article class="topic-notes-content">
+      <section id="overview" class="topic-notes-section"><p class="section-label">01 / Overview</p><h2>Integers vs Floats</h2><div class="note-card"><p>Python separates numbers into whole numbers (<span class="badge">int</span>) and decimals (<span class="badge">float</span>).</p><div class="code-snippet"><span class="variable">x</span> = <span class="number">10</span> <span class="comment"># int</span><br><span class="variable">y</span> = <span class="number">10.5</span> <span class="comment"># float</span></div><div class="meme-box"><div class="meme-header">💡 Memory Tip</div><p>Any math operation involving a float automatically yields a float result.</p></div></div></section>
+      <section id="arithmetic" class="topic-notes-section"><p class="section-label">02 / Basic Arithmetic</p><h2>Basic Arithmetic</h2><div class="note-card"><p>Standard operators handle everyday calculations seamlessly.</p><ul><li><span class="badge">+</span> Addition | <span class="badge">-</span> Subtraction</li><li><span class="badge">*</span> Multiplication | <span class="badge">/</span> True Division</li></ul><div class="meme-box"><div class="meme-header">💀 Division Note</div><p><span class="badge">/</span> always returns a float (e.g., <span class="number">4 / 2 = 2.0</span>).</p></div></div></section>
+      <section id="advanced" class="topic-notes-section"><p class="section-label">03 / Advanced Operators</p><h2>Advanced Math Operators</h2><div class="note-card"><p>Special division and power operators for complex IT problems:</p><div class="code-snippet"><span class="variable">f</span> = <span class="number">10</span> // <span class="number">3</span> <span class="comment"># Floor Div (3)</span><br><span class="variable">m</span> = <span class="number">10</span> % <span class="number">3</span> <span class="comment"># Modulo Remainder (1)</span><br><span class="variable">p</span> = <span class="number">2</span> ** <span class="number">3</span> <span class="comment"># Exponent (8)</span></div><div class="meme-box"><div class="meme-header">⚡ Modulo Use</div><p>Modulo (<span class="badge">%</span>) is vital for checking even/odd numbers (<span class="badge">n % 2 == 0</span>).</p></div></div></section>
+      <section id="precedence" class="topic-notes-section"><p class="section-label">04 / Precedence</p><h2>Precedence &amp; PEMDAS</h2><div class="note-card"><p>Python follows strict operator precedence order during calculation evaluation.</p><div class="code-snippet"><span class="variable">res</span> = (<span class="number">5</span> + <span class="number">5</span>) * <span class="number">2</span> ** <span class="number">2</span> <span class="comment"># Parentheses first!</span></div><div class="meme-box"><div class="meme-header">🎯 Best Practice</div><p>Always use parentheses <span class="badge">()</span> to make complex formulas readable and correct.</p></div></div></section>
+      <section id="negative" class="topic-notes-section"><p class="section-label">05 / Values</p><h2>Negative numbers and absolute value</h2><div class="note-card"><p>A minus sign can represent a negative value or subtraction. <span class="badge">abs()</span> returns the distance from zero without the sign.</p><div class="code-snippet"><span class="variable">temperature</span> = -<span class="number">4</span><br>print(abs(temperature))</div><div class="output-box"><strong>Output</strong>4</div></div></section>
+      <section id="rounding" class="topic-notes-section"><p class="section-label">06 / Precision</p><h2>Rounding decimal results</h2><div class="note-card"><p>Division often creates a float. Use <span class="badge">round(value, digits)</span> when a displayed result needs a chosen number of decimal places.</p><div class="code-snippet"><span class="variable">price</span> = <span class="number">19.987</span><br>print(round(price, <span class="number">2</span>))</div><div class="output-box"><strong>Output</strong>19.99</div><p>Rounding changes the returned value used in the expression; it does not change the original variable unless you assign it back.</p></div></section>
+      <section id="conversion" class="topic-notes-section"><p class="section-label">07 / Conversion</p><h2>Convert numeric text carefully</h2><div class="note-card"><p>When numeric data is stored as text, <span class="badge">int()</span> creates a whole number and <span class="badge">float()</span> creates a decimal.</p><div class="code-snippet"><span class="variable">whole</span> = int(<span class="string">"12"</span>)<br><span class="variable">decimal</span> = float(<span class="string">"12.5"</span>)<br>print(whole + <span class="number">3</span>)</div><p>The text must contain a form the chosen type can understand.</p></div></section>
+      <section id="mistakes" class="topic-notes-section"><p class="section-label">08 / Common Mistakes</p><h2>Check the operation and denominator</h2><div class="note-card"><div class="mistake-card wrong"><span>Wrong assumption</span><code>result = 5 / 2<br># result is 2</code></div><div class="mistake-card correct"><span>Correct result</span><code>result = 5 / 2<br># result is 2.5</code></div><p>True division returns a float. Dividing by zero is invalid, and <span class="badge">int("2.5")</span> cannot parse a decimal string directly.</p></div></section>
+      <section id="recap" class="topic-notes-section"><p class="section-label">09 / What You Learned</p><h2>Numbers are predictable when types are clear</h2><ul class="check-list"><li><span class="badge">int</span> stores whole numbers; <span class="badge">float</span> stores decimals.</li><li>Arithmetic includes /, //, %, and **.</li><li>Parentheses make evaluation order explicit.</li><li><span class="badge">abs()</span> measures distance from zero and <span class="badge">round()</span> controls precision.</li><li>Convert numeric strings before doing math.</li></ul><div class="end-workspace"><button class="workspace-trigger" type="button"><span aria-hidden="true">⌘</span> Open Workspace</button></div></section>
+    </article>
+    <aside class="topic-notes-rail"><div class="topic-notes-rail-card"><details class="topic-notes-toc-panel" open><summary class="topic-notes-toggle"><span>On this page</span><span aria-hidden="true">⌄</span></summary><nav class="topic-notes-toc" aria-label="On this page"><a href="#overview"><span>01</span>Integers vs Floats</a><a href="#arithmetic"><span>02</span>Basic Arithmetic</a><a href="#advanced"><span>03</span>Advanced Operators</a><a href="#precedence"><span>04</span>Precedence &amp; PEMDAS</a></nav><div class="topic-notes-divider"></div></details><button class="workspace-trigger" type="button"><span aria-hidden="true">⌘</span> Open Workspace</button></div></aside>
   </div>
-</div>
+</main>
+<script src="notes-shared.js"></script><script src="../assets/storage.js"></script><script src="../practice/evaluator.js"></script><script src="../practice/editor-enhancements.js"></script><script>window.notesWorkspaceConfig = { title: '>_ Python Workspace · NUMBERS & MATH', starterCode: 'x = 10\ny = 3\nprint(x + y)' };</script><script src="../practice/workspace.js"></script>
 </body>
 </html>

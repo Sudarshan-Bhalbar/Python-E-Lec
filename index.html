@@ -244,10 +244,6 @@
     background:var(--panel-dark-2);
     transform:translateY(-2px);
   }
-  .topic-card.is-locked{
-    opacity:0.55;
-    cursor:default;
-  }
   .topic-card::before{
     content:'';
     position:absolute;
@@ -358,6 +354,172 @@
     color:var(--muted-dark);
     font-size:12.5px;
   }
+
+  /* Shared premium practice language for the topic catalog. */
+  :root {
+    --catalog-ink:#121315;
+    --catalog-paper:#f5f5f3;
+    --catalog-muted:rgba(245,245,243,.55);
+    --catalog-line:rgba(255,255,255,.10);
+    --catalog-green:#b8e66b;
+    --catalog-green-bright:#c9ed78;
+    --catalog-amber:#ffb84a;
+    --catalog-glass:rgba(255,255,255,.065);
+  }
+  html { background:var(--catalog-ink); }
+  body {
+    position:relative;
+    isolation:isolate;
+    overflow-x:hidden;
+    background:
+      radial-gradient(circle at 55% 18%,rgba(183,116,80,.14),transparent 34%),
+      radial-gradient(circle at 15% 75%,rgba(120,180,100,.06),transparent 35%),
+      linear-gradient(180deg,#151617 0%,#101113 100%);
+    color:var(--catalog-paper);
+  }
+  body::before, body::after {
+    content:"";
+    position:fixed;
+    z-index:0;
+    width:420px;
+    height:280px;
+    border-radius:50%;
+    filter:blur(100px);
+    opacity:.18;
+    pointer-events:none;
+  }
+  body::before { top:-90px; right:8%; background:#b77450; }
+  body::after { bottom:5%; left:-140px; background:#8f8270; }
+  .wrap {
+    position:relative;
+    z-index:1;
+    width:min(1120px,100%);
+    max-width:none;
+    padding:24px 28px 48px;
+  }
+  .top-nav { margin-bottom:18px; }
+  .notes-btn {
+    min-height:44px;
+    padding:10px 14px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:12px;
+    background:rgba(255,255,255,.07);
+    color:var(--catalog-paper);
+    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .notes-btn:hover { border-color:rgba(201,237,120,.42); background:rgba(255,255,255,.11); }
+  .dropdown-menu {
+    background:rgba(18,18,18,.92);
+    border-color:rgba(255,255,255,.10);
+    border-radius:16px;
+    -webkit-backdrop-filter:blur(18px);
+    backdrop-filter:blur(18px);
+    box-shadow:0 18px 50px rgba(0,0,0,.32);
+  }
+  .dropdown-menu-header { color:var(--catalog-muted); background:rgba(255,255,255,.035); border-color:var(--catalog-line); }
+  .dropdown-menu a { color:rgba(245,245,243,.82); border-color:var(--catalog-line); }
+  .dropdown-menu a:hover { background:rgba(184,230,107,.10); color:var(--catalog-green-bright); }
+  .hero {
+    align-items:flex-end;
+    padding:12px 0 28px;
+    margin-bottom:26px;
+    border-bottom-color:var(--catalog-line);
+  }
+  .brand { margin-bottom:16px; }
+  .brand .dot { background:var(--catalog-green); box-shadow:0 0 0 4px rgba(184,230,107,.16); }
+  .brand span { color:var(--catalog-amber); letter-spacing:.12em; }
+  .hero h1 { color:var(--catalog-paper); letter-spacing:-.035em; }
+  .hero h1 em { color:var(--catalog-green-bright); }
+  .hero-copy p, .hero-stat span { color:var(--catalog-muted); }
+  .hero-stats {
+    gap:0;
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:18px;
+    background:rgba(255,255,255,.035);
+    -webkit-backdrop-filter:blur(18px);
+    backdrop-filter:blur(18px);
+    overflow:hidden;
+  }
+  .hero-stat { min-width:116px; padding:12px 16px; border-right:1px solid rgba(255,255,255,.08); }
+  .hero-stat:last-child { border-right:0; }
+  .hero-stat b { color:var(--catalog-paper); }
+  .section-head { margin-bottom:16px; }
+  .section-head h2 { color:var(--catalog-paper); }
+  .section-head p { color:var(--catalog-muted); }
+  .topics { gap:12px; }
+  .topic-card {
+    min-width:0;
+    padding:18px;
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:22px;
+    background:var(--catalog-glass);
+    -webkit-backdrop-filter:blur(18px);
+    backdrop-filter:blur(18px);
+    box-shadow:0 12px 32px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.04);
+    transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;
+  }
+  .topic-card.is-open { cursor:pointer; }
+  .topic-card.is-open:hover {
+    border-color:rgba(201,237,120,.32);
+    background:rgba(255,255,255,.085);
+    transform:translateY(-2px);
+    box-shadow:0 16px 38px rgba(0,0,0,.24),0 0 24px rgba(184,230,107,.05);
+  }
+  .topic-card:focus-visible { outline:3px solid rgba(201,237,120,.82); outline-offset:3px; }
+  .topic-card::before { height:2px; background:var(--accent,var(--catalog-green)); opacity:.78; }
+  .topic-glyph {
+    margin-bottom:14px;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;
+    background:rgba(0,0,0,.26);
+    color:var(--accent,var(--catalog-green));
+  }
+  .topic-glyph .c1 { color:rgba(245,245,243,.45); }
+  .topic-glyph .c2 { color:var(--catalog-paper); }
+  .topic-card h3 { color:var(--catalog-paper); font-size:19px; }
+  .topic-card p { color:rgba(245,245,243,.68); display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden; }
+  .topic-meta { margin-top:16px; padding-top:12px; border-top-color:rgba(255,255,255,.09); }
+  .topic-level { color:#d9f5a9; }
+  .topic-card.is-open .level-bars i { background:var(--accent,var(--catalog-green)); }
+  .topic-count { color:rgba(245,245,243,.45); }
+  .status-tag {
+    top:14px;
+    right:14px;
+    color:#d9f5a9;
+    border-color:rgba(184,230,107,.24);
+    background:rgba(184,230,107,.10);
+  }
+  .status-tag.ready { color:#d9f5a9; border-color:rgba(184,230,107,.24); background:rgba(184,230,107,.10); }
+  .go-arrow {
+    width:max-content;
+    margin-top:13px;
+    padding:8px 11px;
+    border:1px solid rgba(184,230,107,.25);
+    border-radius:10px;
+    background:rgba(184,230,107,.12);
+    color:#dfffb2;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .topic-card:hover .go-arrow { background:rgba(184,230,107,.18); }
+  .go-arrow svg { transition:transform .18s ease; }
+  .topic-card:hover .go-arrow svg { transform:translateX(3px); }
+  footer { border-top-color:var(--catalog-line); color:var(--catalog-muted); }
+  @media (max-width:880px) { .hero-stats { width:100%; } .hero-stat { flex:1; } }
+  @media (max-width:600px) {
+    .wrap { padding:20px 16px 40px; }
+    .hero { align-items:flex-start; padding-top:6px; }
+    .hero h1 { font-size:44px; }
+    .hero-stats { width:100%; }
+    .hero-stat { min-width:0; padding:10px 9px; }
+    .hero-stat b { font-size:25px; }
+    .hero-stat span { font-size:10px; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    .topic-card, .go-arrow svg { transition:none; }
+    .topic-card:hover { transform:none; }
+  }
 </style>
 <link rel="stylesheet" href="assets/common.css">
 </head>
@@ -379,6 +541,16 @@
         <a href="Notes_links/python_operators_logic.html">4. Operators & Logic</a>
         <a href="Notes_links/python_strings_text.html">5. Strings & Text</a>
         <a href="Notes_links/python_conditionals.html">6. Conditional Statements</a>
+        <a href="Notes_links/python_while_loops.html">7. While Loops</a>
+        <a href="Notes_links/python_for_loops_ranges.html">8. For Loops & Ranges</a>
+        <a href="Notes_links/python_lists_arrays.html">9. Lists & Arrays</a>
+        <a href="Notes_links/python_tuples_sets.html">10. Tuples & Sets</a>
+        <a href="Notes_links/python_dictionaries.html">11. Dictionaries (Key-Value)</a>
+        <a href="Notes_links/python_functions.html">12. Functions & Return Values</a>
+        <a href="Notes_links/python_list_comprehensions.html">13. List Comprehensions</a>
+        <a href="Notes_links/python_file_handling.html">14. File Handling (I/O)</a>
+        <a href="Notes_links/python_exceptions.html">15. Error & Exception Handling</a>
+        <a href="Notes_links/python_oop.html">16. Object-Oriented Programming</a>
       </div>
     </div>
   </div>
@@ -390,9 +562,9 @@
       <p>Pick a topic below. Each one walks you from the very first idea to the trickier stuff, with real code you write and run yourself — and a live view of exactly what's happening underneath.</p>
     </div>
     <div class="hero-stats">
-      <div class="hero-stat"><b>6</b><span>topics ready</span></div>
-      <div class="hero-stat"><b>239</b><span>lessons live</span></div>
-      <div class="hero-stat"><b>10</b><span>upcoming</span></div>
+      <div class="hero-stat"><b id="topic-count">0</b><span>topics active</span></div>
+      <div class="hero-stat"><b id="lesson-count">0</b><span>lessons in catalog</span></div>
+      <div class="hero-stat"><b id="practice-count">0</b><span>practice routes</span></div>
     </div>
   </div>
 
@@ -408,7 +580,7 @@
 
 <script>
 const TOPICS = [
-  /* Active Ready Labs (6 Topics / 239 Lessons) */
+  /* Complete topic catalog */
   {
     accent: 'var(--teal)',
     title: 'Variables & Types',
@@ -419,7 +591,7 @@ const TOPICS = [
       ['print(', 'type(age)', ')'],
     ],
     lessons: 30,
-    href: 'variables.html',
+    href: 'practice/lab.html?topic=variables',
     open: true,
   },
   {
@@ -432,7 +604,7 @@ const TOPICS = [
       ['left = total ', '% 5'],
     ],
     lessons: 30,
-    href: 'numbers.html',
+    href: 'practice/lab.html?topic=numbers',
     open: true,
   },
   {
@@ -445,7 +617,7 @@ const TOPICS = [
       ['print(f', '"Hello {name}"', ')'],
     ],
     lessons: 29,
-    href: 'input.html',
+    href: 'practice/lab.html?topic=input',
     open: true,
   },
   {
@@ -458,7 +630,7 @@ const TOPICS = [
       ['print(', 'can_enter', ')'],
     ],
     lessons: 50,
-    href: 'operators.html',
+    href: 'practice/lab.html?topic=operators',
     open: true,
   },
   {
@@ -471,7 +643,7 @@ const TOPICS = [
       ['print(f', '"{sub.upper()}"', ')'],
     ],
     lessons: 50,
-    href: 'strings.html',
+    href: 'practice/lab.html?topic=strings',
     open: true,
   },
   {
@@ -484,11 +656,11 @@ const TOPICS = [
       ['else:', ' print("Pass")'],
     ],
     lessons: 50,
-    href: 'conditions.html',
+    href: 'practice/lab.html?topic=conditions',
     open: true,
   },
 
-  /* 10 Upcoming Modules */
+  /* Additional catalog topics */
   {
     accent: 'var(--violet)',
     title: 'While Loops',
@@ -499,7 +671,8 @@ const TOPICS = [
       ['    count ', '+= 1'],
     ],
     lessons: 30,
-    open: false,
+    href: 'practice/lab.html?topic=while-loops',
+    open: true,
   },
   {
     accent: 'var(--teal)',
@@ -510,7 +683,8 @@ const TOPICS = [
       ['    print(', 'f"Step: {i}"', ')'],
     ],
     lessons: 35,
-    open: false,
+    href: 'practice/lab.html?topic=for-loops',
+    open: true,
   },
   {
     accent: 'var(--blue)',
@@ -522,7 +696,8 @@ const TOPICS = [
       ['print(', 'items[0]', ')'],
     ],
     lessons: 40,
-    open: false,
+    href: 'practice/lab.html?topic=lists',
+    open: true,
   },
   {
     accent: 'var(--amber)',
@@ -534,7 +709,8 @@ const TOPICS = [
       ['print(', 'unique', ')'],
     ],
     lessons: 25,
-    open: false,
+    href: 'practice/lab.html?topic=tuples-sets',
+    open: true,
   },
   {
     accent: 'var(--rose)',
@@ -545,7 +721,8 @@ const TOPICS = [
       ['print(', 'user["name"]', ')'],
     ],
     lessons: 40,
-    open: false,
+    href: 'practice/lab.html?topic=dictionaries',
+    open: true,
   },
   {
     accent: 'var(--green)',
@@ -557,7 +734,8 @@ const TOPICS = [
       ['res = ', 'add(5, 7)'],
     ],
     lessons: 35,
-    open: false,
+    href: 'practice/lab.html?topic=functions',
+    open: true,
   },
   {
     accent: 'var(--violet)',
@@ -569,7 +747,8 @@ const TOPICS = [
       ['print(', 'sq', ')'],
     ],
     lessons: 25,
-    open: false,
+    href: 'practice/lab.html?topic=list-comprehensions',
+    open: true,
   },
   {
     accent: 'var(--blue)',
@@ -580,7 +759,8 @@ const TOPICS = [
       ['    f.write(', '"Hello Python"', ')'],
     ],
     lessons: 30,
-    open: false,
+    href: 'practice/lab.html?topic=file-handling',
+    open: true,
   },
   {
     accent: 'var(--amber)',
@@ -592,7 +772,8 @@ const TOPICS = [
       ['    print(', '"Invalid number"', ')'],
     ],
     lessons: 30,
-    open: false,
+    href: 'practice/lab.html?topic=exceptions',
+    open: true,
   },
   {
     accent: 'var(--rose)',
@@ -604,7 +785,8 @@ const TOPICS = [
       ['hero = ', 'Player(100)'],
     ],
     lessons: 45,
-    open: false,
+    href: 'practice/lab.html?topic=oop',
+    open: true,
   },
 ];
 
@@ -617,14 +799,13 @@ function renderGlyph(lines) {
 
 const grid = document.getElementById('topics');
 TOPICS.forEach(t => {
-  const isOpen = !!t.open;
-  const el = document.createElement(isOpen ? 'a' : 'div');
-  el.className = 'topic-card ' + (isOpen ? 'is-open' : 'is-locked');
+  const el = document.createElement('a');
+  el.className = 'topic-card is-open';
   el.style.setProperty('--accent', t.accent);
-  if (isOpen) el.href = t.href;
+  el.href = t.href;
 
   el.innerHTML = `
-    <div class="status-tag ${isOpen ? 'ready' : ''}">${isOpen ? 'Start here' : 'Coming soon'}</div>
+    <div class="status-tag ready">Practice</div>
     <div class="topic-glyph">${renderGlyph(t.glyph)}</div>
     <h3>${t.title}</h3>
     <p>${t.desc}</p>
@@ -632,12 +813,16 @@ TOPICS.forEach(t => {
       <div class="topic-level"><span class="level-bars"><i></i><i></i><i></i></span>Beginner → Advanced</div>
       <div class="topic-count">${t.lessons} lessons</div>
     </div>
-    ${isOpen ? `<div class="go-arrow">Start learning
+    <div class="go-arrow">Open Practice
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>` : ''}
+    </div>
   `;
   grid.appendChild(el);
 });
+
+document.getElementById('topic-count').textContent = TOPICS.length;
+document.getElementById('lesson-count').textContent = TOPICS.reduce((total, topic) => total + topic.lessons, 0);
+document.getElementById('practice-count').textContent = TOPICS.filter(topic => topic.href).length;
 
 // Dropdown Toggle Logic
 const dropdownContainer = document.getElementById('notesDropdown');
